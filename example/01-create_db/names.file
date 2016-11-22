@@ -1,0 +1,9 @@
+#nameInFile	nameInDB	options
+MarkerName	rsid	varchar not null
+chrom	chr	int not null
+start	pos	int not null
+Allele1	allele1	varchar(60) not null
+Allele2	allele2	varchar(60) not null
+P.value	pval	int not null
+Direction	direction	varcahar(60) not null
+Freq.Allele1.HapMapCEU	freq_hapCEU	int not null

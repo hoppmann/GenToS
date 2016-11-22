@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#look for current path of program, even if symlinked
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; 
+do 
+	# resolve $SOURCE until the file is no longer a symlink
+	DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	SOURCE="$(readlink "$SOURCE")"
+	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+
+GENTOS_APP_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+# definde library folder
+LIBDIR="$GENTOS_APP_DIR/lib"
+
+
+CP="$GENTOS_APP_DIR/bin"
+for JAR in `ls $LIBDIR`
+do
+	CP="$CP:$LIBDIR/$JAR"
+done
+
+#start java
+java \
+-Xmx30g \
+-classpath $CP \
+de.gentos.main.Main $@
+
+

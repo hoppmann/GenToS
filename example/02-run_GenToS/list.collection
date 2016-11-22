@@ -1,0 +1,7 @@
+# list of all gene list input files to use with GenToS
+00-from_jackson/01-skelton_physiology.csv
+00-from_jackson/02-skeleton_morphology.csv
+00-from_jackson/03-abnormal_skeleton_development_pheno.csv
+00-from_jackson/04-abnormal_bone_mineralization.csv
+00-from_jackson/05-abnormal_vertebrae_morphology.csv
+00-from_jackson/06-abnormal_long_bone_morphology.csv

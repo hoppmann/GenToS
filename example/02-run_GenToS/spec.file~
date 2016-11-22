@@ -1,0 +1,8 @@
+#lines with "#" are skipped while reading in the spec file
+#dbGene	TableGene
+#/path/to/genes.db	hg19
+
+#dbSNP TableSNP
+#/path/to/SNP.db	table_snp
+../GEFOS_db/GEFOS.db	FNBMD_hg19
+../GEFOS_db/GEFOS.db	LSBMD_hg19
