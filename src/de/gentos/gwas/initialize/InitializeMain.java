@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 // This class initializes all primary steps, like opening a file for log; reading in the options; checking the config file ...

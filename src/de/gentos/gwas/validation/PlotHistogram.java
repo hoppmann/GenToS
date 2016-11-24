@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.initialize.InitializeMain;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class PlotHistogram {

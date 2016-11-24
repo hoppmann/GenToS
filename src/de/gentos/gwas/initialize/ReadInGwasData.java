@@ -13,9 +13,9 @@ import java.util.Map;
 
 import com.google.common.primitives.Ints;
 
+import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGwasData {

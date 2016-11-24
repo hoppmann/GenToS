@@ -1,18 +1,41 @@
 package de.gentos.lists.initialize.options;
 
+import org.apache.commons.cli.Options;
+
+import com.google.common.collect.Multimap;
+
 public class SetOptions {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
-
+	private Options options;
+	Multimap<String, OptionValue> opts;
+	String list;
+	
+	
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
+	
+	
+	
+	
+	
+	
+	
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
 
+	private void makeOptions() {
+		
+	}
+	
+	
+	
+	
+	
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
