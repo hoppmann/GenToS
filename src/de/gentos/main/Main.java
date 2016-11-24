@@ -1,6 +1,8 @@
 package de.gentos.main;
 
-import de.gentos.initialize.InitializeMain;
+import de.gentos.gwas.main.GentosMain;
+
+
 
 
 
@@ -12,54 +14,80 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		///////////////////////////////////////////////
+		//////// check which package is chosen ////////
+		///////////////////////////////////////////////
 		
-		RunGuide rg = new RunGuide();
+		// extract first entry which has to be chosen package
 		
+		String toRun = args[0];
+		// check if GenToS GWAS is chosen, then start
 		
-		
-		
-		// initialize system
-//		-> read in options and check them
-//		-> read in config file
-//		-> check databases for correctness
-
-		InitializeMain init = rg.initializeMain(args);
-		
-
-		
-		
-		
-		// extract snps and calculate threshold
-//		-> extract gene position
-//		-> extract number of independent SNPs
-//		-> calculate threshold 
-//			-> bonferoni (lenient, plenty)
-//			-> FDR
-//		-> extract SNPs according threshold
-//		-> extract low pval SNPs
-//		-> write results in file
-		
-		rg.extractSNPs(init);
-		
-
+		if (args[0].equals("gwas")) {
+			GentosMain gwas = new GentosMain();
+			gwas.runGentos(args);
+		}   
+			
+			
 
 		
 		
+//		for (String bla : args) {
+//			System.out.println(bla);
+//		}
 		
-		// validate results (random draw)
-//		-> iterate entire program
-//		-> random draw on calculated thresh
-//		-> distributon based validation? 
-		
-		rg.validate(init);
+		System.out.println(args[0]);
 		
 		
 		
-		
-				
-		//close log file
-		
-		rg.finish(init);
+//		
+//		RunGuide rg = new RunGuide();
+//		
+//		
+//		
+//		
+//		// initialize system
+////		-> read in options and check them
+////		-> read in config file
+////		-> check databases for correctness
+//
+//		InitializeMain init = rg.initializeMain(args);
+//		
+//
+//		
+//		
+//		
+//		// extract snps and calculate threshold
+////		-> extract gene position
+////		-> extract number of independent SNPs
+////		-> calculate threshold 
+////			-> bonferoni (lenient, plenty)
+////			-> FDR
+////		-> extract SNPs according threshold
+////		-> extract low pval SNPs
+////		-> write results in file
+//		
+//		rg.extractSNPs(init);
+//		
+//
+//
+//		
+//		
+//		
+//		// validate results (random draw)
+////		-> iterate entire program
+////		-> random draw on calculated thresh
+////		-> distributon based validation? 
+//		
+//		rg.validate(init);
+//		
+//		
+//		
+//		
+//				
+//		//close log file
+//		
+//		rg.finish(init);
 		
 	}
 	
