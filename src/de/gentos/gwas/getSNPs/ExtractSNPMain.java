@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.initialize.InitializeMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
+import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 import de.gentos.gwas.threshold.CreateThresh;
 

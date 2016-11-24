@@ -1,4 +1,4 @@
-package de.gentos.general.initialize.options;
+package de.gentos.gwas.initialize.options;
 
 import java.io.File;
 import java.util.HashMap;

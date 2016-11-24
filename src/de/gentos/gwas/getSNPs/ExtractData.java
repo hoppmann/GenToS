@@ -7,12 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.initialize.InitializeMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
+import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 

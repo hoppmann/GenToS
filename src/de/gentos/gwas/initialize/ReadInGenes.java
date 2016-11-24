@@ -10,9 +10,9 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.GeneInfo;
+import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGenes {

@@ -6,11 +6,11 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 
-import de.gentos.general.initialize.options.GetOptions;
 import de.gentos.gwas.initialize.InitializeMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
+import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class WriteResult {
