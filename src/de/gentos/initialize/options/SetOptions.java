@@ -64,7 +64,6 @@ public class SetOptions {
 
 		// pval correction options
 		opts.put(threshold, new OptionValue(options, "plenty", false, "\tCorrects for independent SNPs across all number of genes in list"));
-//		opts.put(threshold, new OptionValue(options, "lenient", false, "\tIf chosen the threshold will be corrected by min ([independent reference SNPs], [SNPs in GWAS file])"));
 		opts.put(threshold, new OptionValue(options, "fixThresh", true, "Sets a fixed threshold to define statistical significance"));
 		opts.put(threshold, new OptionValue(options, "bonferroni", false, "Significance threshold is calculated useing Bonferroni correction [default]"));
 		opts.put(threshold, new OptionValue(options, "FDR", false, "\tIf chosen FDR based threshold is calculated using Bejnamini-Hochberg"));
@@ -78,7 +77,7 @@ public class SetOptions {
 		
 		// plotting options
 		opts.put(plot, new OptionValue(options, "title", true, "\tSets the title for the enrichment graph. If set to \"NONE\", no title will be displayed"));
-		opts.put(plot, new OptionValue(options, "format", true, "\tType of output format for graph. Possible options png(default) and pdf"));
+		opts.put(plot, new OptionValue(options, "format", true, "\tType of output format for graph. Possible options png and pdf(default)"));
 		opts.put(plot, new OptionValue(options, "scaling", true, "\tScales all fonts of the enrichment graph by chosen value. Must be > 0 (1.4 default)"));
 		
 		// validation of enrichment

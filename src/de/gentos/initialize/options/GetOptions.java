@@ -505,7 +505,7 @@ public class GetOptions {
 		//////// plotting 
 		
 		if (!cmd.hasOption("format")) {
-			graphSuffix = "png";
+			graphSuffix = "pdf";
 		} else {
 			graphSuffix = cmd.getOptionValue("format");
 		}
