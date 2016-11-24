@@ -79,8 +79,8 @@ public class Binomial {
 
 		// instanciate random generator and if seed option chosen set seed
 		RandomGenerator rng = new MersenneTwister();
-		if (init.getOptions().getCmd().hasOption("seed")){
-			rng.setSeed(init.getOptions().getSeed());
+		if (init.getGwasOptions().getCmd().hasOption("seed")){
+			rng.setSeed(init.getGwasOptions().getSeed());
 		}
 
 		///////// simulate binomial draw

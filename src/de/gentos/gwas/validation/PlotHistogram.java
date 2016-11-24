@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.InitializeMain;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class PlotHistogram {
@@ -19,7 +19,7 @@ public class PlotHistogram {
 
 	InitializeMain init;
 	HandleFile log;
-	GetOptions options;
+	GetGwasOptions options;
 
 
 
@@ -33,7 +33,7 @@ public class PlotHistogram {
 
 		this.init = init;
 		this.log = init.getLog();
-		this.options = init.getOptions();
+		this.options = init.getGwasOptions();
 
 	}
 
@@ -68,23 +68,23 @@ public class PlotHistogram {
 		
 		// for readability prepare output strings
 		String rStarter = init.getConfig().getRpath();
-		String rScript = init.getOptions().getProgPath() + "MakeHist.R";
+		String rScript = init.getGwasOptions().getProgPath() + "MakeHist.R";
 		String measuredHits = Integer.toString(actualFindings);
 		String nameOfGraph = validationDir + System.getProperty("file.separator") + outName;
-		String suffix = init.getOptions().getGraphSuffix();
+		String suffix = init.getGwasOptions().getGraphSuffix();
 		String scaling = options.getScaling();
 		
 		// prepare title
 		String title = null;
 		// if method is FDR include FDR threshold
-		if (init.getOptions().getMethod().equals("FDR")){
+		if (init.getGwasOptions().getMethod().equals("FDR")){
 		
 			String threshold = String.format(Locale.US, "%.2e", thresh);
-			title = outName + "\n" + init.getOptions().getMethod() + ": " + init.getOptions().getAlpha() + "\nThreshold: " + threshold;
+			title = outName + "\n" + init.getGwasOptions().getMethod() + ": " + init.getGwasOptions().getAlpha() + "\nThreshold: " + threshold;
 		} else {
 
 			String threshold = String.format(Locale.US, "%.2e", thresh);
-			title = outName + "\n" + init.getOptions().getMethod() + "\nThreshold: " + threshold;
+			title = outName + "\n" + init.getGwasOptions().getMethod() + "\nThreshold: " + threshold;
 
 		}
 		

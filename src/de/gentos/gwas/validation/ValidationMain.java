@@ -40,7 +40,7 @@ public class ValidationMain {
 	public ValidationMain(InitializeMain init) {
 		this.init = init;
 		this.log = init.getLog();
-		this.numberOfIterations = init.getOptions().getNumberOfIterations();
+		this.numberOfIterations = init.getGwasOptions().getNumberOfIterations();
 	}
 
 
@@ -67,8 +67,8 @@ public class ValidationMain {
 		log.writeOutFile("######## Starting validation with binomial distribution. ########\n");
 
 		// create temporary folder and folder for graphs
-		String tmpDir = init.getOptions().getDir()+ System.getProperty("file.separator") + "tmp";
-		String validationDir = init.getOptions().getDir()+ System.getProperty("file.separator") + "graphs";
+		String tmpDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "tmp";
+		String validationDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "graphs";
 		mkDir(tmpDir);
 		mkDir(validationDir);
 
@@ -88,7 +88,7 @@ public class ValidationMain {
 			log.writeOutFile("######## Running on " + init.getDbSNPInfo().get(currentGwasFile).getDbName() +"\t" + init.getDbSNPInfo().get(currentGwasFile).getTableName());
 
 			// run over each gene query list
-			for (String origList : init.getOptions().getGeneLists().keySet()){
+			for (String origList : init.getGwasOptions().getGeneLists().keySet()){
 
 				///////////////
 				//////// estimate probability of hit
@@ -104,13 +104,13 @@ public class ValidationMain {
 
 				///////////////////
 				//////// get length of gene list
-				int lengthList = init.getOptions().getGeneLists().get(origList).size();
+				int lengthList = init.getGwasOptions().getGeneLists().get(origList).size();
 
 
 
 				///////////////		
 				//////// get number of iterations
-				int numberIterations = init.getOptions().getNumberOfIterations();
+				int numberIterations = init.getGwasOptions().getNumberOfIterations();
 
 
 
@@ -139,7 +139,7 @@ public class ValidationMain {
 				plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
 
 				// print out probHit on screen and in file
-				if (init.getOptions().isGetProp()){
+				if (init.getGwasOptions().isGetProp()){
 					System.out.println("p(Hit) " + databaseName + " " + tableName + " " + origList + " = " + String.format("%6.2e", probHit));
 					log.writeFile("p(Hit) " + databaseName + " " + tableName + " " + origList + " =  " + String.format("%6.2e", probHit));
 				}
@@ -149,7 +149,7 @@ public class ValidationMain {
 		}
 
 		// delete temp dir if not specified to keep
-		if (!init.getOptions().getCmd().hasOption("keepTmp")){
+		if (!init.getGwasOptions().getCmd().hasOption("keepTmp")){
 			rmDir(tmpDir);
 		}
 	}
@@ -178,10 +178,10 @@ public class ValidationMain {
 		/////////////////
 		//// for each list draw random list of length list
 
-		for (String origList : init.getOptions().getGeneLists().keySet()){
+		for (String origList : init.getGwasOptions().getGeneLists().keySet()){
 
 			// get length of list 
-			int lengthCurrenList = init.getOptions().getGeneLists().get(origList).size(); 
+			int lengthCurrenList = init.getGwasOptions().getGeneLists().get(origList).size(); 
 
 			// creat random lists
 			random.drawList(lengthCurrenList, numberOfIterations, origList, allLists);
@@ -189,8 +189,8 @@ public class ValidationMain {
 
 
 		// create temporary folder and folder for graphs
-		String tmpDir = init.getOptions().getDir()+ System.getProperty("file.separator") + "tmp";
-		String validationDir = init.getOptions().getDir()+ System.getProperty("file.separator") + "graphs";
+		String tmpDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "tmp";
+		String validationDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "graphs";
 		mkDir(tmpDir);
 		mkDir(validationDir);
 
@@ -272,7 +272,7 @@ public class ValidationMain {
 				double probHit = binom.estimateProb(thresh);
 
 				//////// get length of gene list
-				int lengthList = init.getOptions().getGeneLists().get(origList).size();
+				int lengthList = init.getGwasOptions().getGeneLists().get(origList).size();
 
 
 				///////////////
@@ -297,7 +297,7 @@ public class ValidationMain {
 		}
 
 		// delete temp dir if not specified to keep
-		if (!init.getOptions().getCmd().hasOption("keepTmp")){
+		if (!init.getGwasOptions().getCmd().hasOption("keepTmp")){
 			rmDir(tmpDir);
 		}
 	}

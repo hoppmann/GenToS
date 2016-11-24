@@ -13,9 +13,9 @@ import java.util.Map;
 
 import com.google.common.primitives.Ints;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGwasData {
@@ -25,7 +25,7 @@ public class ReadInGwasData {
 
 	InitializeMain init;
 	HandleFile log;
-	GetOptions options;
+	GetGwasOptions options;
 	String tableGene;
 	String dbGene;
 	Map<String, List<SnpLine>> geneSNP = new HashMap<>();
@@ -49,7 +49,7 @@ public class ReadInGwasData {
 
 		// set variables
 		this.init = init;
-		this.options = init.getOptions();
+		this.options = init.getGwasOptions();
 		this.log = init.getLog();
 	}
 

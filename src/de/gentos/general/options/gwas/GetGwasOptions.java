@@ -1,4 +1,4 @@
-package de.gentos.gwas.initialize.options;
+package de.gentos.general.options.gwas;
 
 import java.io.File;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import de.gentos.gwas.initialize.ExtracSpecFile;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
 import de.gentos.gwas.main.HandleFile;
 
-public class GetOptions {
+public class GetGwasOptions {
 
 	// handed in variables and general variables
 	private ConfigFile config;
@@ -85,7 +85,7 @@ public class GetOptions {
 	////////////////////////////////
 	/////// Constructor to init args
 
-	public GetOptions(String[] args, ConfigFile conifg) {
+	public GetGwasOptions(String[] args, ConfigFile conifg) {
 		// get arguments
 		this.args = args;
 		this.config = conifg;

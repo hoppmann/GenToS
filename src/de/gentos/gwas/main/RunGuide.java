@@ -53,13 +53,13 @@ public class RunGuide {
 		//		-> simulating random draw via binomial distribution
 
 
-		if (init.getOptions().getCmd().hasOption("enrichment")) {
-			if (init.getOptions().isRandomRepeats()){
+		if (init.getGwasOptions().getCmd().hasOption("enrichment")) {
+			if (init.getGwasOptions().isRandomRepeats()){
 				
 				ValidationMain validation = new ValidationMain(init);
 				validation.randomDraw(extract);
 				
-			} else if (init.getOptions().isBinomial()) {
+			} else if (init.getGwasOptions().isBinomial()) {
 				
 				ValidationMain validation = new ValidationMain(init);
 				validation.binomial(extract);

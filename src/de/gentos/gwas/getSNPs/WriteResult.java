@@ -6,11 +6,11 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.InitializeMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class WriteResult {
@@ -20,7 +20,7 @@ public class WriteResult {
 
 	Map<String, GeneListInfo> geneQueryList;
 	HandleFile result;
-	GetOptions options;
+	GetGwasOptions options;
 	HandleFile csv;
 	InitializeMain init;
 	CommandLine cmd;
@@ -32,12 +32,12 @@ public class WriteResult {
 	//////// Constructor
 
 	public WriteResult(Map<String, GeneListInfo> geneQueryList, String tableName, String pathSNP, 
-			HandleFile result, GetOptions options, String csvDir, InitializeMain init, String currentListName) {
+			HandleFile result, GetGwasOptions options, String csvDir, InitializeMain init, String currentListName) {
 
 		this.geneQueryList = geneQueryList;
 		this.result = result;
 		this.init = init;
-		options = init.getOptions();
+		options = init.getGwasOptions();
 		cmd = options.getCmd();
 		this.currentListName = currentListName;
 		this.readGenes = init.getReadGenes();
@@ -103,7 +103,7 @@ public class WriteResult {
 
 			// if bonferoni option chosen
 			// write out number of independent SNPs (depending if lenient option chosen or not with additional info)
-			if (init.getOptions().getMethod().equals("bonferoni")) {
+			if (init.getGwasOptions().getMethod().equals("bonferoni")) {
 
 				int indep = geneQueryList.get(gene).getIndepSNPs(); 
 				int lenient = geneQueryList.get(gene).getGwasSNPs(); 

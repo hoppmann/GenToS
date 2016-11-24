@@ -35,7 +35,7 @@ public class CreateThresh {
 	public CreateThresh(InitializeMain init, ReadInGwasData gwasData) {
 		this.init = init;
 		this.log = init.getLog();
-		this.cmd = init.getOptions().getCmd();
+		this.cmd = init.getGwasOptions().getCmd();
 		this.gwasData = gwasData;
 		this.readGenes = init.getReadGenes();
 	}
@@ -74,7 +74,7 @@ public class CreateThresh {
 
 		////////////
 		//////// bonferoni
-		if (init.getOptions().getMethod().equals("bonferroni")) {
+		if (init.getGwasOptions().getMethod().equals("bonferroni")) {
 
 
 			// for each Gene get number of independent SNPs
@@ -119,7 +119,7 @@ public class CreateThresh {
 		////////////
 		//////// FDR correction
 		//////// by Benjamini-Hochberg
-		if (init.getOptions().getMethod().equals("FDR")) {
+		if (init.getGwasOptions().getMethod().equals("FDR")) {
 			// for each gene in query list check if gene is supported if so save in corrected hash
 
 			for (String currentGene : queryGenes){
@@ -139,7 +139,7 @@ public class CreateThresh {
 
 		////////////
 		/////// Fix Thresh
-		if (init.getOptions().getMethod().equals("fixThresh")) {
+		if (init.getGwasOptions().getMethod().equals("fixThresh")) {
 
 			// for each gene in query list check if gene is supported if so save in corrected hash
 			for (String currentGene : queryGenes){
@@ -147,7 +147,7 @@ public class CreateThresh {
 			}
 			// use fix thresh
 			// add threshold to each gene in hash
-			thresh = init.getOptions().getFixThresh();
+			thresh = init.getGwasOptions().getFixThresh();
 			for (String gene : queryGenesChecked.keySet()) {
 				queryGenesChecked.get(gene).setThreshold(thresh);
 				queryGenesChecked.get(gene).setMethod("fixThresh");

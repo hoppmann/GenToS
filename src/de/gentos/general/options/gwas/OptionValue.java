@@ -1,4 +1,4 @@
-package de.gentos.gwas.initialize.options;
+package de.gentos.general.options.gwas;
 
 import org.apache.commons.cli.Options;
 

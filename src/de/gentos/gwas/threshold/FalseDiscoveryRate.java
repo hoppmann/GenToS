@@ -58,7 +58,7 @@ public class FalseDiscoveryRate  {
 		int totalLength = allPval.size();
 
 		// calculate threshold using benjamini hochberg
-		double alpha = init.getOptions().getAlpha();
+		double alpha = init.getGwasOptions().getAlpha();
 		threshold = 0.0;
 
 		for (int counter = 0; counter < totalLength; counter++) {

@@ -1,18 +1,43 @@
-package de.gentos.lists.initialize.options;
+package de.gentos.general.options;
 
-public class GetOptions {
+import de.gentos.general.options.gwas.GetGwasOptions;
+
+
+public class MainOptions {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
 
+	String[] args;
+	GetGwasOptions gwasOptions;
+	
+	
+	
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
+	
+	public  MainOptions(String[] args) {
+		this.args = args;
+		
+		
+		// check which program part is chosen
+		if (args[0].equals("gwas")) {
+		}
+		
+	}
+	
+	
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
 
+	
+	
+	
+	
+	
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////

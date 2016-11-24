@@ -10,9 +10,9 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.GeneInfo;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGenes {
@@ -24,7 +24,7 @@ public class ReadInGenes {
 
 	InitializeMain init;
 	HandleFile log;
-	GetOptions options;
+	GetGwasOptions options;
 	String tableGene;
 	String dbGene;
 	Map<String, GeneInfo> geneInfo = new HashMap<>();
@@ -46,7 +46,7 @@ public class ReadInGenes {
 
 		// set variables
 		this.init = init;
-		this.options = init.getOptions();
+		this.options = init.getGwasOptions();
 		this.log = init.getLog();
 		this.tableGene = options.getTableGene();
 		this.dbGene = options.getDbGene();
@@ -80,7 +80,7 @@ public class ReadInGenes {
 		ResultSet rs = connection.select(query);
 
 		// retrieve flanking parameters
-		int[] flanking = init.getOptions().getFlank();
+		int[] flanking = init.getGwasOptions().getFlank();
 
 
 		// retrieve gene info and save in hash

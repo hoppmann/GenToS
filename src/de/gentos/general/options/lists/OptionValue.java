@@ -1,4 +1,4 @@
-package de.gentos.lists.initialize.options;
+package de.gentos.general.options.lists;
 
 import org.apache.commons.cli.Options;
 

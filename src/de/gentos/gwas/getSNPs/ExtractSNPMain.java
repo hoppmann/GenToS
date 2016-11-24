@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.InitializeMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 import de.gentos.gwas.threshold.CreateThresh;
 
@@ -26,7 +26,7 @@ public class ExtractSNPMain {
 
 	InitializeMain init;
 	HandleFile log;
-	GetOptions options;
+	GetGwasOptions options;
 	String colPVal;
 	String colChr;
 	String colPos;
@@ -44,7 +44,7 @@ public class ExtractSNPMain {
 		// set Variables
 		this.init = init;
 		log = init.getLog();
-		options = init.getOptions();
+		options = init.getGwasOptions();
 		colPVal = options.getColPval();
 		colPos = options.getColPos();
 		colChr = options.getColChr();
@@ -80,7 +80,7 @@ public class ExtractSNPMain {
 			
 			
 			// run over each gene list
-			for (String currentListName : init.getOptions().getGeneLists().keySet()) {
+			for (String currentListName : init.getGwasOptions().getGeneLists().keySet()) {
 
 				
 				// log entry for current gene list
@@ -136,7 +136,7 @@ public class ExtractSNPMain {
 
 		// copy multimap gene to new multimap (new object each iteration)
 		Map<String, GeneListInfo> queryGenesChecked = new HashMap<>();
-		LinkedList<String> queryGenes = init.getOptions().getGeneLists().get(curentListName); 
+		LinkedList<String> queryGenes = init.getGwasOptions().getGeneLists().get(curentListName); 
 
 		// create thresh according to method chosen
 		CreateThresh correction = new CreateThresh(init, gwasData);

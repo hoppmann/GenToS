@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
-import de.gentos.gwas.initialize.options.GetOptions;
 import de.gentos.gwas.main.HandleFile;
 
 // This class initializes all primary steps, like opening a file for log; reading in the options; checking the config file ...
@@ -15,7 +15,7 @@ public class InitializeMain {
 
 
 	// define variables
-	GetOptions options;
+	GetGwasOptions options;
 	ConfigFile config;
 	HandleFile log;
 	ReadInGwasData gwasData;
@@ -99,7 +99,7 @@ public class InitializeMain {
 	// init commandline options and write them to logfile and check basic options for correctness
 
 	private void InitOptions(String[] args) {
-		options = new GetOptions(args, config);
+		options = new GetGwasOptions(args, config);
 
 	}
 
@@ -195,7 +195,7 @@ public class InitializeMain {
 		return readGenes;
 	}
 
-	public GetOptions getOptions() {
+	public GetGwasOptions getGwasOptions() {
 		return options;
 	}
 

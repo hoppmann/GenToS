@@ -62,8 +62,8 @@ public class RandomDraw {
 		// init random class
 		//if seed option is chosen use value as seed
 		Random rand = new Random();
-		if (init.getOptions().getCmd().hasOption("seed") ){
-			long seed = init.getOptions().getSeed();
+		if (init.getGwasOptions().getCmd().hasOption("seed") ){
+			long seed = init.getGwasOptions().getSeed();
 			rand.setSeed(seed);
 		}
 		
