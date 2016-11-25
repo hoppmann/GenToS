@@ -5,19 +5,19 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
-import de.gentos.gwas.main.HandleFile;
 
 // This class initializes all primary steps, like opening a file for log; reading in the options; checking the config file ...
 
-public class InitializeMain {
+public class InitializeGwasMain {
 
 
 	// define variables
 	GetGwasOptions options;
 	ConfigFile config;
-	HandleFile log;
+	HandleFiles log;
 	ReadInGwasData gwasData;
 	ReadInGenes readGenes;
 	Map<Integer, DbSnpInfo> dbSNPInfo;
@@ -26,7 +26,7 @@ public class InitializeMain {
 	// //////////////////////////////////////////////
 	// ////// constructor to sequentially init steps
 
-	public InitializeMain(String[] args) {
+	public InitializeGwasMain(String[] args) {
 
 		// read in config file
 		InitConfig();
@@ -69,7 +69,7 @@ public class InitializeMain {
 	// open log file
 	private void initLog() {
 
-		log = new HandleFile();
+		log = new HandleFiles();
 		log.openWriter(options.getDir() + System.getProperty("file.separator") + options.getLog());
 	}
 
@@ -203,7 +203,7 @@ public class InitializeMain {
 		return config;
 	}
 
-	public HandleFile getLog() {
+	public HandleFiles getLog() {
 		return log;
 	}
 

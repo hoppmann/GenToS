@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
-import de.gentos.gwas.main.HandleFile;
 import de.gentos.gwas.threshold.CreateThresh;
 
 
@@ -24,8 +24,8 @@ public class ExtractSNPMain {
 	//////////////////////
 	//////// set variables
 
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	GetGwasOptions options;
 	String colPVal;
 	String colChr;
@@ -39,7 +39,7 @@ public class ExtractSNPMain {
 	////////////////////
 	//////// Constructor
 
-	public ExtractSNPMain(InitializeMain init) {
+	public ExtractSNPMain(InitializeGwasMain init) {
 
 		// set Variables
 		this.init = init;
@@ -71,7 +71,7 @@ public class ExtractSNPMain {
 			String dbName = init.getDbSNPInfo().get(currentDbSNP).getDbName(); 
 			String tableName = init.getDbSNPInfo().get(currentDbSNP).getTableName();
 
-			HandleFile resultFile = new HandleFile();
+			HandleFiles resultFile = new HandleFiles();
 			resultFile.openWriter( options.getDir() + System.getProperty("file.separator") + dbName + "_" + tableName + ".txt");
 
 			

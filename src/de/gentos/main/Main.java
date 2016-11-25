@@ -1,6 +1,7 @@
 package de.gentos.main;
 
-import de.gentos.gwas.main.GentosMain;
+import de.gentos.gwas.main.GwasMain;
+import de.gentos.lists.main.ListsMain;
 
 
 
@@ -19,17 +20,22 @@ public class Main {
 		///////////////////////////////////////////////
 		
 		// extract first entry which has to be chosen package
-		
+
 		String toRun = args[0];
 		// check if GenToS GWAS is chosen, then start
 		
 		if (args[0].equals("gwas")) {
-			GentosMain gwas = new GentosMain();
+		
+			GwasMain gwas = new GwasMain();
 			gwas.runGentos(args);
-		}   
-			
-			
+		
+		} else if (args[0].equals("list")) {
 
+			ListsMain list = new ListsMain();
+			list.runLists(args);
+		}
+			
+			
 		
 		
 //		for (String bla : args) {

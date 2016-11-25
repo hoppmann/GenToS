@@ -4,18 +4,18 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.general.files.HandleFiles;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
-import de.gentos.gwas.main.HandleFile;
 
 public class Bonferroni  {
 
 	//////////////////////
 	//////// Set variables
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	CommandLine cmd;
 	double basePval = 0.05;
 	ReadInGwasData gwasData;
@@ -32,7 +32,7 @@ public class Bonferroni  {
 	//////// Constructor
 
 
-	public Bonferroni (InitializeMain init, ReadInGwasData gwasData) {
+	public Bonferroni (InitializeGwasMain init, ReadInGwasData gwasData) {
 		this.init = init;
 		this.gwasData = gwasData;
 		this.readGenes = init.getReadGenes();

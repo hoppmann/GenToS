@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
@@ -14,13 +14,13 @@ import de.gentos.gwas.initialize.data.SnpLine;
 public class FalseDiscoveryRate  {
 
 	// set variables
-	private InitializeMain init;
+	private InitializeGwasMain init;
 	private Double threshold;
 
 
 	////////////////
 	//////// Constructor
-	public FalseDiscoveryRate(InitializeMain init) {
+	public FalseDiscoveryRate(InitializeGwasMain init) {
 
 		this.init = init;
 	}

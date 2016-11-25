@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.validation.Binomial;
@@ -14,12 +14,12 @@ public class MaxEnrichment {
 
 	////////////////
 	//////// set variables
-	InitializeMain init;
+	InitializeGwasMain init;
 	ReadInGenes readGenes;
 	ReadInGwasData gwasData;
 
 
-	public MaxEnrichment(InitializeMain init, ReadInGenes readGenes,
+	public MaxEnrichment(InitializeGwasMain init, ReadInGenes readGenes,
 			ReadInGwasData gwasData) {
 		this.init = init;
 		this.readGenes = readGenes;

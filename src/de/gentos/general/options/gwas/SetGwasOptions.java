@@ -5,7 +5,9 @@ import org.apache.commons.cli.Options;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-public class SetOptions {
+import de.gentos.general.options.OptionValue;
+
+public class SetGwasOptions {
 
 	//////////////////////
 	//////// Set variables
@@ -26,7 +28,7 @@ public class SetOptions {
 	
 	////////////////////
 	//////// constructor
-	public SetOptions() {
+	public SetGwasOptions() {
 		makeOptions();
 	}
 

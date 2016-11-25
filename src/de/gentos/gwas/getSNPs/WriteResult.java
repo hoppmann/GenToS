@@ -6,12 +6,12 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.main.HandleFile;
 
 public class WriteResult {
 
@@ -19,10 +19,10 @@ public class WriteResult {
 	//////// set variables
 
 	Map<String, GeneListInfo> geneQueryList;
-	HandleFile result;
+	HandleFiles result;
 	GetGwasOptions options;
-	HandleFile csv;
-	InitializeMain init;
+	HandleFiles csv;
+	InitializeGwasMain init;
 	CommandLine cmd;
 	String currentListName;
 	ReadInGenes readGenes;
@@ -32,7 +32,7 @@ public class WriteResult {
 	//////// Constructor
 
 	public WriteResult(Map<String, GeneListInfo> geneQueryList, String tableName, String pathSNP, 
-			HandleFile result, GetGwasOptions options, String csvDir, InitializeMain init, String currentListName) {
+			HandleFiles result, GetGwasOptions options, String csvDir, InitializeGwasMain init, String currentListName) {
 
 		this.geneQueryList = geneQueryList;
 		this.result = result;
@@ -47,7 +47,7 @@ public class WriteResult {
 		String filePath = csvDir + System.getProperty("file.separator") + dbName + "_"+ tableName + "_"  + currentListName + ".csv"; 
 
 		// open csv file
-		csv = new HandleFile();
+		csv = new HandleFiles();
 		csv.openWriter(filePath);
 
 	}

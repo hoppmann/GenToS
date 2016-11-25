@@ -12,16 +12,19 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FilenameUtils;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.gwas.initialize.ConfigFile;
 import de.gentos.gwas.initialize.ExtracSpecFile;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
-import de.gentos.gwas.main.HandleFile;
 
 public class GetGwasOptions {
 
 	// handed in variables and general variables
 	private ConfigFile config;
 	CommandLine cmd = null;
+	private String[] args;
+	private SetGwasOptions setGwasOptions;
+	private Options options;
 
 	// define variables to be set by options
 	//mandatory
@@ -61,11 +64,6 @@ public class GetGwasOptions {
 	private String dir;
 	private String csvDir;
 
-	// define other variables
-	private String[] args;
-	private SetOptions setOptions;
-	private Options options;
-
 	// plotting
 	private String graphSuffix;
 	private String scaling;
@@ -91,9 +89,9 @@ public class GetGwasOptions {
 		this.config = conifg;
 
 		// run set options
-		setOptions = new SetOptions();
-		this.options = setOptions.getOptions();
-
+		setGwasOptions = new SetGwasOptions();
+		this.options = setGwasOptions.getOptions();
+		
 		// extract path of the program
 		progPath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
@@ -118,14 +116,14 @@ public class GetGwasOptions {
 			cmd = cmdParser.parse(options, args);
 		} catch (ParseException e) {
 			System.out.println(e.getLocalizedMessage());
-			setOptions.callHelp();
+			setGwasOptions.callHelp();
 			System.exit(1);
 		}
 
 		// check if help or getSpec requested
 
 		if (cmd.hasOption("help")) {
-			new SetOptions().callHelp();
+			new SetGwasOptions().callHelp();
 			System.exit(0);
 		}
 
@@ -202,8 +200,8 @@ public class GetGwasOptions {
 		}
 		if (cmd.hasOption("listCollection")) {
 			// check if list Collection exist then extract lists
-			new HandleFile().exist(cmd.getOptionValue("listCollection"));
-			list.addAll(new HandleFile().openFile(cmd.getOptionValue("listCollection")));
+			new HandleFiles().exist(cmd.getOptionValue("listCollection"));
+			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection")));
 			check++;
 		}
 
@@ -218,9 +216,9 @@ public class GetGwasOptions {
 			// if list or list collection option chosen read in genes for each list
 		} else if (!list.isEmpty()) {
 			for (String file : list){
-				new HandleFile().exist(file);
+				new HandleFiles().exist(file);
 				String key = FilenameUtils.getBaseName(file);
-				geneLists.put(key, new HandleFile().openFile(file));
+				geneLists.put(key, new HandleFiles().openFile(file));
 			}
 
 		}
@@ -641,8 +639,8 @@ public class GetGwasOptions {
 		return args;
 	}
 
-	public SetOptions getSetOptions() {
-		return setOptions;
+	public SetGwasOptions getSetOptions() {
+		return setGwasOptions;
 	}
 
 	public String getColrsID() {

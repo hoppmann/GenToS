@@ -1,8 +1,8 @@
 package de.gentos.gwas.main;
 
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 
-public class GentosMain {
+public class GwasMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
@@ -28,7 +28,7 @@ public class GentosMain {
 		//	-> read in config file
 		//	-> check databases for correctness
 
-		InitializeMain init = rg.initializeMain(args);
+		InitializeGwasMain init = rg.initializeGwasMain(args);
 
 
 

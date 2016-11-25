@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.gentos.gwas.main.HandleFile;
+import de.gentos.general.files.HandleFiles;
 
 public class InitDatabase {
 
@@ -24,13 +24,13 @@ public class InitDatabase {
 
 
 	// other
-	HandleFile log;
+	HandleFiles log;
 	String dbPath;
 
 	////////////////////
 	//////// Constructor
 
-	public InitDatabase(String dbPath, HandleFile log) {
+	public InitDatabase(String dbPath, HandleFiles log) {
 		this.dbPath = dbPath;
 		this.log = log;
 

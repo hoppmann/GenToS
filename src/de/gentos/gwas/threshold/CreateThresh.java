@@ -5,20 +5,20 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.gwas.getSNPs.ExtractData;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneInfo;
 import de.gentos.gwas.initialize.data.GeneListInfo;
-import de.gentos.gwas.main.HandleFile;
 
 public class CreateThresh {
 
 	//////////////////////
 	//////// Set variables
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	CommandLine cmd;
 	Double thresh;
 	String plenty;
@@ -32,7 +32,7 @@ public class CreateThresh {
 	/////////////////////
 	//////// Constructor
 
-	public CreateThresh(InitializeMain init, ReadInGwasData gwasData) {
+	public CreateThresh(InitializeGwasMain init, ReadInGwasData gwasData) {
 		this.init = init;
 		this.log = init.getLog();
 		this.cmd = init.getGwasOptions().getCmd();

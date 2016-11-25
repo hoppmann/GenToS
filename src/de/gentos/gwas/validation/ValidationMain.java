@@ -13,12 +13,12 @@ import org.apache.commons.io.FileUtils;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.gwas.getSNPs.ExtractData;
 import de.gentos.gwas.getSNPs.ExtractSNPMain;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
-import de.gentos.gwas.main.HandleFile;
 import de.gentos.gwas.threshold.CreateThresh;
 
 public class ValidationMain {
@@ -27,8 +27,8 @@ public class ValidationMain {
 	///////////////////
 	//////// set variables
 
-	private InitializeMain init;
-	private HandleFile log;
+	private InitializeGwasMain init;
+	private HandleFiles log;
 	private int numberOfIterations;
 
 
@@ -37,7 +37,7 @@ public class ValidationMain {
 
 	///////////////
 	//////// constructor
-	public ValidationMain(InitializeMain init) {
+	public ValidationMain(InitializeGwasMain init) {
 		this.init = init;
 		this.log = init.getLog();
 		this.numberOfIterations = init.getGwasOptions().getNumberOfIterations();

@@ -1,7 +1,7 @@
 package de.gentos.gwas.main;
 
 import de.gentos.gwas.getSNPs.ExtractSNPMain;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.validation.ValidationMain;
 
 
@@ -19,18 +19,18 @@ public class RunGuide {
 	////////////////
 	//////// Methods
 
-	public InitializeMain initializeMain(String[] args){
+	public InitializeGwasMain initializeGwasMain(String[] args){
 		// initialize system
 		//		-> read in options and check them
 		//		-> read in config file
 		//		-> check databases for correctness
-		InitializeMain init = new InitializeMain(args);
+		InitializeGwasMain init = new InitializeGwasMain(args);
 
 		return init;
 	}
 
 
-	public void extractSNPs(InitializeMain init) {
+	public void extractSNPs(InitializeGwasMain init) {
 		// extract independent snps and calculate threshold
 		//		-> extract gene position
 		//		-> extract number of independent SNPs
@@ -46,7 +46,7 @@ public class RunGuide {
 	}
 
 
-	public void validate(InitializeMain init) {
+	public void validate(InitializeGwasMain init) {
 
 		// validate findings of lists by
 		//		-> iteration randomly drawn genes then running the program
@@ -70,7 +70,7 @@ public class RunGuide {
 	}
 
 
-	public void finish(InitializeMain init) {
+	public void finish(InitializeGwasMain init) {
 		//close log file
 		init.getLog().writeOutFile("Program finished.");
 		init.getLog().closeFile();

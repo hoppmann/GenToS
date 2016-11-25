@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import de.gentos.gwas.initialize.InitializeMain;
-import de.gentos.gwas.main.HandleFile;
+import de.gentos.general.files.HandleFiles;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 
 public class Database {
 
@@ -25,14 +25,14 @@ public class Database {
 	private String password = "";
 
 	// other
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 
 
 	////////////////////
 	//////// constructor
 
-	public Database(String dbPath, InitializeMain init) {
+	public Database(String dbPath, InitializeGwasMain init) {
 		this.dbPath = dbPath;
 		this.init = init;
 		log = init.getLog();

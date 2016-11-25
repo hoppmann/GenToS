@@ -13,18 +13,18 @@ import java.util.Map;
 
 import com.google.common.primitives.Ints;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGwasData {
 
 	//////////////
 	//////// set variables
 
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	GetGwasOptions options;
 	String tableGene;
 	String dbGene;
@@ -45,7 +45,7 @@ public class ReadInGwasData {
 	//////////////
 	//////// constructor
 
-	public ReadInGwasData(InitializeMain init) {
+	public ReadInGwasData(InitializeGwasMain init) {
 
 		// set variables
 		this.init = init;

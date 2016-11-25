@@ -1,4 +1,4 @@
-package de.gentos.gwas.main;
+package de.gentos.general.files;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 
-public class HandleFile {
+public class HandleFiles {
 
 	//////////////////////
 	//////// set variables

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.initialize.InitializeMain;
-import de.gentos.gwas.main.HandleFile;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 
 public class PlotHistogram {
 
@@ -17,8 +17,8 @@ public class PlotHistogram {
 	//////// variables
 
 
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	GetGwasOptions options;
 
 
@@ -29,7 +29,7 @@ public class PlotHistogram {
 	//////// constructor
 
 
-	public PlotHistogram(InitializeMain init) {
+	public PlotHistogram(InitializeGwasMain init) {
 
 		this.init = init;
 		this.log = init.getLog();
@@ -55,7 +55,7 @@ public class PlotHistogram {
 
 
 		//save Data to tmp file in  dir
-		HandleFile file = new HandleFile();
+		HandleFiles file = new HandleFiles();
 		String tempFileName = tempDir + System.getProperty("file.separator") + outName;
 		file.openWriter(tempFileName);
 		

@@ -10,10 +10,10 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.getSNPs.Database;
 import de.gentos.gwas.initialize.data.GeneInfo;
-import de.gentos.gwas.main.HandleFile;
 
 public class ReadInGenes {
 
@@ -22,8 +22,8 @@ public class ReadInGenes {
 	//////////////
 	//////// set variables
 
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	GetGwasOptions options;
 	String tableGene;
 	String dbGene;
@@ -42,7 +42,7 @@ public class ReadInGenes {
 	//////////////
 	//////// constructor
 
-	public ReadInGenes(InitializeMain init) {
+	public ReadInGenes(InitializeGwasMain init) {
 
 		// set variables
 		this.init = init;

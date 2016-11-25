@@ -5,9 +5,9 @@ import java.util.Random;
 
 import com.google.common.collect.Multimap;
 
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.general.files.HandleFiles;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
-import de.gentos.gwas.main.HandleFile;
 
 public class RandomDraw {
 
@@ -18,8 +18,8 @@ public class RandomDraw {
 	///////////////////
 	//////// set variables
 
-	private InitializeMain init;
-	private HandleFile log;
+	private InitializeGwasMain init;
+	private HandleFiles log;
 
 
 
@@ -27,7 +27,7 @@ public class RandomDraw {
 
 	///////////////
 	//////// constructor
-	public RandomDraw(InitializeMain init) {
+	public RandomDraw(InitializeGwasMain init) {
 		this.init = init;
 		this.log = init.getLog();
 

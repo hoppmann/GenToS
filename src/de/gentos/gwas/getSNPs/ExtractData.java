@@ -7,13 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.initialize.InitializeMain;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
-import de.gentos.gwas.main.HandleFile;
 
 
 /* in this class several methods are written to extract the SNPs from the GWAS file
@@ -32,8 +32,8 @@ public class ExtractData {
 	//////// set variables
 	ReadInGenes readGenes; 
 	ReadInGwasData data;
-	InitializeMain init;
-	HandleFile log;
+	InitializeGwasMain init;
+	HandleFiles log;
 	GetGwasOptions options;
 	String colPVal;
 	String colChr;
@@ -57,7 +57,7 @@ public class ExtractData {
 	//////// constructor
 
 
-	public ExtractData(InitializeMain init) {
+	public ExtractData(InitializeGwasMain init) {
 
 		// initialize variables
 		this.init = init;
