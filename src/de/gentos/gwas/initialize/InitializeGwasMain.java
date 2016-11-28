@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
@@ -36,6 +37,7 @@ public class InitializeGwasMain {
 
 		
 		// open output directory
+		
 		new File(options.getDir()).mkdir();
 
 		// open log file

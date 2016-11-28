@@ -9,7 +9,5 @@
 	<classpathentry kind="lib" path="/media/anselm/Daten/workspace/GenToS/lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="/media/anselm/Daten/workspace/GenToS/lib/commons-math3-3.5.jar"/>
 	<classpathentry kind="lib" path="/media/anselm/Daten/workspace/GenToS/lib/commons-math3-3.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.7.21.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

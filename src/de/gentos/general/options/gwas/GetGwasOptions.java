@@ -12,8 +12,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FilenameUtils;
 
+import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.gwas.initialize.ConfigFile;
 import de.gentos.gwas.initialize.ExtracSpecFile;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
 
@@ -201,7 +201,7 @@ public class GetGwasOptions {
 		if (cmd.hasOption("listCollection")) {
 			// check if list Collection exist then extract lists
 			new HandleFiles().exist(cmd.getOptionValue("listCollection"));
-			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection")));
+			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection"), false));
 			check++;
 		}
 
@@ -218,7 +218,7 @@ public class GetGwasOptions {
 			for (String file : list){
 				new HandleFiles().exist(file);
 				String key = FilenameUtils.getBaseName(file);
-				geneLists.put(key, new HandleFiles().openFile(file));
+				geneLists.put(key, new HandleFiles().openFile(file, false));
 			}
 
 		}

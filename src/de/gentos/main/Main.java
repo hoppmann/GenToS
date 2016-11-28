@@ -42,7 +42,7 @@ public class Main {
 //			System.out.println(bla);
 //		}
 		
-		System.out.println(args[0]);
+//		System.out.println(args[0]);
 		
 		
 		

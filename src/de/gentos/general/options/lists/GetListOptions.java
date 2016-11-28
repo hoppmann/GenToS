@@ -120,8 +120,8 @@ public class GetListOptions {
 		}
 		
 		// get directory of resource gene lists
-		if (cmd.hasOption("listDir")) {
-			listDir = cmd.getOptionValue("listDir");
+		if (cmd.hasOption("resourceDir")) {
+			listDir = cmd.getOptionValue("resourceDir");
 		}
 		
 		

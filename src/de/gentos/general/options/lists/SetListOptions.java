@@ -53,7 +53,7 @@ public class SetListOptions {
 		opts.put(main, new OptionValue(options, "inputList", true, "List of genes to check for"));
 		opts.put(main, new OptionValue(options, "outDir", true, "Name of the directory for the output"));
 		opts.put(main, new OptionValue(options, "log", true, "Name of the logfile. (default = \"logfile.txt\""));
-		opts.put(main, new OptionValue(options, "listDir", true, "Directory where the resource lists are saved. (default \"geneLists\")"));
+		opts.put(main, new OptionValue(options, "resourceDir", true, "Directory where the resource lists are saved. (default \"geneLists\")"));
 		
 		
 		

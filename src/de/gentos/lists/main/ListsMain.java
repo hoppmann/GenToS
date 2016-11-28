@@ -1,6 +1,7 @@
 package de.gentos.lists.main;
 
 import de.gentos.general.options.lists.GetListOptions;
+import de.gentos.lists.initialize.InitializeListsMain;
 
 public class ListsMain {
 	///////////////////////////
@@ -25,14 +26,23 @@ public class ListsMain {
 	
 	public void runLists(String[] args) {
 	
+		
+		///////////////////////////
+		//////// initialize program
+		
 		// getting command line options
-
+		// prepare log file  
+		// read in resource lists
+		// read in query gene list
+		
 		InitializeListsMain init = new InitializeListsMain(args);
 		options = init.getOptions();
 		
-		System.out.println("HALLO");
 		
-		System.out.println(options.getListDir());
+		// query 
+		
+		
+		
 		
 		
 		
