@@ -13,10 +13,11 @@ import java.util.Map;
 
 import com.google.common.primitives.Ints;
 
+import de.gentos.general.files.Database;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.getSNPs.Database;
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.data.SnpLine;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
 
 public class ReadInGwasData {
 
@@ -72,7 +73,7 @@ public class ReadInGwasData {
 		String colPos = options.getColPos();
 
 		// connect to DB
-		Database db = new Database(currentDB, init);
+		Database db = new Database(currentDB, log);
 
 		
 		
@@ -187,8 +188,8 @@ public class ReadInGwasData {
 							// take next gene and check if SNP is in gene > save to current list
 							// extract needed information for readability
 							String currentGene = genesOnChrom.toArray()[counter].toString();
-							int start = genes.geneInfo.get(currentGene).getStart();
-							int stop = genes.geneInfo.get(currentGene).getStop();
+							int start = genes.getGeneInfo().get(currentGene).getStart();
+							int stop = genes.getGeneInfo().get(currentGene).getStop();
 
 							// if start < pos < stop (in gene) save in list. Else set check to true to check gene on next SNP
 							if (pos >= start) {

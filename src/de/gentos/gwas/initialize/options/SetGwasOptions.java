@@ -1,11 +1,11 @@
-package de.gentos.general.options.gwas;
+package de.gentos.gwas.initialize.options;
 
 import org.apache.commons.cli.Options;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import de.gentos.general.options.OptionValue;
+import de.gentos.general.misc.OptionValue;
 
 public class SetGwasOptions {
 

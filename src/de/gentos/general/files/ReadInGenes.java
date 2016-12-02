@@ -1,4 +1,4 @@
-package de.gentos.gwas.initialize;
+package de.gentos.general.files;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +10,11 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
-import de.gentos.gwas.getSNPs.Database;
+import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneInfo;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
+import de.gentos.lists.initialize.InitializeListsMain;
+import de.gentos.lists.initialize.options.GetListOptions;
 
 public class ReadInGenes {
 
@@ -22,18 +23,17 @@ public class ReadInGenes {
 	//////////////
 	//////// set variables
 
-	InitializeGwasMain init;
-	HandleFiles log;
-	GetGwasOptions options;
-	String tableGene;
-	String dbGene;
-	Map<String, GeneInfo> geneInfo = new HashMap<>();
-	Map<String, String> nonGoodGenes = new HashMap<>(); 
-	Multimap<Integer, String> chrGene = LinkedListMultimap.create();
-	ArrayList<String> allGeneNames = new ArrayList<>();
-	Integer[] correctChr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+	private HandleFiles log;
+	private String tableGene;
+	private String dbGene;
+	private Map<String, GeneInfo> geneInfo = new HashMap<>();
+	private Map<String, String> nonGoodGenes = new HashMap<>(); 
+	private Multimap<Integer, String> chrGene = LinkedListMultimap.create();
+	private ArrayList<String> allGeneNames = new ArrayList<>();
+	private Integer[] correctChr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 			12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
-
+	private int[] flanking = {0,0};
+	
 
 
 
@@ -45,17 +45,36 @@ public class ReadInGenes {
 	public ReadInGenes(InitializeGwasMain init) {
 
 		// set variables
-		this.init = init;
-		this.options = init.getGwasOptions();
+		GetGwasOptions options = init.getGwasOptions();
 		this.log = init.getLog();
 		this.tableGene = options.getTableGene();
 		this.dbGene = options.getDbGene();
-
+		this.flanking = options.getFlank();
+		
+		
 		// extract gene info and save them in Hash with gene as key
 		readGeneInfo();
 	}
 
+	
+	
 
+	// Constructor for GenToS lists
+	public ReadInGenes(InitializeListsMain init) {
+
+		// set variables
+		GetListOptions options = init.getOptions();
+		this.log = init.getLog();
+		this.tableGene = options.getDbGeneTable();
+		this.dbGene = options.getDbGeneName();
+
+		// make log entry
+		log.writeOutFile("Reading in genes from DB " + dbGene + " table " + tableGene + ".");
+	
+		// extract gene info and save them in Hash with gene as key
+		readGeneInfo();
+	
+	}
 
 
 
@@ -69,18 +88,15 @@ public class ReadInGenes {
 
 	// extract all gene names and sort to hash
 	// 1. key gene : chr, star, stop -> for extraction purpose
-	// 2. key chr : gene -> for reading in data choromosome wise
+	// 2. key chr : gene -> for reading in data chromosome wise
 	private void readGeneInfo(){
 
 		// query for all gene info.
 		String query = "select * from " + tableGene + " order by start asc";
 
 		// connect to database and send query
-		Database connection = new Database(dbGene, init);
+		Database connection = new Database(dbGene, log);
 		ResultSet rs = connection.select(query);
-
-		// retrieve flanking parameters
-		int[] flanking = init.getGwasOptions().getFlank();
 
 
 		// retrieve gene info and save in hash

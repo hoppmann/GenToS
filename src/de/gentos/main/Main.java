@@ -21,7 +21,6 @@ public class Main {
 		
 		// extract first entry which has to be chosen package
 
-		String toRun = args[0];
 		// check if GenToS GWAS is chosen, then start
 		
 		if (args[0].equals("gwas")) {

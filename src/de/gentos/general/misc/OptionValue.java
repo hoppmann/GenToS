@@ -1,4 +1,4 @@
-package de.gentos.general.options;
+package de.gentos.general.misc;
 
 import org.apache.commons.cli.Options;
 

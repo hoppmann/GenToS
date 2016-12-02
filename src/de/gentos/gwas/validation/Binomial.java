@@ -8,9 +8,9 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.getSNPs.ExtractData;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.SnpLine;
 
@@ -21,11 +21,14 @@ public class Binomial {
 
 	////////////////
 	//////// set variables
+	//// Gwas setting
 	InitializeGwasMain init;
 	ReadInGenes readGenes;
 	ReadInGwasData gwasData;
 
 
+	
+	//// list setting
 
 
 
@@ -39,7 +42,8 @@ public class Binomial {
 		this.gwasData = gwasData;
 	}
 
-
+	
+	
 	////////////
 	//////// Methods
 
@@ -191,7 +195,7 @@ public class Binomial {
 	
 	
 	
-	//////// get number of actual hist depending on threshold and queryGenes
+	//////// get number of actual hits depending on threshold and queryGenes
 	public Integer extractHits(double thresh, List<String> queryGenes) {
 
 		// init variable
@@ -234,11 +238,11 @@ public class Binomial {
 		// prepare binomial distribution 
 		BinomialDistribution bino = new BinomialDistribution(lengthList, probHit);
 		
-		// calculate pVal ( p(X >= x )
+		// calculate pVal ( p(X) >= x )
 		pVal = 1 - bino.cumulativeProbability(actualFindings-1);
 		
 		
-		
+		// return pVal
 		return pVal;
 	}
 	

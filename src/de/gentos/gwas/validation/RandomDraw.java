@@ -6,8 +6,7 @@ import java.util.Random;
 import com.google.common.collect.Multimap;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
+import de.gentos.general.files.ReadInGenes;
 
 public class RandomDraw {
 
@@ -18,7 +17,6 @@ public class RandomDraw {
 	///////////////////
 	//////// set variables
 
-	private InitializeGwasMain init;
 	private HandleFiles log;
 
 
@@ -27,15 +25,10 @@ public class RandomDraw {
 
 	///////////////
 	//////// constructor
-	public RandomDraw(InitializeGwasMain init) {
-		this.init = init;
-		this.log = init.getLog();
-
-
+	public RandomDraw(HandleFiles log) {
+		this.log = log;
 
 	}
-
-
 
 
 
@@ -48,25 +41,20 @@ public class RandomDraw {
 
 
 	// draw random list of genes
-	public void drawList(int length, int iterations, String key, Multimap<String, LinkedList<String>> allRandomLists) {
+	public void drawList(int length, int iterations, String listName, Multimap<String, LinkedList<String>> allRandomLists, long seed, ReadInGenes genes) {
 
-		
+
 		// make log entry
-		log.writeOutFile("Drawing random lists of genes for " + key);
-
-
-		// extract list of all genes
-		ReadInGenes genes = init.getReadGenes();
+		log.writeOutFile("Drawing random lists of genes for " + listName);
 
 
 		// init random class
 		//if seed option is chosen use value as seed
 		Random rand = new Random();
-		if (init.getGwasOptions().getCmd().hasOption("seed") ){
-			long seed = init.getGwasOptions().getSeed();
+		if (seed != -1 ){
 			rand.setSeed(seed);
 		}
-		
+
 
 		// draw random lists depending on defined iterations
 		for (int iter = 0 ; iter < iterations; iter++) {
@@ -76,7 +64,7 @@ public class RandomDraw {
 
 			// draw randomly according to list length
 			int counter = 0;
-			while (counter <= length){
+			while (counter < length){
 				int randInt = rand.nextInt(genes.getAllGeneNames().size() - 1);
 
 				// check that gene isn't in list yet
@@ -85,26 +73,13 @@ public class RandomDraw {
 					counter++;
 				} 
 			}
-			
+
 			// add random list to hash 
-			allRandomLists.put(key, randomList);
+			allRandomLists.put(listName, randomList);
+
 		}
 	}
 
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 
 }

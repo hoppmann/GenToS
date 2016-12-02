@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
 import de.gentos.gwas.initialize.InitializeGwasMain;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
 
 public class PlotHistogram {
 

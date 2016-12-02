@@ -5,8 +5,8 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 
 import de.gentos.general.files.HandleFiles;
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 

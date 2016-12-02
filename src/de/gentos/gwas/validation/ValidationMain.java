@@ -172,7 +172,7 @@ public class ValidationMain {
 		Multimap<String, LinkedList<String>> allLists = LinkedListMultimap.create();
 
 		// instanciate RandomDraw
-		RandomDraw random = new RandomDraw(init);
+		RandomDraw random = new RandomDraw(log);
 
 
 		/////////////////
@@ -183,8 +183,16 @@ public class ValidationMain {
 			// get length of list 
 			int lengthCurrenList = init.getGwasOptions().getGeneLists().get(origList).size(); 
 
-			// creat random lists
-			random.drawList(lengthCurrenList, numberOfIterations, origList, allLists);
+			//// Create random lists
+			// check if seed is given, else set to -1
+			long seed = -1;
+			if (init.getGwasOptions().getCmd().hasOption("seed")){
+				seed = init.getGwasOptions().getSeed();
+			}
+			// draw lists
+			random.drawList(lengthCurrenList, numberOfIterations, origList, allLists, seed, init.getReadGenes());
+			
+		
 		}
 
 

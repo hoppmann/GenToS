@@ -1,10 +1,12 @@
-package de.gentos.general.options.lists;
+package de.gentos.lists.initialize.options;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+
+import de.gentos.general.files.ConfigFile;
 
 public class GetListOptions {
 	///////////////////////////
@@ -23,26 +25,36 @@ public class GetListOptions {
 	/////////////////////////
 	//////// option variables
 	
-	
+	// general
+	ConfigFile config;
 	
 	// main options
 	
-	private String listIn;
+	private String query;
 	private String outDir = "out";
 	private String log = "logfile.txt";
 	private String listDir = "geneLists";
+	private String listOfQueries;
 	
+	// resampling
+	private int iteration = 1000;
+	private String dbGeneName;
+	private String dbGeneTable;
+	private long seed = -1;
 	
 	
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
-	public GetListOptions(String[] args) {
+	public GetListOptions(String[] args, ConfigFile config) {
 	
 		
 		this.args = args;
+		this.config = config;
 		
+		
+		// set options
 		setListOptions = new SetListOptions();
 		this.options = setListOptions.getOptions();
 		
@@ -88,9 +100,15 @@ public class GetListOptions {
 		////// Check for not combinable options
 		
 		
-		
-		
-		
+		// either query or list of queries has and can be chosen 
+		if (cmd.hasOption("inputList") && cmd.hasOption("listOfQueries")){
+			System.out.println("\nERROR: Option \"inputList\" and \"listOfQueries\" may not be used together.\n");
+			System.exit(3);
+		} else if (!cmd.hasOption("inputList") && !cmd.hasOption("listOfQueries")){
+			System.out.println("\nERROR: Either option \"inputList\" OR \"listOfQueries\" is mandatory.\n");
+			System.exit(1);
+
+		}			
 		
 		
 		
@@ -103,10 +121,8 @@ public class GetListOptions {
 		//// general settings
 		
 		// get input gene list
-		listIn = cmd.getOptionValue("inputList");
-		if (!cmd.hasOption("inputList")){
-			System.out.println("Option \"inputList\" is mandatory.");
-			System.exit(1);
+		if (cmd.hasOption("inputList")){
+			query = cmd.getOptionValue("inputList");
 		}
 		
 		// output directory
@@ -123,6 +139,58 @@ public class GetListOptions {
 		if (cmd.hasOption("resourceDir")) {
 			listDir = cmd.getOptionValue("resourceDir");
 		}
+		
+		if (cmd.hasOption("listOfQueries")){
+			listOfQueries = cmd.getOptionValue("listOfQueries");
+		}
+		
+		
+		
+		
+		///////////////////////
+		//// Resampling options
+		
+		// get number of iterations
+		if (cmd.hasOption("iterations")) {
+			iteration = Integer.parseInt(cmd.getOptionValue("iterations"));
+		}
+		
+		// get name of gene database
+		if (cmd.hasOption("dbGene")){
+			dbGeneName = cmd.getOptionValue("dbGene");
+		} else {
+			dbGeneName = config.getDbGene();
+		}
+
+		// get table of gene database
+		if (cmd.hasOption("tableGene")){
+			dbGeneTable = cmd.getOptionValue("tableGene");
+		} else {
+			dbGeneTable = config.getTableGene();
+		}
+		
+		// get seed
+		if (cmd.hasOption("seed")){
+			seed = Long.parseLong(cmd.getOptionValue("seed"));
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}
@@ -164,8 +232,8 @@ public class GetListOptions {
 		return cmd;
 	}
 
-	public String getListIn() {
-		return listIn;
+	public String getQuery() {
+		return query;
 	}
 
 	public String getOutDir() {
@@ -180,10 +248,36 @@ public class GetListOptions {
 		return listDir;
 	}
 
+	public int getIteration() {
+		return iteration;
+	}
+
+	public ConfigFile getConfig() {
+		return config;
+	}
+
+	public String getDbGeneName() {
+		return dbGeneName;
+	}
+
+	public String getDbGeneTable() {
+		return dbGeneTable;
+	}
+
+	public long getSeed() {
+		return seed;
+	}
+
+	public String getListOfQueries() {
+		return listOfQueries;
+	}
+	
+	
 
 	
 	
 	
+	 
 	
 	
 	
@@ -227,69 +321,6 @@ public class GetListOptions {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
 
 
 }

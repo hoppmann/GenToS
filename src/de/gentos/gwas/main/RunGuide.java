@@ -25,7 +25,6 @@ public class RunGuide {
 		//		-> read in config file
 		//		-> check databases for correctness
 		InitializeGwasMain init = new InitializeGwasMain(args);
-
 		return init;
 	}
 

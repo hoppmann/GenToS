@@ -7,13 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.gentos.general.files.Database;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
 
 
 /* in this class several methods are written to extract the SNPs from the GWAS file
@@ -89,7 +90,7 @@ public class ExtractData {
 
 		// connect to indepDB
 		String indepDBPath = options.getIndepDB();
-		Database dbIndep = new Database(indepDBPath, init);
+		Database dbIndep = new Database(indepDBPath, log);
 
 
 		// for each gene in query get gene position if no position available exclude from list

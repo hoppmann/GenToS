@@ -7,11 +7,11 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
 
 public class WriteResult {
 

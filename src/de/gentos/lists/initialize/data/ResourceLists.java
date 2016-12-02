@@ -1,17 +1,19 @@
-package de.gentos.lists.initialize;
+package de.gentos.lists.initialize.data;
 
 import java.util.LinkedList;
+import java.util.List;
 
-public class GeneLists {
+public class ResourceLists {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
 
-	Boolean sorted;
-	LinkedList<ResourceData> header;
-	LinkedList<ResourceData> geneLine;
-	
-	
+	private Boolean sorted;
+	private LinkedList<ResourceData> header;
+	private LinkedList<ResourceData> geneLine;
+	private List<String> geneList;	
+	private double enrichmentPval;
+	private boolean enriched;
 	
 	
 	/////////////////////////////
@@ -19,12 +21,13 @@ public class GeneLists {
 	/////////////////////////////
 
 	
-	public GeneLists() {
+	public ResourceLists() {
 		
 		// initialize lists
 		header = new LinkedList<>();
 		geneLine = new LinkedList<>();
 		sorted = false;
+		geneList = new LinkedList<String>();
 		
 		
 		
@@ -55,6 +58,13 @@ public class GeneLists {
 		
 	}
 	
+	// add gene name in array
+	public void addGenes(String gene) {
+		
+		geneList.add(gene);
+		
+	}
+	
 	
 	
 	/////////////////////////////////
@@ -82,6 +92,30 @@ public class GeneLists {
 
 	public void setGeneLines(LinkedList<ResourceData> geneLines) {
 		this.geneLine = geneLines;
+	}
+
+	public LinkedList<ResourceData> getGeneLine() {
+		return geneLine;
+	}
+
+	public List<String> getGeneList() {
+		return geneList;
+	}
+
+	public double getEnrichmentPval() {
+		return enrichmentPval;
+	}
+
+	public void setEnrichmentPval(double enrichmentPval) {
+		this.enrichmentPval = enrichmentPval;
+	}
+
+	public boolean isEnriched() {
+		return enriched;
+	}
+
+	public void setEnriched(boolean enriched) {
+		this.enriched = enriched;
 	}
 	
 	

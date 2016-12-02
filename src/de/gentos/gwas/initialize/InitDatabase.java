@@ -34,16 +34,18 @@ public class InitDatabase {
 		this.dbPath = dbPath;
 		this.log = log;
 
+		
 		//try to connect to database if database exists else abort
 		File file = new File(dbPath);
 		if (file.exists()){
+
 			try {
 				connectDatabase();
 			} catch (Exception e) {
 				log.writeOutFile("Failed to connect to database " + dbPath);
 				System.exit(1);
 			}
-			log.writeFile("Connection to database " + dbPath + " successful.");
+			log.writeOutFile("Connection to database " + dbPath + " successful.");
 		} else {
 			log.writeError("Database " + dbPath + " not found.");
 			System.exit(1);

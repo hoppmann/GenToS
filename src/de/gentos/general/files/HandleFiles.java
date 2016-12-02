@@ -81,7 +81,7 @@ public class HandleFiles {
 	
 	// open text file for read in
 
-	public LinkedList<String> openFile(String filePath, Boolean header) {
+	public LinkedList<String> openFile(String filePath, boolean skipHeader) {
 
 		// make log entry if log available else print on screen.
 		if (log != null){
@@ -100,7 +100,7 @@ public class HandleFiles {
 			while ((line = br.readLine()) != null) {
 				
 				// check if header should also be read in or be skipped
-				if (!header){
+				if (skipHeader){
 					if (line.isEmpty() || line.startsWith("#")) {
 						continue;
 					}

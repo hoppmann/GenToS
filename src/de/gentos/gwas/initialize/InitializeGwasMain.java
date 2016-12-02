@@ -7,8 +7,9 @@ import java.util.Map;
 
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.options.gwas.GetGwasOptions;
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
+import de.gentos.gwas.initialize.options.GetGwasOptions;
 
 // This class initializes all primary steps, like opening a file for log; reading in the options; checking the config file ...
 

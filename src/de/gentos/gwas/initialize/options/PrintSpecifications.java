@@ -1,4 +1,4 @@
-package de.gentos.general.options.gwas;
+package de.gentos.gwas.initialize.options;
 
 public class PrintSpecifications {
 	

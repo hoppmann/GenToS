@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.ReadInGenes;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.validation.Binomial;
 

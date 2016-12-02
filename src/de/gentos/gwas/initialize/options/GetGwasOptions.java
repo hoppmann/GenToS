@@ -1,4 +1,4 @@
-package de.gentos.general.options.gwas;
+package de.gentos.gwas.initialize.options;
 
 import java.io.File;
 import java.util.HashMap;
@@ -201,7 +201,7 @@ public class GetGwasOptions {
 		if (cmd.hasOption("listCollection")) {
 			// check if list Collection exist then extract lists
 			new HandleFiles().exist(cmd.getOptionValue("listCollection"));
-			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection"), false));
+			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection"), true));
 			check++;
 		}
 
@@ -218,7 +218,7 @@ public class GetGwasOptions {
 			for (String file : list){
 				new HandleFiles().exist(file);
 				String key = FilenameUtils.getBaseName(file);
-				geneLists.put(key, new HandleFiles().openFile(file, false));
+				geneLists.put(key, new HandleFiles().openFile(file, true));
 			}
 
 		}

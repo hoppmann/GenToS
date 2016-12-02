@@ -1,12 +1,9 @@
-package de.gentos.gwas.getSNPs;
+package de.gentos.general.files;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import de.gentos.general.files.HandleFiles;
-import de.gentos.gwas.initialize.InitializeGwasMain;
 
 public class Database {
 
@@ -25,17 +22,14 @@ public class Database {
 	private String password = "";
 
 	// other
-	InitializeGwasMain init;
 	HandleFiles log;
 
 
 	////////////////////
 	//////// constructor
 
-	public Database(String dbPath, InitializeGwasMain init) {
+	public Database(String dbPath, HandleFiles log) {
 		this.dbPath = dbPath;
-		this.init = init;
-		log = init.getLog();
 
 		// connect to databse
 

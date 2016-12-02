@@ -1,4 +1,4 @@
-package de.gentos.lists.initialize;
+package de.gentos.lists.initialize.data;
 
 import java.util.LinkedList;
 
