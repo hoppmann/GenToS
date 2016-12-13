@@ -234,7 +234,6 @@ public class Binomial {
 		// define variables
 		double pVal = 0;
 		
-		
 		// prepare binomial distribution 
 		BinomialDistribution bino = new BinomialDistribution(lengthList, probHit);
 		

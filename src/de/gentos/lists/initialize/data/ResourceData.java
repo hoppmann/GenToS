@@ -10,6 +10,8 @@ public class ResourceData {
 	String geneName;
 	LinkedList<String> line;
 	Boolean sorted;
+	double cumScore = 0;
+	int scoreHits = 0;
 
 
 	/////////////////////////////
@@ -46,12 +48,30 @@ public class ResourceData {
 	}
 
 
+	// constructor to initialize only name
+	public ResourceData(String geneName) {
+		
+		this.geneName = geneName;
+	
+	}
+	
+	
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
 	public void addInfo(String text) {
 		line.add(text);
 	}
+	
+	
+	public void sumScore(double curScore) {
+		cumScore = cumScore + curScore;
+	}
+	
+	public void incrementScoreHits () {
+		scoreHits++;
+	}
+	
 
 
 	/////////////////////////////////
@@ -67,4 +87,27 @@ public class ResourceData {
 	}
 
 
+	public double getCumScore() {
+		return cumScore;
+	}
+
+
+	public void setCumScore(double cumScore) {
+		this.cumScore = cumScore;
+	}
+
+
+	public int getScoreHits() {
+		return scoreHits;
+	}
+
+
+	public void setScoreHits(int scoreHits) {
+		this.scoreHits = scoreHits;
+	}
+
+
+	
+	
+	
 }

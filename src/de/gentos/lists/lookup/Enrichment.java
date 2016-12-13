@@ -60,7 +60,7 @@ public class Enrichment {
 	
 	
 	
-	// calculate the enrichment p-val 
+	// calculate the enrichment p-val based on binomial distribution
 	public double getEnrichment (int hits, int totalGenes, int lengthList) {
 		
 		// init variables
@@ -79,8 +79,37 @@ public class Enrichment {
 
 	
 	
-	
-	
+	// calculate enrichment p-val based on fisher exact test
+	public double fisherEnrichment(int inputResource, int lengthResource, int lengthInput, int totalGenes) {
+		
+		// init variables
+		double pVal = 0;
+		
+		
+		//////// prepare contingency table
+		
+		// collect table entries
+		int inputNotResource = lengthInput - inputResource;
+		int notInputResource = lengthResource - inputResource;
+		int notInputNotResource = totalGenes - lengthResource - inputNotResource;
+
+		
+		// calculate fisher one-sided fisher test
+		FisherTest fisher = new FisherTest(totalGenes, log);
+
+		/* the entries of the contingency table are
+						this.class								Fisher.class
+			inputResources		inputNotResource		=>	a11		c12
+			notInputResources	NotInputNotResource		=>	b21		d22
+		
+		*/
+		
+		pVal = fisher.getCumulativevP(inputResource, notInputResource, inputNotResource, notInputNotResource);
+		
+		// return enrichment pval
+		return pVal;
+		
+	}
 	
 	
 	

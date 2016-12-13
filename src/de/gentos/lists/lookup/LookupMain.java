@@ -7,6 +7,7 @@ import java.util.Map;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.lists.initialize.InitializeListsMain;
 import de.gentos.lists.initialize.data.QueryList;
+import de.gentos.lists.initialize.data.ResourceData;
 import de.gentos.lists.initialize.data.ResourceLists;
 
 public class LookupMain {
@@ -17,6 +18,7 @@ public class LookupMain {
 	private HandleFiles log;
 	private LinkedList<String> queryList;
 	private Map<String, ResourceLists> resources;
+	private Map<String, ResourceData> allScores;
 
 	// basic variable
 	private double threshold = 0.05;
@@ -43,9 +45,10 @@ public class LookupMain {
 		// get enrichement for each resource list
 		getEnrichment();
 
+		
+		
 		// create weighted List
-		createWeightList();
-
+		createListOfScores();
 
 
 	}
@@ -68,7 +71,6 @@ public class LookupMain {
 		Enrichment enrichment = new Enrichment(log);
 		int totalGenes = init.getGenes().getAllGeneNames().size();
 
-
 		// define threshold as bonferonie correction for each list
 		int numberResources = resources.keySet().size();
 		int numberQueries = init.getQueryLists().size();
@@ -78,13 +80,21 @@ public class LookupMain {
 		for (String curList: resources.keySet()){
 
 			// extract the number of query genes found in resource list
-			int hits = enrichment.getHits(queryList, resources.get(curList));
+			int numberOfHits = enrichment.getHits(queryList, resources.get(curList));
 
-			// extract the length of the query gene list and the total number of genes
-			int lengthList = queryList.size();
+			
+			// extract the length of the query gene list and the resource list
+			int lengthQueryList = queryList.size();
+			int lengthResourceList = resources.get(curList).getGeneList().size();
+			
+			// get enrichment p-value based on fisher exact test
+			
+			double enrichmentPval = enrichment.fisherEnrichment(numberOfHits, lengthResourceList, lengthQueryList, totalGenes);
 
-			double enrichmentPval = enrichment.getEnrichment(hits, totalGenes, lengthList);
+			// get enrichment pVal based on binomial distribution
+//			double enrichmentPval = enrichment.getEnrichment(hits, totalGenes, lengthList);
 
+			
 
 			// check if list is has enrichment pVal < threshold
 			if (enrichmentPval <= threshold){
@@ -101,13 +111,12 @@ public class LookupMain {
 
 
 	//// create final ranked list
-	public void createWeightList(){
+	public void createListOfScores(){
 
 		// make log entry
-		log.writeOutFile("\n#### Calculating gene weights");
+		log.writeOutFile("\n#### Calculating gene scores");
 
-		// init hash containig all weights
-		Map<String, Double> allWeights = new LinkedHashMap<>();
+		allScores = new LinkedHashMap<>();
 
 
 
@@ -118,22 +127,20 @@ public class LookupMain {
 			// check if list is enriched
 			if (resources.get(curList).isEnriched()) {
 
-
-
-				if (resources.get(curList).getSorted()){
+				if (resources.get(curList).isSorted()){
 					
-					new GetWeights().rankedList(resources.get(curList).getGeneList(), allWeights);
+					new GetScore().rankedList(resources.get(curList).getGeneList(), allScores);
 
 
 				} else {
 
-					new GetWeights().unranked(resources.get(curList).getGeneList(), allWeights);
+					new GetScore().unranked(resources.get(curList).getGeneList(), allScores);
 
 				}
 			}
-
 		}
-
+		
+		
 		//		Map<String, Double> newWeights = new LinkedHashMap<>();
 		//		GetWeights test = new GetWeights();
 		//		test.rankedList(queryList, newWeights);
@@ -163,6 +170,11 @@ public class LookupMain {
 
 	}
 
+	
+
+
+
+	
 
 
 	//
@@ -210,6 +222,9 @@ public class LookupMain {
 	/////////////////////////////////
 
 
+	public Map<String, ResourceData> getAllScores() {
+		return allScores;
+	}
 
 
 

@@ -109,7 +109,7 @@ public class GetGwasOptions {
 		// print out current job
 		System.out.println("Getting command line options.");
 
-		// parse commandline options
+		// parse command line options
 		CommandLineParser cmdParser = new PosixParser();
 
 		try {

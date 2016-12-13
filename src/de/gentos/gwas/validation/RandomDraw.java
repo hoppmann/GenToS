@@ -74,8 +74,15 @@ public class RandomDraw {
 				} 
 			}
 
+			
+//			randomList = new LinkedList<String>(Arrays.asList("MIR22HG", "DOT1L", "LYRM4", "PSG1", "RNASEH2A", "TMEM51", "KRT6A", "LOC101928227"));
+//			, "LOC101927123"
+			
 			// add random list to hash 
 			allRandomLists.put(listName, randomList);
+			
+			
+			
 
 		}
 	}

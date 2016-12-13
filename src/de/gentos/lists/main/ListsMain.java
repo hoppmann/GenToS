@@ -54,13 +54,13 @@ public class ListsMain {
 			//////// calculate enrichment in different lists  
 
 			// for each list check enrichment with query gene list
-			new LookupMain(init, queryList);
-
+			LookupMain lookup = new LookupMain(init, queryList);
+			
 
 
 			///////////////////////////
 			//////// random repeat for empirical pVal estimation
-			new ResamplingMain(options, init, queryList);
+			new ResamplingMain(options, init, queryList, lookup.getAllScores());
 
 
 

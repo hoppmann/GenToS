@@ -104,9 +104,7 @@ public class ValidationMain {
 
 				///////////////////
 				//////// get length of gene list
-				int lengthList = init.getGwasOptions().getGeneLists().get(origList).size();
-
-
+				int lengthInputList = init.getGwasOptions().getGeneLists().get(origList).size();
 
 				///////////////		
 				//////// get number of iterations
@@ -117,7 +115,7 @@ public class ValidationMain {
 				//////////////
 				//////// perform random draw of binomial distributed variables
 				// Instantiate random generator
-				List<Integer> histogram = binom.simulate(lengthList, probHit, numberIterations);
+				List<Integer> histogram = binom.simulate(lengthInputList, probHit, numberIterations);
 
 
 
@@ -132,7 +130,7 @@ public class ValidationMain {
 				String databaseName = init.getDbSNPInfo().get(currentGwasFile).getDbName();
 				String tableName = init.getDbSNPInfo().get(currentGwasFile).getTableName();
 				String outName = databaseName + "-" + tableName + "-" + origList;
-				double pVal = binom.cummulativeBinom(probHit, lengthList, actualFindings);
+				double pVal = binom.cummulativeBinom(probHit, lengthInputList, actualFindings);
 
 				String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
 				PlotHistogram plotter = new PlotHistogram(init);

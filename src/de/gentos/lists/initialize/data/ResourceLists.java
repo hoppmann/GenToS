@@ -8,7 +8,7 @@ public class ResourceLists {
 	//////// variables ////////
 	///////////////////////////
 
-	private Boolean sorted;
+	private boolean sorted;
 	private LinkedList<ResourceData> header;
 	private LinkedList<ResourceData> geneLine;
 	private List<String> geneList;	
@@ -70,11 +70,14 @@ public class ResourceLists {
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
-	public Boolean getSorted() {
+	
+	
+	
+	public boolean isSorted() {
 		return sorted;
 	}
 
-	public void setSorted(Boolean sorted) {
+	public void setSorted(boolean sorted) {
 		this.sorted = sorted;
 	}
 
