@@ -10,11 +10,11 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.gentos.geneSet.initialize.InitializeListsMain;
+import de.gentos.geneSet.initialize.options.GetListOptions;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneInfo;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
-import de.gentos.lists.initialize.InitializeListsMain;
-import de.gentos.lists.initialize.options.GetListOptions;
 
 public class ReadInGenes {
 

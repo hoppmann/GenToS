@@ -1,7 +1,7 @@
 package de.gentos.main;
 
+import de.gentos.geneSet.main.ListsMain;
 import de.gentos.gwas.main.GwasMain;
-import de.gentos.lists.main.ListsMain;
 
 
 
@@ -28,72 +28,15 @@ public class Main {
 			GwasMain gwas = new GwasMain();
 			gwas.runGentos(args);
 		
-		} else if (args[0].equals("list")) {
+		} else if (args[0].equals("GeneSet")) {
 
 			ListsMain list = new ListsMain();
 			list.runLists(args);
+		} else {
+			System.out.println("Missing analysis type: \nChoosable types are \"GWAS\" and \"GeneSet\"");
 		}
-			
-			
-		
-		
-//		for (String bla : args) {
-//			System.out.println(bla);
-//		}
-		
-//		System.out.println(args[0]);
-		
-		
-		
-//		
-//		RunGuide rg = new RunGuide();
-//		
-//		
-//		
-//		
-//		// initialize system
-////		-> read in options and check them
-////		-> read in config file
-////		-> check databases for correctness
-//
-//		InitializeMain init = rg.initializeMain(args);
-//		
-//
-//		
-//		
-//		
-//		// extract snps and calculate threshold
-////		-> extract gene position
-////		-> extract number of independent SNPs
-////		-> calculate threshold 
-////			-> bonferoni (lenient, plenty)
-////			-> FDR
-////		-> extract SNPs according threshold
-////		-> extract low pval SNPs
-////		-> write results in file
-//		
-//		rg.extractSNPs(init);
-//		
-//
-//
-//		
-//		
-//		
-//		// validate results (random draw)
-////		-> iterate entire program
-////		-> random draw on calculated thresh
-////		-> distributon based validation? 
-//		
-//		rg.validate(init);
-//		
-//		
-//		
-//		
-//				
-//		//close log file
-//		
-//		rg.finish(init);
-		
+
+	
 	}
 	
 	
