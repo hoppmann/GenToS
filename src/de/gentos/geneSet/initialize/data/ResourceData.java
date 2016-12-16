@@ -11,7 +11,7 @@ public class ResourceData {
 	private LinkedList<String> line;
 	private double cumScore = 0;
 	private int scoreHits = 0;
-	private double validationPVal;
+	private double empiricalPval;
 
 
 	/////////////////////////////
@@ -90,8 +90,13 @@ public class ResourceData {
 	public double getCumScore() {
 		return cumScore;
 	}
+	
+	public double getLogCumScore() {
+		return -1 * Math.log10(cumScore);
+	}
 
-
+	
+	
 	public void setCumScore(double cumScore) {
 		this.cumScore = cumScore;
 	}
@@ -107,13 +112,13 @@ public class ResourceData {
 	}
 
 
-	public double getValidationPVal() {
-		return validationPVal;
+	public double getEmpiricalPVal() {
+		return empiricalPval;
 	}
 
 
-	public void setValidationPVal(double validationPVal) {
-		this.validationPVal = validationPVal;
+	public void setEmpiricalPVal(double validationPVal) {
+		this.empiricalPval = validationPVal;
 	}
 
 

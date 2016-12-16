@@ -11,7 +11,7 @@ import java.util.Map;
 
 import de.gentos.geneSet.initialize.data.QueryList;
 import de.gentos.geneSet.initialize.data.ResourceLists;
-import de.gentos.geneSet.initialize.options.GetListOptions;
+import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGenes;
@@ -21,7 +21,7 @@ public class InitializeListsMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
-	private GetListOptions options;
+	private GetGeneSetOptions options;
 	private ConfigFile config;
 	private HandleFiles log;
 	private String[] args;
@@ -110,7 +110,7 @@ public class InitializeListsMain {
 
 	private void initOptions() {
 
-		options = new GetListOptions(args, config);
+		options = new GetGeneSetOptions(args, config);
 
 	}
 
@@ -330,7 +330,7 @@ public class InitializeListsMain {
 		return config;
 	}
 
-	public GetListOptions getOptions() {
+	public GetGeneSetOptions getOptions() {
 		return options;
 	}
 

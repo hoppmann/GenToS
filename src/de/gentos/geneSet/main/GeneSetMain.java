@@ -2,15 +2,15 @@ package de.gentos.geneSet.main;
 
 import de.gentos.geneSet.initialize.InitializeListsMain;
 import de.gentos.geneSet.initialize.data.QueryList;
-import de.gentos.geneSet.initialize.options.GetListOptions;
+import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.geneSet.lookup.LookupMain;
 import de.gentos.geneSet.lookup.ResamplingMain;
 
-public class ListsMain {
+public class GeneSetMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
-	GetListOptions options;
+	GetGeneSetOptions options;
 	InitializeListsMain init; 
 	QueryList queryLists;
 

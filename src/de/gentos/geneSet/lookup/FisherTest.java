@@ -109,34 +109,4 @@ public class FisherTest {
 	/////////////////////////////////
 
 
-
-
-	//		  /**
-	//		   * calculates the one tail P-value for the Fisher Exact test
-	//		   * This
-	//		   *
-	//		   * @param a,b,c,d are the four cells in a 2x2 matrix
-	//		   * @return the P-value
-	//		   */
-	//		  public final double getCumlativeP(int a, int b, int c, int d) {
-	//		    int min,i;
-	//		    int n=a+b+c+d;
-	//		    if(n>maxSize)
-	//		      {return Double.NaN;}
-	//		    double p=0;
-	//		    p+=getP(a, b, c, d);
-	//		    if((a*d)>=(b*c))
-	//		      {min=(c<b)?c:b;
-	//		      for(i=0; i<min; i++)
-	//		        {p+=getP(++a, --b, --c, ++d);}
-	//		      }
-	//		    if((a*d)<(b*c))
-	//		      {min=(a<d)?a:d;
-	//		      for(i=0; i<min; i++)
-	//		        {p+=getP(--a, ++b, ++c, --d);}
-	//		      }
-	//		    return p;
-	//		  }
-	//
-	//		}
 }

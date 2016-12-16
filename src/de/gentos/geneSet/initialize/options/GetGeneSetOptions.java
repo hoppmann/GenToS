@@ -8,7 +8,7 @@ import org.apache.commons.cli.PosixParser;
 
 import de.gentos.general.files.ConfigFile;
 
-public class GetListOptions {
+public class GetGeneSetOptions {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
@@ -20,71 +20,71 @@ public class GetListOptions {
 	Options options;
 	CommandLine cmd = null;
 
-	
-	
+
+
 	/////////////////////////
 	//////// option variables
-	
+
 	// general
 	ConfigFile config;
-	
+
 	// main options
-	
+
 	private String query;
 	private String outDir = "out";
 	private String log = "logfile.txt";
 	private String listDir = "geneLists";
 	private String listOfQueries;
-	
+
 	// resampling
 	private int iteration = 1000;
 	private String dbGeneName;
 	private String dbGeneTable;
 	private long seed = -1;
-	
-	
+
+
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
-	public GetListOptions(String[] args, ConfigFile config) {
-	
-		
+	public GetGeneSetOptions(String[] args, ConfigFile config) {
+
+
 		this.args = args;
 		this.config = config;
-		
-		
+
+
 		// set options
 		setGeneSetOptions = new SetGeneSetOptions();
 		this.options = setGeneSetOptions.getOptions();
-		
-		
+
+
 		// extract path of the program
 		progPath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
 		// get options
 		getOptions();
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
 
-	
+
 	private void getOptions() {
-		
+
 		// print out current job
 		System.out.println("Getting command line options.");
 
-		
+
 		///////////////////////
 		//////// parse command line options or print help
-		
+
 		CommandLineParser cmdParser = new PosixParser();
 		try {
 			cmd = cmdParser.parse(options, args);
@@ -93,68 +93,78 @@ public class GetListOptions {
 			setGeneSetOptions.callHelp();
 			System.exit(1);
 		}
-		
-		
+
+
+		////////////////////////////////
+		//////// check if help is called
+		if (cmd.hasOption("help")){
+			setGeneSetOptions.callHelp();
+			System.exit(0);
+		}
+
+
 
 		/////////////////////////
 		////// Check for not combinable options
-		
-		
+
+
 		// either query or list of queries has and can be chosen 
 		if (cmd.hasOption("inputList") && cmd.hasOption("listOfQueries")){
 			System.out.println("\nERROR: Option \"inputList\" and \"listOfQueries\" may not be used together.\n");
-			System.exit(3);
+			setGeneSetOptions.callHelp();
+			System.exit(1);
 		} else if (!cmd.hasOption("inputList") && !cmd.hasOption("listOfQueries")){
 			System.out.println("\nERROR: Either option \"inputList\" OR \"listOfQueries\" is mandatory.\n");
+			setGeneSetOptions.callHelp();
 			System.exit(1);
 
 		}			
-		
-		
-		
-		
-		
+
+
+
+
+
 		////////////////////////////////////////////////////
 		//////// write options in variables, check variables
 
 		/////////////////////
 		//// general settings
-		
+
 		// get input gene list
 		if (cmd.hasOption("inputList")){
 			query = cmd.getOptionValue("inputList");
 		}
-		
+
 		// output directory
 		if (cmd.hasOption("outDir")){
 			outDir = cmd.getOptionValue("outDir");
 		}
-		
+
 		// get name of logfile
 		if (cmd.hasOption("log")) {
 			log = cmd.getOptionValue("log");
 		}
-		
+
 		// get directory of resource gene lists
 		if (cmd.hasOption("resourceDir")) {
 			listDir = cmd.getOptionValue("resourceDir");
 		}
-		
+
 		if (cmd.hasOption("listOfQueries")){
 			listOfQueries = cmd.getOptionValue("listOfQueries");
 		}
-		
-		
-		
-		
+
+
+
+
 		///////////////////////
 		//// Resampling options
-		
+
 		// get number of iterations
 		if (cmd.hasOption("iterations")) {
 			iteration = Integer.parseInt(cmd.getOptionValue("iterations"));
 		}
-		
+
 		// get name of gene database
 		if (cmd.hasOption("dbGene")){
 			dbGeneName = cmd.getOptionValue("dbGene");
@@ -168,48 +178,48 @@ public class GetListOptions {
 		} else {
 			dbGeneTable = config.getTableGene();
 		}
-		
+
 		// get seed
 		if (cmd.hasOption("seed")){
 			seed = Long.parseLong(cmd.getOptionValue("seed"));
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 
 
 
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
 
-	
-	
+
+
 	//////// Stuff
 	public String[] getArgs() {
 		return args;
@@ -219,11 +229,11 @@ public class GetListOptions {
 		return setGeneSetOptions;
 	}
 
-	
-	
-	
+
+
+
 	//////// main options
-	
+
 	public String getProgPath() {
 		return progPath;
 	}
@@ -271,56 +281,56 @@ public class GetListOptions {
 	public String getListOfQueries() {
 		return listOfQueries;
 	}
-	
-	
 
-	
-	
-	
-	 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

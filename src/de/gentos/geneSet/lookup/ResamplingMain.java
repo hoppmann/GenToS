@@ -1,5 +1,6 @@
 package de.gentos.geneSet.lookup;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -10,13 +11,14 @@ import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import de.gentos.geneSet.initialize.InitializeListsMain;
 import de.gentos.geneSet.initialize.data.QueryList;
 import de.gentos.geneSet.initialize.data.ResourceData;
 import de.gentos.geneSet.initialize.data.ResourceLists;
-import de.gentos.geneSet.initialize.options.GetListOptions;
+import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.validation.RandomDraw;
@@ -25,7 +27,7 @@ public class ResamplingMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
-	private GetListOptions options;
+	private GetGeneSetOptions options;
 	private InitializeListsMain init;
 	private HandleFiles log; 
 	private QueryList queryList;
@@ -40,13 +42,13 @@ public class ResamplingMain {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public ResamplingMain(GetListOptions options, InitializeListsMain init, QueryList queryList, Map<String, ResourceData> map) {
+	public ResamplingMain(GetGeneSetOptions options, InitializeListsMain init, QueryList queryList, Map<String, ResourceData> map) {
 
 
 		// gather and retriev variables
 		this.options = options;
 		this.init = init;
-		log = init.getLog();
+		this.log = init.getLog();
 		this.queryList = queryList;
 		this.resources = init.getResources();
 		this.originalScores = map;
@@ -183,17 +185,20 @@ public class ResamplingMain {
 			// prepare results file
 			String resultFileName = FilenameUtils.getBaseName(origInputList) + ".csv";
 			HandleFiles resultOut = new HandleFiles();
-			resultOut.openWriter(resultFileName);
+			resultOut.openWriter(options.getOutDir() + File.separator + resultFileName);
 			
 			
-			for (String key : originalScores.keySet()) {
+			// init variables
+			Map<String, Double> geneList = new LinkedHashMap<>();
+			
+			for (String curGene : originalScores.keySet()) {
 
 				// init variables
 				double pval = 0;
 				
 				// check if gene was found by any random draw then calculate pval else define pval as 0 
-				if (originalScores.get(key).getScoreHits() > 0){
-					int numhits = originalScores.get(key).getScoreHits();
+				if (originalScores.get(curGene).getScoreHits() > 0){
+					int numhits = originalScores.get(curGene).getScoreHits();
 					int numiter = options.getIteration();
 					
 					// calculate p-value
@@ -201,28 +206,27 @@ public class ResamplingMain {
 				}
 				
 				// store pval and create hash to get sorted
-				originalScores.get(key).setValidationPVal(pval);
-				
-//				System.out.println(key + " = " + pval);
+				originalScores.get(curGene).setEmpiricalPVal(pval);
+				geneList.put(curGene, pval);
+			}
+			
+			// Sort genes according to their pval
+			Map<String, Double> sortedGeneList = sortByValue(geneList);
+			
+			// prepare out file header
+			resultOut.writeFile("#gene\tp-value\tscore [-log10]");
 
+			
+			for (String curGene : sortedGeneList.keySet()){
+				double pval = originalScores.get(curGene).getEmpiricalPVal();
+				double score = originalScores.get(curGene).getLogCumScore();
 				
-				
-				
+				resultOut.writeFile(curGene + "\t" + pval + "\t" + score);
 				
 			}
 			
 			// close result file
 			resultOut.closeFile();
-			
-			
-//			System.out.println(originalScores.keySet().size());
-			
-			
-			// form hash of gene and pval
-//			for 
-			
-			
-			
 		}
 	}
 
@@ -230,22 +234,28 @@ public class ResamplingMain {
 	
 		////////////////////
 		//////// sort hash according to the values
-//		public Map<String, Double> sortByValue(Map<String, Double> map) {
-//	        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
-//	
-//	        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
-//	
-//	            public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
-//	                return (m2.getValue()).compareTo(m1.getValue());
-//	            }
-//	        });
-//	
-//	        Map<String, Double> result = new LinkedHashMap<String, Double>();
-//	        for (Map.Entry<String, Double> entry : list) {
-//	            result.put(entry.getKey(), entry.getValue());
-//	        }
-//	        return result;
-//	    }
+		public Map<String, Double> sortByValue(Map<String, Double> map) {
+	        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
+	
+	        
+	        // sort by values
+	        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+
+	        	public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
+	        		return (m2.getValue()).compareTo(m1.getValue());
+	        	}
+	        });
+
+	        // reverse sort order to start with smallest
+	        List<Map.Entry<String, Double>> reverseList = Lists.reverse(list);
+	        
+	        // transfer sorted list to linked hash map
+	        Map<String, Double> result = new LinkedHashMap<String, Double>();
+	        for (Map.Entry<String, Double> entry : reverseList) {
+	            result.put(entry.getKey(), entry.getValue());
+	        }
+	        return result;
+	    }
 
 	
 	
@@ -254,9 +264,8 @@ public class ResamplingMain {
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
-
-
-
-
+		
+		
+		
 
 }

@@ -11,7 +11,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.gentos.geneSet.initialize.InitializeListsMain;
-import de.gentos.geneSet.initialize.options.GetListOptions;
+import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneInfo;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
@@ -63,7 +63,7 @@ public class ReadInGenes {
 	public ReadInGenes(InitializeListsMain init) {
 
 		// set variables
-		GetListOptions options = init.getOptions();
+		GetGeneSetOptions options = init.getOptions();
 		this.log = init.getLog();
 		this.tableGene = options.getDbGeneTable();
 		this.dbGene = options.getDbGeneName();

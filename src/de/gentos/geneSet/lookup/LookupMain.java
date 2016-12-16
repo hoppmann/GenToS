@@ -91,10 +91,6 @@ public class LookupMain {
 			
 			double enrichmentPval = enrichment.fisherEnrichment(numberOfHits, lengthResourceList, lengthQueryList, totalGenes);
 
-			// get enrichment pVal based on binomial distribution
-//			double enrichmentPval = enrichment.getEnrichment(hits, totalGenes, lengthList);
-
-			
 
 			// check if list is has enrichment pVal < threshold
 			if (enrichmentPval <= threshold){
@@ -139,82 +135,7 @@ public class LookupMain {
 				}
 			}
 		}
-		
-		
-		//		Map<String, Double> newWeights = new LinkedHashMap<>();
-		//		GetWeights test = new GetWeights();
-		//		test.rankedList(queryList, newWeights);
-
-
-		//		// rank genes according their commulative weights
-		//		
-		//		// save weighted genes in out file
-		//		String sep = File.separator;
-		//		String outDir = options.getOutDir();
-		//		String outFileName = outDir + sep + "results.csv";
-		//		
-		//		// create out directory and out file
-		//		HandleFiles file = new HandleFiles();
-		//		file.openWriter(outFileName);
-		//		
-		//		// write header in out file
-		//		file.writeOutFile("#gene\tSumOfWeights");
-		//		
-		//		
-		//		Map<String, Double> sortedMap = sortByValue(allWeights);
-		//		for (String gene : sortedMap.keySet()){
-		//			file.writeOutFile(gene + "\t" + sortedMap.get(gene));
-		//		}
-		//		
-		//		file.closeFile();
-
 	}
-
-	
-
-
-
-	
-
-
-	//
-	//	// sort hash according to the values
-	//	public Map<String, Double> sortByValue(Map<String, Double> map) {
-	//        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
-	//
-	//        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
-	//
-	//            public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
-	//                return (m2.getValue()).compareTo(m1.getValue());
-	//            }
-	//        });
-	//
-	//        Map<String, Double> result = new LinkedHashMap<String, Double>();
-	//        for (Map.Entry<String, Double> entry : list) {
-	//            result.put(entry.getKey(), entry.getValue());
-	//        }
-	//        return result;
-	//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//// retain all genes from all significant lists and rank them
-
-
 
 
 	/////////////////////////////////
