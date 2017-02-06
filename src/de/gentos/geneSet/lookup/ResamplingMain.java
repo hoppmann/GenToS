@@ -14,8 +14,8 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-import de.gentos.geneSet.initialize.InitializeListsMain;
-import de.gentos.geneSet.initialize.data.QueryList;
+import de.gentos.geneSet.initialize.InitializeGeneSetMain;
+import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.ResourceData;
 import de.gentos.geneSet.initialize.data.ResourceLists;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
@@ -28,13 +28,14 @@ public class ResamplingMain {
 	//////// variables ////////
 	///////////////////////////
 	private GetGeneSetOptions options;
-	private InitializeListsMain init;
+	private InitializeGeneSetMain init;
 	private HandleFiles log; 
-	private QueryList queryList;
+	private InputList inputList;
 	private Multimap<String, LinkedList<String>> allRandomLists;
 	private Map<String, ResourceLists> resources;
 	private Map<String, ResourceData> originalScores;
 	private double threshold = 0.05;
+	private String curInputList;
 
 
 
@@ -42,20 +43,21 @@ public class ResamplingMain {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public ResamplingMain(GetGeneSetOptions options, InitializeListsMain init, QueryList queryList, Map<String, ResourceData> map) {
+	public ResamplingMain(GetGeneSetOptions options, InitializeGeneSetMain init, InputList inputList, Map<String, ResourceData> map) {
 
 
 		// gather and retriev variables
 		this.options = options;
 		this.init = init;
 		this.log = init.getLog();
-		this.queryList = queryList;
+		this.inputList = inputList;
 		this.resources = init.getResources();
 		this.originalScores = map;
+		this.curInputList = inputList.getListName();
 		
 		
 		// make log entry
-		log.writeOutFile("\n#### Running resampling with random gene lists.");
+		log.writeOutFile("\n######## Resampling with random gene lists. ########");
 
 		// draw random genes
 		drawRandomGenes();
@@ -83,9 +85,9 @@ public class ResamplingMain {
 
 		// init and gather variables
 		allRandomLists = LinkedListMultimap.create();
-		int length = queryList.getQueryGenes().size();
+		int length = inputList.getQueryGenes().size();
 		int iterations = options.getIteration();
-		String curListName = queryList.getListName();
+		String curListName = inputList.getListPath();
 		long seed = options.getSeed();
 		ReadInGenes genes = init.getGenes();
 
@@ -213,10 +215,31 @@ public class ResamplingMain {
 			// Sort genes according to their pval
 			Map<String, Double> sortedGeneList = sortByValue(geneList);
 			
-			// prepare out file header
+			
+			
+			//// prepare out file header
+			// prepare summary of enriched Lists 
+			
+			int numberEnrichedLists = init.getDataMap().get(curInputList).getNumberEnrichedLists();
+			LinkedList<String> enrichedLists = init.getDataMap().get(curInputList).getEnrichedLists();
+
+			resultOut.writeFile("# Number of enriched lists: " + numberEnrichedLists);
+			for (String curEnrichedList : enrichedLists){
+				Boolean isSorted = init.getResources().get(curEnrichedList).isSorted();
+				
+				if (isSorted) {
+					resultOut.writeFile("# " + curEnrichedList + "\tsorted");
+				} else {
+					resultOut.writeFile("# " + curEnrichedList + "\tnot sorted");
+				}
+				
+			
+			}
+			
+			// prepare values definitions
 			resultOut.writeFile("#gene\tp-value\tscore [-log10]");
 
-			
+			// print out values
 			for (String curGene : sortedGeneList.keySet()){
 				double pval = originalScores.get(curGene).getEmpiricalPVal();
 				double score = originalScores.get(curGene).getLogCumScore();

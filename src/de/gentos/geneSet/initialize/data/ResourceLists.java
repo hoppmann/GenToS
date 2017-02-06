@@ -105,6 +105,13 @@ public class ResourceLists {
 		return geneList;
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	public double getEnrichmentPval() {
 		return enrichmentPval;
 	}

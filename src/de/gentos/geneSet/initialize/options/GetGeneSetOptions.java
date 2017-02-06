@@ -41,7 +41,11 @@ public class GetGeneSetOptions {
 	private String dbGeneName;
 	private String dbGeneTable;
 	private long seed = -1;
-
+	
+	// misc
+	private String infoFile  = "INFO.txt";
+	
+	
 
 	/////////////////////////////
 	//////// constructor ////////
@@ -139,7 +143,7 @@ public class GetGeneSetOptions {
 		if (cmd.hasOption("outDir")){
 			outDir = cmd.getOptionValue("outDir");
 		}
-
+		
 		// get name of logfile
 		if (cmd.hasOption("log")) {
 			log = cmd.getOptionValue("log");
@@ -185,14 +189,11 @@ public class GetGeneSetOptions {
 		}
 
 
-
-
-
-
-
-
-
-
+		////////////
+		//// misc options
+		if (cmd.hasOption("infoFile")){
+			infoFile = cmd.getOptionValue("infoFile");
+		}
 
 
 
@@ -282,8 +283,13 @@ public class GetGeneSetOptions {
 		return listOfQueries;
 	}
 
+	public SetGeneSetOptions getSetGeneSetOptions() {
+		return setGeneSetOptions;
+	}
 
-
+	public String getInfoFile() {
+		return infoFile;
+	}
 
 
 

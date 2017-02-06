@@ -9,15 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.gentos.geneSet.initialize.data.QueryList;
+import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.ResourceLists;
+import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGenes;
 import de.gentos.gwas.initialize.InitDatabase;
 
-public class InitializeListsMain {
+public class InitializeGeneSetMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
@@ -26,7 +27,8 @@ public class InitializeListsMain {
 	private HandleFiles log;
 	private String[] args;
 	private Map<String, ResourceLists> resources;
-	private List<QueryList> queryLists;
+	private List<InputList> inputLists;
+	private Map<String, RunData> data;
 
 	
 	
@@ -42,11 +44,11 @@ public class InitializeListsMain {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public InitializeListsMain(String[] args) {
+	public InitializeGeneSetMain(String[] args) {
 
 		// retrieve variables
 		this.args = args;
-		queryLists = new LinkedList<>();
+		inputLists = new LinkedList<>();
 
 
 		// init config file
@@ -64,7 +66,10 @@ public class InitializeListsMain {
 		// write command line options to log file
 		log.writeOutFile("\n######## Starting initializing ########");
 		log.writeFile("Options chosen:\n" + Arrays.toString(args) + "\n");
-
+		
+		
+		// init run data map
+		data = new HashMap<>();
 
 		// read in resource lists
 		initResources();
@@ -88,7 +93,6 @@ public class InitializeListsMain {
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
-
 
 	/////////////////////
 	//// read in config file and save to variables
@@ -221,6 +225,7 @@ public class InitializeListsMain {
 				}
 			}
 			
+			// save current file in map containing all resources
 			resources.put(curFile, curListIn);
 		}	
 	
@@ -258,8 +263,8 @@ public class InitializeListsMain {
 				
 				
 				// split file and take first entry, for the case that information ist stored in input list
-				QueryList curList = new QueryList(curListPath);
-				queryLists.add(curList);
+				InputList curList = new InputList(curListPath);
+				inputLists.add(curList);
 				for (String line : lines){
 					String[] splitString = line.split("\t");
 					curList.addGene(splitString[0]);
@@ -281,8 +286,8 @@ public class InitializeListsMain {
 			LinkedList<String> lines  = file.openFile(queryGeneFile, true);
 
 			// split file and take first entry, for the case that information ist stored in input list
-			QueryList curList = new QueryList(queryGeneFile);
-			queryLists.add(curList);
+			InputList curList = new InputList(queryGeneFile);
+			inputLists.add(curList);
 			for (String line : lines){
 				String[] splitString = line.split("\t");
 				curList.addGene(splitString[0]);
@@ -291,6 +296,7 @@ public class InitializeListsMain {
 		}
 	}
 
+	/////////////////
 	//// initialize gene db
 	public void readInGenes() {
 
@@ -317,8 +323,6 @@ public class InitializeListsMain {
 	}
 
 
-
-
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
@@ -342,14 +346,17 @@ public class InitializeListsMain {
 		return resources;
 	}
 
-	public List<QueryList> getQueryLists() {
-		return queryLists;
+	public List<InputList> getQueryLists() {
+		return inputLists;
 	}
 
 	public ReadInGenes getGenes() {
 		return genes;
 	}
 
+	public Map<String, RunData> getDataMap() {
+		return data;
+	}
 
 
 

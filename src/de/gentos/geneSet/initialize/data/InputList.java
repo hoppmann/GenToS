@@ -1,14 +1,15 @@
 package de.gentos.geneSet.initialize.data;
 
+import java.io.File;
 import java.util.LinkedList;
 
-public class QueryList {
+public class InputList {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
 
 	private String listName;
-	private LinkedList<String> queryGenes;
+	private LinkedList<String> inputqueryGenes;
 	
 	
 	
@@ -18,11 +19,11 @@ public class QueryList {
 	/////////////////////////////
 
 	
-	public QueryList(String listName) {
+	public InputList(String listName) {
 
 		this.listName = listName;
 		
-		queryGenes = new LinkedList<>();
+		inputqueryGenes = new LinkedList<>();
 	
 	}
 	
@@ -36,7 +37,7 @@ public class QueryList {
 	
 	public void addGene(String gene) {
 		
-		queryGenes.add(gene);
+		inputqueryGenes.add(gene);
 		
 	}
 
@@ -53,13 +54,15 @@ public class QueryList {
 	//////// getter / setter ////////
 	/////////////////////////////////
 	
-	
 	public String getListName() {
+		return new File(listName).getName();
+	}
+	public String getListPath() {
 		return listName;
 	}
 
 	public LinkedList<String> getQueryGenes() {
-		return queryGenes;
+		return inputqueryGenes;
 	}
 	
 	

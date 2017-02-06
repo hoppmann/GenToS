@@ -19,6 +19,7 @@ public class SetGeneSetOptions {
 	//// names for grouping
 	private String main = "main options";
 	private String resample = "resampling";
+	private String misc = "misc";
 	
 	
 	/////////////////////////////
@@ -63,10 +64,8 @@ public class SetGeneSetOptions {
 		opts.put(resample, new OptionValue(options, "tableGene", true, "Name of gene table in dbGene (default = genes)"));
 		opts.put(resample, new OptionValue(options, "seed", true, "\tSet seed for random generator."));
 
-		
-		
-		
-		
+		//////// misc
+		opts.put(misc, new OptionValue(options, "infoFile", true, "Name of the infoFile"));
 		
 	}
 

@@ -10,7 +10,7 @@ import java.util.Map;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import de.gentos.geneSet.initialize.InitializeListsMain;
+import de.gentos.geneSet.initialize.InitializeGeneSetMain;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneInfo;
@@ -60,7 +60,7 @@ public class ReadInGenes {
 	
 
 	// Constructor for GenToS lists
-	public ReadInGenes(InitializeListsMain init) {
+	public ReadInGenes(InitializeGeneSetMain init) {
 
 		// set variables
 		GetGeneSetOptions options = init.getOptions();
