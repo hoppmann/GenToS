@@ -311,8 +311,6 @@ public class InitializeGeneSetMain {
 		// gather variables
 		String geneDB = getOptions().getDbGeneName();
 		String geneTable = getOptions().getDbGeneTable();
-
-		
 		
 		// connect to databse
 		InitDatabase db = new InitDatabase(geneDB, log);

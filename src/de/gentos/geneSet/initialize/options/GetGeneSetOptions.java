@@ -173,7 +173,7 @@ public class GetGeneSetOptions {
 		if (cmd.hasOption("dbGene")){
 			dbGeneName = cmd.getOptionValue("dbGene");
 		} else {
-			dbGeneName = config.getDbGene();
+			dbGeneName = progPath + config.getDbGene();
 		}
 
 		// get table of gene database
