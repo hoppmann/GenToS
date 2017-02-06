@@ -51,14 +51,14 @@ public class GeneSetMain {
 
 		
 		// for each query input list run program
-		for (InputList inputList : init.getQueryLists()){
+		for (InputList inputList : init.getInputLists()){
 
-
+			
 			///////////////////////////
 			//////// calculate enrichment in different lists  
 
 			// init new data entry in dataMap
-			init.getDataMap().put(inputList.getListName(), new RunData(init));
+			init.getDataMap().put(inputList.getListName(), new RunData(init, inputList.getQueryGenes().size()));
 			
 			// print info which input list is processed
 			HandleFiles log = init.getLog();

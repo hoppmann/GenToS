@@ -17,6 +17,7 @@ public class RunData {
 	private int scoreHits = 0;
 	private double empiricalPval;
 	private Map<String, ResourceLists> resources;
+	private int lengthInput; 
 
 
 	
@@ -25,7 +26,7 @@ public class RunData {
 	/////////////////////////////
 
 
-	public RunData(InitializeGeneSetMain init) {
+	public RunData(InitializeGeneSetMain init, int lengthInputList) {
 		
 		enrichedLists = new LinkedList<>();
 		resources = new HashMap<>();
@@ -35,6 +36,9 @@ public class RunData {
 			resources.put(curResource, new ResourceLists());
 			resources.get(curResource).setSorted(init.getResources().get(curResource).isSorted());
 		}
+		
+		// add length of input list
+		this.lengthInput = lengthInputList;
 		
 		
 		
@@ -126,6 +130,14 @@ public class RunData {
 
 	public void setEmpiricalPval(double empiricalPval) {
 		this.empiricalPval = empiricalPval;
+	}
+
+	public int getLengthInput() {
+		return lengthInput;
+	}
+
+	public void setLengthInput(int lengthInput) {
+		this.lengthInput = lengthInput;
 	}
 
 	

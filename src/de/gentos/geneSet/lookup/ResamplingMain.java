@@ -111,7 +111,7 @@ public class ResamplingMain {
 
 		// define threshold as bonferroni correction for each list
 		int numberResources = resources.keySet().size();
-		int numberQueries = init.getQueryLists().size();
+		int numberQueries = init.getInputLists().size();
 		threshold = (double) 0.05 / ( numberResources * numberQueries);
 
 		// for each original list rerun lookup for each randomly drawn list

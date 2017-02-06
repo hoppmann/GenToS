@@ -46,6 +46,13 @@ public class HandleFiles {
 	}
 
 
+	// write in file as warning
+	public void writeWarning (String line) {
+		String warningline = "## WARNING: " + line;
+		System.out.println(warningline);
+		writer.write(warningline);
+		
+	}
 
 	// write in file and to screen and close file
 	public void writeError (String line) {

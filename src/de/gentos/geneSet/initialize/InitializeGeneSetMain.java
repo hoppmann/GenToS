@@ -28,7 +28,7 @@ public class InitializeGeneSetMain {
 	private String[] args;
 	private Map<String, ResourceLists> resources;
 	private List<InputList> inputLists;
-	private Map<String, RunData> data;
+	private Map<String, RunData> dataMap;
 
 	
 	
@@ -69,7 +69,7 @@ public class InitializeGeneSetMain {
 		
 		
 		// init run data map
-		data = new HashMap<>();
+		dataMap = new HashMap<>();
 
 		// read in resource lists
 		initResources();
@@ -262,14 +262,20 @@ public class InitializeGeneSetMain {
 				LinkedList<String> lines = file.openFile(curListPath, true);
 				
 				
-				// split file and take first entry, for the case that information ist stored in input list
+				// split file and take first entry, for the case that information is stored in input list
 				InputList curList = new InputList(curListPath);
 				inputLists.add(curList);
 				for (String line : lines){
 					String[] splitString = line.split("\t");
-					curList.addGene(splitString[0]);
+					
+					// check if input gene is already listsed if so don't add it again.
+					if (curList.getQueryGenes().contains(splitString[0])){
+						log.writeWarning(splitString[0] + " is duplicated in input list. Only used once.");
+					} else {
+						curList.addGene(splitString[0]);
+
+					}
 				}
-				
 			}
 			
 		} else if (options.getQuery() != null && !options.getQuery().isEmpty()){
@@ -285,14 +291,13 @@ public class InitializeGeneSetMain {
 			// open file and save query list
 			LinkedList<String> lines  = file.openFile(queryGeneFile, true);
 
-			// split file and take first entry, for the case that information ist stored in input list
+			// split file and take first entry, for the case that information is stored in input list
 			InputList curList = new InputList(queryGeneFile);
 			inputLists.add(curList);
 			for (String line : lines){
 				String[] splitString = line.split("\t");
 				curList.addGene(splitString[0]);
 			}
-
 		}
 	}
 
@@ -346,7 +351,7 @@ public class InitializeGeneSetMain {
 		return resources;
 	}
 
-	public List<InputList> getQueryLists() {
+	public List<InputList> getInputLists() {
 		return inputLists;
 	}
 
@@ -355,7 +360,7 @@ public class InitializeGeneSetMain {
 	}
 
 	public Map<String, RunData> getDataMap() {
-		return data;
+		return dataMap;
 	}
 
 

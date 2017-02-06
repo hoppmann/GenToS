@@ -25,11 +25,13 @@ public class WriteInfoFile {
 
 	public WriteInfoFile(InitializeGeneSetMain init) {
 		
+		// collect variables
 		this.init = init;
 		this.options = init.getOptions();
 		this.data = init.getDataMap();
 		
 		
+		// create info file
 		writeInfo();
 	}
 	
@@ -50,10 +52,13 @@ public class WriteInfoFile {
 		/* create short summary in the top containing 
 			- resource list
 			- number of enriched lists
+			- number of genes in input list
 		*/
-		infoFile.writeFile("Inputlist\tnumber of enriched lists");
-		for (String curInputList : init.getDataMap().keySet()) {
-			infoFile.writeFile(curInputList + "\t" + Integer.toString(data.get(curInputList).getNumberEnrichedLists()));
+		infoFile.writeFile("Inputlist\tnumber of genes in list\tnumber of enriched lists");
+		for (String curInputList : data.keySet()) {
+			String numberGenes = Integer.toString(data.get(curInputList).getLengthInput());
+			String numberEnrichedLists = Integer.toString(data.get(curInputList).getNumberEnrichedLists());
+			infoFile.writeFile(curInputList + "\t" + numberGenes + "\t" + numberEnrichedLists);
 		}
 		
 		// enter empty lines for better visability
@@ -68,14 +73,15 @@ public class WriteInfoFile {
 		 * - resource list
 		 * - number of enriched lists
 		 * - name of enriched list
-		 * 
+		 * - number of genes in input list
 		 */
 		
 		
 		// for each input list write infos in file
-		for ( String curInputList : init.getDataMap().keySet()){
+		for ( String curInputList : data.keySet()){
 			
 			infoFile.writeFile(curInputList);
+			infoFile.writeFile("Number of genes in input list: " + data.get(curInputList).getLengthInput());;
 			infoFile.writeFile("Number of enriched lists: " + Integer.toString(data.get(curInputList).getNumberEnrichedLists()));
 			
 			// extract found lists

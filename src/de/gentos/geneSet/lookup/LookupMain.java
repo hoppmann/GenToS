@@ -75,7 +75,7 @@ public class LookupMain {
 		
 		// define threshold as bonferonie correction for each list
 		int numberResources = resources.keySet().size();
-		int numberQueries = init.getQueryLists().size();
+		int numberQueries = init.getInputLists().size();
 		threshold = (double) 0.05 / ( numberResources * numberQueries);
 
 		
