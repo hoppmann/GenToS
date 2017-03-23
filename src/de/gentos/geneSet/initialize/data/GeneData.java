@@ -2,23 +2,35 @@ package de.gentos.geneSet.initialize.data;
 
 import java.util.LinkedList;
 
-public class ResourceData {
+public class GeneData {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
 
+	// initial gene informations
 	private String geneName;
 	private LinkedList<String> line;
+	
+	
+	
+	// gene data collection during lookup
 	private double cumScore = 0;
+
+	
+	
+	
 	private int scoreHits = 0;
 	private double empiricalPval;
+	private int numberEnricheLists = 0;
+	private int numberAllFoundResources = 0;
 
 
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
-	public ResourceData(String[] splitLine) {
+	// general constructor
+	public GeneData(String[] splitLine) {
 
 		// init LinkedList
 		line = new LinkedList<>();
@@ -49,7 +61,7 @@ public class ResourceData {
 
 
 	// constructor to initialize only name
-	public ResourceData(String geneName) {
+	public GeneData(String geneName) {
 		
 		this.geneName = geneName.toUpperCase();
 	
@@ -71,6 +83,15 @@ public class ResourceData {
 	public void incrementScoreHits () {
 		scoreHits++;
 	}
+	
+	public void incrementNumberEnricheLists (){
+		numberEnricheLists++;
+	}
+	
+	public void incrementNumberAllFoundResources(){
+		numberAllFoundResources++;
+	}
+	
 	
 
 
@@ -121,8 +142,25 @@ public class ResourceData {
 		this.empiricalPval = validationPVal;
 	}
 
+	public int getNumberAllFoundResources() {
+		return numberAllFoundResources;
+	}
+
+	public void setNumberAllFoundResources(int numberAllFoundResources) {
+		this.numberAllFoundResources = numberAllFoundResources;
+	}
 
 
+	public int getNumberEnricheLists() {
+		return numberEnricheLists;
+	}
+
+	public void setNumberEnricheLists(int numberEnricheLists) {
+		this.numberEnricheLists = numberEnricheLists;
+	}
+
+
+	
 
 	
 	

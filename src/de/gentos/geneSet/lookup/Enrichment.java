@@ -1,5 +1,6 @@
 package de.gentos.geneSet.lookup;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,10 +24,6 @@ public class Enrichment {
 		// retrieve variables
 		this.log = log;
 	
-	
-	
-	
-	
 	}
 	
 	
@@ -42,11 +39,13 @@ public class Enrichment {
 		
 		// for each gene in query gene list check if is in resource list, if
 		int numberOfHits = 0;
+
+		// get list of genes in resource list
+		List<String> geneList = new ArrayList<>(resourceList.getGenes().keySet());
+
+		
 		for (String gene : queryList) {
 			
-			// retrieve varialbe
-			List<String> geneList = resourceList.getGeneList();
-
 			// if gene is found in resource list increment hit count
 			if (geneList.contains(gene)) {
 				numberOfHits++;

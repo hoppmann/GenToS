@@ -8,7 +8,7 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.getSNPs.ExtractData;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
@@ -23,7 +23,7 @@ public class Binomial {
 	//////// set variables
 	//// Gwas setting
 	InitializeGwasMain init;
-	ReadInGenes readGenes;
+	ReadInGeneDB readGenes;
 	ReadInGwasData gwasData;
 
 

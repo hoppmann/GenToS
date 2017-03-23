@@ -1,14 +1,17 @@
 package de.gentos.geneSet.lookup;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
+import de.gentos.geneSet.initialize.data.GeneData;
 import de.gentos.geneSet.initialize.data.InputList;
-import de.gentos.geneSet.initialize.data.RunData;
-import de.gentos.geneSet.initialize.data.ResourceData;
 import de.gentos.geneSet.initialize.data.ResourceLists;
+import de.gentos.geneSet.initialize.data.RunData;
+import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
 
 public class LookupMain {
@@ -19,9 +22,9 @@ public class LookupMain {
 	private HandleFiles log;
 	private LinkedList<String> inputList;
 	private Map<String, ResourceLists> resources;
-	private Map<String, ResourceData> allScores;
-	private Map<String, RunData> data;
-	private String curInputList;
+	private Map<String, GeneData> allScores;
+	private GetGeneSetOptions options;
+	private RunData runData; 
 
 	// basic variable
 	private double threshold = 0.05;
@@ -31,15 +34,15 @@ public class LookupMain {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public LookupMain(InitializeGeneSetMain init, InputList inputList) {
+	public LookupMain(InitializeGeneSetMain init, InputList inputList, RunData runData) {
 
 		// retrieve variables
 		this.init = init;
 		log = init.getLog();
+		this.options = init.getOptions();
 		this.resources = init.getResources();
 		this.inputList = inputList.getQueryGenes();
-		this.data = init.getDataMap();
-		this.curInputList = inputList.getListName();
+		this.runData = runData;
 
 		// run through different steps
 
@@ -63,7 +66,11 @@ public class LookupMain {
 	//////// methods ////////
 	/////////////////////////
 
-	//// check for enrichment
+	
+	
+	/////////////////////////////
+	//////// check for enrichment
+	
 	public void getEnrichment() {
 
 		// make log entry
@@ -71,17 +78,19 @@ public class LookupMain {
 
 		// init and gather variables
 		Enrichment enrichment = new Enrichment(log);
-		int totalGenes = init.getGenes().getAllGeneNames().size();
+		int totalGenes = init.getGeneDbGenes().getAllGeneNames().size();
 		
-		// define threshold as bonferonie correction for each list
+		// define threshold as bonferroni correction for each list
 		int numberResources = resources.keySet().size();
 		int numberQueries = init.getInputLists().size();
-		threshold = (double) 0.05 / ( numberResources * numberQueries);
-
 		
-		// initialize variables needed for qc
-//		int numberOfEnrichedLists = 0;
-//		LinkedList<String> enrichedLists = new LinkedList<>();
+		// if set stringent make bonferroni for resources AND queries, else resources only
+		if (options.isStringent()){
+			threshold = (double) 0.05 / ( numberResources * numberQueries );
+		} else {
+			threshold = (double) 0.05 / ( numberResources );
+
+		}
 
 		
 		// for each resource list get enrichment p-val
@@ -94,42 +103,32 @@ public class LookupMain {
 			
 			// extract the length of the query gene list and the resource list
 			int lengthQueryList = inputList.size();
-			int lengthResourceList = resources.get(curResourceList).getGeneList().size();
+			int lengthResourceList = resources.get(curResourceList).getGenes().size();
+			
 			
 			// get enrichment p-value based on fisher exact test
-			
 			double enrichmentPval = enrichment.fisherEnrichment(numberOfHits, lengthResourceList, lengthQueryList, totalGenes);
 
 			// check if list is has enrichment pVal < threshold, remember enriched lists
 			if (enrichmentPval <= threshold){
-				data.get(curInputList).getResources().get(curResourceList).setEnriched(true);
-				data.get(curInputList).incrementEnrichment();
-				data.get(curInputList).getEnrichedLists().add(curResourceList);
-//				resources.get(curResourceList).setEnriched(true);
-//				numberOfEnrichedLists++;
-//				enrichedLists.add(curResourceList);
-
+				runData.getResources().get(curResourceList).setEnriched(true);
+				runData.incrementEnrichment();
+				runData.getEnrichedLists().add(curResourceList);
 			}
 
+			
 			// store enrichment pVal
-			data.get(curInputList).getResources().get(curResourceList).setEnrichmentPval(enrichmentPval);
-//			resources.get(curResourceList).setEnrichmentPval(enrichmentPval);
-
-
+			runData.getResources().get(curResourceList).setEnrichmentPval(enrichmentPval);
 		}
-		
-		
-//		// write qc elements to log file
-//		log.writeOutFile("Number of enriched lists: " + numberOfEnrichedLists);
-//		for (String curEnrichedList : enrichedLists) {
-//			log.writeOutFile(curEnrichedList);
-//		}
-
 	}
 
+	
+	
+	
 
-
-	//// create final ranked list
+	/////////////////////////////////
+	//////// create final ranked list
+	
 	public void createListOfScores(){
 
 		// make log entry
@@ -141,27 +140,21 @@ public class LookupMain {
 		for (String curResourceList : resources.keySet()) {
 
 			// check if list is enriched if so check if it is sorted or not and score accordingly
-//			if (resources.get(curResourceList).isEnriched()) {
-			
-			if (data.get(curInputList).getResources().get(curResourceList).isEnriched()) {
+			if (runData.getResources().get(curResourceList).isEnriched()) {
 
-//				if (resources.get(curResourceList).isSorted()){
-				if (data.get(curInputList).getResources().get(curResourceList).isSorted()) {
-				
-					new GetScore().rankedList(resources.get(curResourceList).getGeneList(), allScores);
+				if (runData.getResources().get(curResourceList).isSorted()) {
+
+					List<String> resourceGeneList = new ArrayList<>(resources.get(curResourceList).getGenes().keySet());	
+					new GetScore().rankedList(resourceGeneList, allScores);
 					
 				} else {
-
-					new GetScore().unranked(resources.get(curResourceList).getGeneList(), allScores);
+					
+					List<String> resourceGeneList = new ArrayList<>(resources.get(curResourceList).getGenes().keySet());	
+					new GetScore().unranked(resourceGeneList, allScores);
 
 				}
-				
-				// reset enrichment flag for future checks
-//				resources.get(curResourceList).setEnriched(false);
-				
 			}
 		}
-		
 	}
 
 
@@ -170,7 +163,7 @@ public class LookupMain {
 	/////////////////////////////////
 
 
-	public Map<String, ResourceData> getAllScores() {
+	public Map<String, GeneData> getAllScores() {
 		return allScores;
 	}
 

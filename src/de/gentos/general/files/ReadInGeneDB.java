@@ -16,7 +16,7 @@ import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneInfo;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
 
-public class ReadInGenes {
+public class ReadInGeneDB {
 
 
 
@@ -42,7 +42,8 @@ public class ReadInGenes {
 	//////////////
 	//////// constructor
 
-	public ReadInGenes(InitializeGwasMain init) {
+	// constructor for GenToS GWAS 
+	public ReadInGeneDB(InitializeGwasMain init) {
 
 		// set variables
 		GetGwasOptions options = init.getGwasOptions();
@@ -59,8 +60,8 @@ public class ReadInGenes {
 	
 	
 
-	// Constructor for GenToS lists
-	public ReadInGenes(InitializeGeneSetMain init) {
+	// Constructor for GenToS geneSet
+	public ReadInGeneDB(InitializeGeneSetMain init) {
 
 		// set variables
 		GetGeneSetOptions options = init.getOptions();

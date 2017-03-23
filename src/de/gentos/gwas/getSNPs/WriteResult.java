@@ -7,7 +7,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.io.FilenameUtils;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.data.GeneListInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
@@ -25,7 +25,7 @@ public class WriteResult {
 	InitializeGwasMain init;
 	CommandLine cmd;
 	String currentListName;
-	ReadInGenes readGenes;
+	ReadInGeneDB readGenes;
 
 
 	////////////////////

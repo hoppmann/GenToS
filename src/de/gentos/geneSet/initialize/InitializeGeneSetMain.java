@@ -11,11 +11,10 @@ import java.util.Map;
 
 import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.ResourceLists;
-import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.InitDatabase;
 
 public class InitializeGeneSetMain {
@@ -28,13 +27,12 @@ public class InitializeGeneSetMain {
 	private String[] args;
 	private Map<String, ResourceLists> resources;
 	private List<InputList> inputLists;
-	private Map<String, RunData> dataMap;
 
 	
 	
 	// gene database
 	private String[] columnNamesGenes = {"gene"};
-	private ReadInGenes genes;
+	private ReadInGeneDB genes;
 
 
 
@@ -68,9 +66,6 @@ public class InitializeGeneSetMain {
 		log.writeFile("Options chosen:\n" + Arrays.toString(args) + "\n");
 		
 		
-		// init run data map
-		dataMap = new HashMap<>();
-
 		// read in resource lists
 		initResources();
 
@@ -167,15 +162,14 @@ public class InitializeGeneSetMain {
 				}
 			}	
 		} else {
+			
 			// if directory is empty make log error entry and exit 
 			log.writeError(resourceDir + " does not contain any files!");
 			System.exit(1);
 		}
 
-
-
-
-
+		
+		
 
 		///////////////////////////////
 		//////// read in resource lists 
@@ -190,7 +184,7 @@ public class InitializeGeneSetMain {
 			file.setLog(log);
 			LinkedList<String> lines = file.openFile(curFile, false);
 
-			// read in line wise and save correnspondingly
+			// read in line wise and save correspondingly
 			for (String line : lines ) {
 
 				// check if line is empty or contains only white spaces then skip line
@@ -204,7 +198,7 @@ public class InitializeGeneSetMain {
 				// extract header and check if file is sorted or not.
 				if (splitLine[0].startsWith("#")){
 
-					// save header
+					// save header lines
 					curListIn.addHeader(splitLine);
 
 					// check if list is sorted if so store it
@@ -215,15 +209,21 @@ public class InitializeGeneSetMain {
 				} else {
 
 					// if not header section any more save as gene element
-					// check that ther is an entry for the gene name
+					// check if there is an entry for the gene name
 					if (!splitLine[0].isEmpty()){
-						if (!curListIn.getGeneList().contains(splitLine[0])){
-							curListIn.addGeneLine(splitLine);
-							curListIn.addGenes(splitLine[0]);
-						} 
+						String curGene = splitLine[0];
+						int lengthNewArray = splitLine.length -1;
+						String[] geneInfo = new String[lengthNewArray]; 
+						System.arraycopy(splitLine, 1, geneInfo, 0, lengthNewArray );
+						
+						// save gene with corresponding infos
+						if (!curListIn.getGenes().containsKey(curGene)){
+							curListIn.addGene(curGene, geneInfo);
+						}
 					}
 				}
 			}
+			
 			
 			// save current file in map containing all resources
 			resources.put(curFile, curListIn);
@@ -232,18 +232,26 @@ public class InitializeGeneSetMain {
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
 	/////////////////
-	// read in query gene list
+	// read in input gene list
 	private void initQueryGenes(){
 
 		// make log entry
-		log.writeOutFile("\n#### Reading in query gene list");
+		log.writeOutFile("\n#### Reading in input gene list");
 
 		// init variables
-		// init class to work with file
+		// init class to work with files
 		HandleFiles file = new HandleFiles();
 
-		// check if query list or list of queries is chosen
+		// check if single query or list of queries is chosen
 		if (options.getListOfQueries() != null && !options.getListOfQueries().isEmpty()){
 
 			
@@ -258,9 +266,8 @@ public class InitializeGeneSetMain {
 				// check if file exists
 				file.exist(curListPath);
 				
-				//// open file
+				//// open single query file
 				LinkedList<String> lines = file.openFile(curListPath, true);
-				
 				
 				// split file and take first entry, for the case that information is stored in input list
 				InputList curList = new InputList(curListPath);
@@ -268,7 +275,7 @@ public class InitializeGeneSetMain {
 				for (String line : lines){
 					String[] splitString = line.split("\t");
 					
-					// check if input gene is already listsed if so don't add it again.
+					// check if input gene is already listed if so don't add it again.
 					if (curList.getQueryGenes().contains(splitString[0])){
 						log.writeWarning(splitString[0] + " is duplicated in input list. Only used once.");
 					} else {
@@ -301,6 +308,8 @@ public class InitializeGeneSetMain {
 		}
 	}
 
+	
+	
 	/////////////////
 	//// initialize gene db
 	public void readInGenes() {
@@ -319,7 +328,7 @@ public class InitializeGeneSetMain {
 		db.checkDatabases(geneTable, columnNamesGenes);
 
 		// read in gene database
-		genes = new ReadInGenes(this);
+		genes = new ReadInGeneDB(this);
 
 		
 		
@@ -353,12 +362,8 @@ public class InitializeGeneSetMain {
 		return inputLists;
 	}
 
-	public ReadInGenes getGenes() {
+	public ReadInGeneDB getGeneDbGenes() {
 		return genes;
-	}
-
-	public Map<String, RunData> getDataMap() {
-		return dataMap;
 	}
 
 

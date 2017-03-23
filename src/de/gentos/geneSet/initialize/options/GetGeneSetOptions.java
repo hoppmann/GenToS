@@ -45,6 +45,9 @@ public class GetGeneSetOptions {
 	// misc
 	private String infoFile  = "INFO.txt";
 	
+	// lookup
+	private boolean stringent = false;
+	
 	
 
 	/////////////////////////////
@@ -161,6 +164,9 @@ public class GetGeneSetOptions {
 
 
 
+		
+		
+		
 		///////////////////////
 		//// Resampling options
 
@@ -189,6 +195,12 @@ public class GetGeneSetOptions {
 		}
 
 
+		
+		
+		
+		
+		
+		
 		////////////
 		//// misc options
 		if (cmd.hasOption("infoFile")){
@@ -199,6 +211,12 @@ public class GetGeneSetOptions {
 
 
 
+		///////////
+		//// lookup
+		if (cmd.hasOption("stringent")) {
+			stringent = true;
+		}
+		
 
 
 
@@ -289,6 +307,11 @@ public class GetGeneSetOptions {
 
 	public String getInfoFile() {
 		return infoFile;
+	}
+
+
+	public boolean isStringent() {
+		return stringent;
 	}
 
 

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import de.gentos.general.files.Database;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneListInfo;
@@ -31,7 +31,7 @@ public class ExtractData {
 
 	//////////////////////
 	//////// set variables
-	ReadInGenes readGenes; 
+	ReadInGeneDB readGenes; 
 	ReadInGwasData data;
 	InitializeGwasMain init;
 	HandleFiles log;

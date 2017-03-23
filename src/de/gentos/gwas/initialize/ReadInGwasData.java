@@ -15,7 +15,7 @@ import com.google.common.primitives.Ints;
 
 import de.gentos.general.files.Database;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.data.SnpLine;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
 
@@ -30,7 +30,7 @@ public class ReadInGwasData {
 	String tableGene;
 	String dbGene;
 	Map<String, List<SnpLine>> geneSNP = new HashMap<>();
-	ReadInGenes readGenes;
+	ReadInGeneDB readGenes;
 
 	Integer[] correctChr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 			12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
@@ -64,7 +64,7 @@ public class ReadInGwasData {
 	//////// methods
 
 
-	public void readGWASFile(String currentDB, String currentTable, ReadInGenes genes) {
+	public void readGWASFile(String currentDB, String currentTable, ReadInGeneDB genes) {
 
 		// set column names
 		String colRsID = options.getColrsID();
@@ -255,12 +255,12 @@ public class ReadInGwasData {
 
 	
 	
-	public ReadInGenes getReadGenes() {
+	public ReadInGeneDB getReadGenes() {
 		return readGenes;
 	}
 
 
-	public void setReadGenes(ReadInGenes readGenes) {
+	public void setReadGenes(ReadInGeneDB readGenes) {
 		this.readGenes = readGenes;
 	}
 

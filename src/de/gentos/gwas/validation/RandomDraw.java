@@ -1,12 +1,11 @@
 package de.gentos.gwas.validation;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.google.common.collect.Multimap;
-
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 
 public class RandomDraw {
 
@@ -41,8 +40,7 @@ public class RandomDraw {
 
 
 	// draw random list of genes
-	public void drawList(int length, int iterations, String listName, Multimap<String, LinkedList<String>> allRandomLists, long seed, ReadInGenes genes) {
-
+	public void drawList(int length, int iterations, String listName, ArrayList<LinkedList<String>> allRandomLists, long seed, ReadInGeneDB genes) {
 
 		// make log entry
 		log.writeOutFile("Drawing random lists of genes for " + listName);
@@ -76,11 +74,7 @@ public class RandomDraw {
 
 			
 			// add random list to hash 
-			allRandomLists.put(listName, randomList);
-			
-			
-			
-
+			allRandomLists.add(randomList);
 		}
 	}
 

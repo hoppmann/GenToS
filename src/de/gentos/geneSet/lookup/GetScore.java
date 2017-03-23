@@ -3,7 +3,7 @@ package de.gentos.geneSet.lookup;
 import java.util.List;
 import java.util.Map;
 
-import de.gentos.geneSet.initialize.data.ResourceData;
+import de.gentos.geneSet.initialize.data.GeneData;
 
 public class GetScore {
 	///////////////////////////
@@ -12,15 +12,9 @@ public class GetScore {
 
 
 
-
-
-
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
-
-
-
 
 
 
@@ -34,7 +28,7 @@ public class GetScore {
 	//////// calculate weight for ranked list
 	//// weight of gene = rank of gene / sum of all ranks in list
 
-	public void rankedList(List<String> list, Map<String, ResourceData> allScores) {
+	public void rankedList(List<String> list, Map<String, GeneData> allScores) {
 
 		// get sum of ranks
 		int lengthList = list.size();
@@ -52,7 +46,7 @@ public class GetScore {
 
 			// check if gene key is available else initialize
 			if (! allScores.containsKey(gene)) {
-				allScores.put(gene, new ResourceData(gene));
+				allScores.put(gene, new GeneData(gene));
 			}
 
 			// get weight of current gene 
@@ -70,7 +64,7 @@ public class GetScore {
 	//////// calculate weight for unranked list
 	//// weight of gene = 1 / length of list
 
-	public void unranked(List<String> list, Map<String, ResourceData> allScores){
+	public void unranked(List<String> list, Map<String, GeneData> allScores){
 
 		int lengthList = list.size();
 		// for each gene get weight and save in hash
@@ -78,7 +72,7 @@ public class GetScore {
 
 			// check if gene key is available else initialize
 			if (! allScores.containsKey(gene)) {
-				allScores.put(gene, new ResourceData(gene));
+				allScores.put(gene, new GeneData(gene));
 			}
 
 			// get weight of current gene 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.data.DbSnpInfo;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
 
@@ -21,7 +21,7 @@ public class InitializeGwasMain {
 	ConfigFile config;
 	HandleFiles log;
 	ReadInGwasData gwasData;
-	ReadInGenes readGenes;
+	ReadInGeneDB readGenes;
 	Map<Integer, DbSnpInfo> dbSNPInfo;
 
 
@@ -155,7 +155,7 @@ public class InitializeGwasMain {
 	// read in gene data from gene db and gwas data from gwas db's and save it in hash
 	private void readData() {
 		// get gene info
-		readGenes = new ReadInGenes(this);
+		readGenes = new ReadInGeneDB(this);
 
 
 
@@ -194,7 +194,7 @@ public class InitializeGwasMain {
 		return gwasData;
 	}
 
-	public ReadInGenes getReadGenes() {
+	public ReadInGeneDB getReadGenes() {
 		return readGenes;
 	}
 

@@ -1,17 +1,21 @@
 package de.gentos.geneSet.initialize.data;
 
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 public class ResourceLists {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
 
+	//////// data produced in init step
 	private boolean sorted;
-	private LinkedList<ResourceData> header;
-	private LinkedList<ResourceData> geneLine;
-	private List<String> geneList;	
+	private LinkedList<GeneData> header;
+	private Map<String, String[]> genes; // line coresponing 
+	
+	
+	//////// collection of data produced during enrichment
 	private double enrichmentPval;
 	private boolean enriched;
 	
@@ -25,9 +29,8 @@ public class ResourceLists {
 		
 		// initialize lists
 		header = new LinkedList<>();
-		geneLine = new LinkedList<>();
 		sorted = false;
-		geneList = new LinkedList<String>();
+		genes = new HashMap<>();
 		
 		
 		
@@ -47,22 +50,13 @@ public class ResourceLists {
 	// add line to header information
 	public void addHeader(String[] splitLine) {
 		
-		header.add(new ResourceData(splitLine));
+		header.add(new GeneData(splitLine));
 	}
 
 	
-	// add line to gene informations
-	public void addGeneLine(String[] splitLine) {
-		
-		geneLine.add(new ResourceData(splitLine));
-		
-	}
-	
-	// add gene name in array
-	public void addGenes(String gene) {
-		
-		geneList.add(gene);
-		
+	// add genes to map
+	public void addGene(String gene, String[] geneInfo ){
+		genes.put(gene, geneInfo);
 	}
 	
 	
@@ -81,37 +75,32 @@ public class ResourceLists {
 		this.sorted = sorted;
 	}
 
-	public LinkedList<ResourceData> getHeader() {
+	public LinkedList<GeneData> getHeader() {
 		return header;
 	}
 
-	public void setHeader(LinkedList<ResourceData> header) {
+	public void setHeader(LinkedList<GeneData> header) {
 		this.header = header;
 	}
-
-	public LinkedList<ResourceData> getGeneLines() {
-		return geneLine;
+	
+	public Map<String, String[]> getGenes() {
+		return genes;
 	}
 
-	public void setGeneLines(LinkedList<ResourceData> geneLines) {
-		this.geneLine = geneLines;
-	}
-
-	public LinkedList<ResourceData> getGeneLine() {
-		return geneLine;
-	}
-
-	public List<String> getGeneList() {
-		return geneList;
+	public void setGenes(Map<String, String[]> genes) {
+		this.genes = genes;
 	}
 
 	
 	
 	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	public double getEnrichmentPval() {
 		return enrichmentPval;
 	}

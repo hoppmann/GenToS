@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.general.files.ReadInGenes;
+import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.getSNPs.ExtractData;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
@@ -23,7 +23,7 @@ public class CreateThresh {
 	Double thresh;
 	String plenty;
 	ReadInGwasData gwasData;
-	ReadInGenes readGenes;
+	ReadInGeneDB readGenes;
 	GeneInfo geneInfo;
 
 

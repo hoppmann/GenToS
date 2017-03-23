@@ -9,6 +9,7 @@ import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.geneSet.lookup.LookupMain;
 import de.gentos.geneSet.lookup.ResamplingMain;
 import de.gentos.geneSet.lookup.WriteInfoFile;
+import de.gentos.geneSet.lookup.WriteResults;
 import de.gentos.general.files.HandleFiles;
 
 public class GeneSetMain {
@@ -53,27 +54,33 @@ public class GeneSetMain {
 		// for each query input list run program
 		for (InputList inputList : init.getInputLists()){
 
-			
+
 			///////////////////////////
 			//////// calculate enrichment in different lists  
 
-			// init new data entry in dataMap
-			init.getDataMap().put(inputList.getListName(), new RunData(init, inputList.getQueryGenes().size()));
+			// create object to save data generated the processing the current input
+			RunData runData = new RunData(init, inputList.getQueryGenes().size());
 			
+
 			// print info which input list is processed
 			HandleFiles log = init.getLog();
 			log.writeOutFile("\n\n################ \n######## " + new File(inputList.getListPath()).getName() );
 			
-			// for each list check enrichment with query gene list
-			LookupMain lookup = new LookupMain(init, inputList);
 			
-
+			// for each list check enrichment with query gene list
+			LookupMain lookup = new LookupMain(init, inputList, runData);
+			
 
 			///////////////////////////
 			//////// random repeat for empirical pVal estimation
 			new ResamplingMain(options, init, inputList, lookup.getAllScores());
 
 
+			System.exit(0);
+			
+			//////// write results file
+			new WriteResults(init);
+			
 			//////// write info file
 			new WriteInfoFile(init);
 

@@ -20,6 +20,7 @@ public class SetGeneSetOptions {
 	private String main = "main options";
 	private String resample = "resampling";
 	private String misc = "misc";
+	private String lookup = "lookup";
 	
 	
 	/////////////////////////////
@@ -66,6 +67,11 @@ public class SetGeneSetOptions {
 
 		//////// misc
 		opts.put(misc, new OptionValue(options, "infoFile", true, "Name of the infoFile"));
+		
+		//////// lookup
+		opts.put(lookup, new OptionValue(options, "stringent", false, "Íf chosen make threshold correction by number of resource lists AND input lists."));
+		
+		
 		
 	}
 
