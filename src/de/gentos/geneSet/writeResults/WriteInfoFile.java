@@ -1,4 +1,4 @@
-package de.gentos.geneSet.lookup;
+package de.gentos.geneSet.writeResults;
 
 import java.io.File;
 import java.util.Map;
@@ -14,7 +14,8 @@ public class WriteInfoFile {
 	///////////////////////////
 	private GetGeneSetOptions options;
 	private InitializeGeneSetMain init;
-	private Map<String, RunData> data;
+	private RunData runData;
+//	private Map<String, RunData> data;
 	
 	
 	
@@ -23,12 +24,13 @@ public class WriteInfoFile {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public WriteInfoFile(InitializeGeneSetMain init) {
+	public WriteInfoFile(InitializeGeneSetMain init, RunData runData) {
 		
 		// collect variables
 		this.init = init;
 		this.options = init.getOptions();
-		this.data = init.getDataMap();
+		this.runData = runData;
+//		this.data = init.getDataMap();
 		
 		
 		// create info file
@@ -57,7 +59,7 @@ public class WriteInfoFile {
 		infoFile.writeFile("Inputlist\tnumber of genes in list\tnumber of enriched lists");
 		for (String curInputList : data.keySet()) {
 			String numberGenes = Integer.toString(data.get(curInputList).getLengthInput());
-			String numberEnrichedLists = Integer.toString(data.get(curInputList).getNumberEnrichedLists());
+			String numberEnrichedLists = Integer.toString(data.get(curInputList).getNumberEnrichedResources());
 			infoFile.writeFile(curInputList + "\t" + numberGenes + "\t" + numberEnrichedLists);
 		}
 		
@@ -82,10 +84,10 @@ public class WriteInfoFile {
 			
 			infoFile.writeFile(curInputList);
 			infoFile.writeFile("Number of genes in input list: " + data.get(curInputList).getLengthInput());;
-			infoFile.writeFile("Number of enriched lists: " + Integer.toString(data.get(curInputList).getNumberEnrichedLists()));
+			infoFile.writeFile("Number of enriched lists: " + Integer.toString(data.get(curInputList).getNumberEnrichedResources()));
 			
 			// extract found lists
-			for (String curEnrichedList : data.get(curInputList).getEnrichedLists()) {
+			for (String curEnrichedList : data.get(curInputList).getEnrichedResources()) {
 				
 				// check if enriched list is sorted
 				if (init.getResources().get(curEnrichedList).isSorted()) {

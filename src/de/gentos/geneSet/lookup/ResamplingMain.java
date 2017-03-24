@@ -11,13 +11,11 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
-import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.GeneData;
+import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.ResourceLists;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
@@ -37,7 +35,7 @@ public class ResamplingMain {
 	private Map<String, ResourceLists> resources;
 	private Map<String, GeneData> originalScores;
 	private double threshold = 0.05;
-	private String curInputList;
+	private RunData runData;
 
 
 
@@ -45,7 +43,8 @@ public class ResamplingMain {
 	//////// constructor ////////
 	/////////////////////////////
 
-	public ResamplingMain(GetGeneSetOptions options, InitializeGeneSetMain init, InputList inputList, Map<String, GeneData> originalScores) {
+	public ResamplingMain(GetGeneSetOptions options, InitializeGeneSetMain init, 
+			InputList inputList, RunData runData) {
 
 		
 		// gather and retriev variables
@@ -54,8 +53,8 @@ public class ResamplingMain {
 		this.log = init.getLog();
 		this.inputList = inputList;
 		this.resources = init.getResources();
-		this.originalScores = originalScores;
-		this.curInputList = inputList.getListName();
+		this.originalScores = runData.getGeneData();
+		this.runData = runData;
 		
 		// make log entry
 		log.writeOutFile("\n######## Resampling with random gene lists. ########");
@@ -93,9 +92,9 @@ public class ResamplingMain {
 		ReadInGeneDB genes = init.getGeneDbGenes();
 
 		// draw random set of genes
-
-		 new RandomDraw(log).drawList(length, iterations, curListName, allRandomLists, seed, genes);
-
+		// create map to be able to reuse GenToS GWAS random draw
+		new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes);
+		
 	}
 
 
@@ -164,13 +163,13 @@ public class ResamplingMain {
 
 						// calculate weights for current resource list in sorted case
 						List<String> resourceGeneList = new ArrayList<>(resources.get(curResource).getGenes().keySet());	
-						new GetScore().rankedList(resourceGeneList, allRandScores);
+						new GetScore().rankedList(resourceGeneList, allRandScores, curResource);
 
 					} else if (!resources.get(curResource).isSorted()) {
 
 						// calculate weights for current resource list in unsorted case
 						List<String> resourceGeneList = new ArrayList<>(resources.get(curResource).getGenes().keySet());	
-						new GetScore().unranked(resourceGeneList, allRandScores);
+						new GetScore().unranked(resourceGeneList, allRandScores, curResource);
 
 					}
 				}
@@ -233,13 +232,10 @@ public class ResamplingMain {
 				geneList.put(curGene, pval);
 			}
 			
-			
-			
-			/////////////
-			// Sort genes according to their pval
+			// Sort genes according to their pval and save for later use
 			Map<String, Double> sortedGeneList = sortByValue(geneList);
+			runData.setEmpiricalPval(sortedGeneList);
 			
-			System.out.println(sortedGeneList);
 			
 			
 //			//// prepare out file header

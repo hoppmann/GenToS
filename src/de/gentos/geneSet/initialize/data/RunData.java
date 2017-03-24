@@ -11,15 +11,23 @@ public class RunData {
 	//////// variables ////////
 	///////////////////////////
 
+	// general data
+	private String curListName;	
+	private Map<String, ResourceLists> resources;
+
+	
+	// lookup data
 	private int numberEnrichedLists = 0;
-	private LinkedList<String> enrichedLists;
+	private LinkedList<String> enrichedResources;
 	private double cumScore = 0;
 	private int scoreHits = 0;
-	private double empiricalPval;
-	private Map<String, ResourceLists> resources;
-	private int lengthInput; 
+	private int lengthInput;
+	private Map<String, GeneData> geneData; // map with key resource list and value geneData object
 
 
+
+	// resampling data
+	private Map<String, Double> empiricalPval; // Sorted Map containing gene <=> empirical pval connection
 	
 	/////////////////////////////
 	//////// constructor ////////
@@ -28,8 +36,9 @@ public class RunData {
 
 	public RunData(InitializeGeneSetMain init, int lengthInputList) {
 		
-		enrichedLists = new LinkedList<>();
+		enrichedResources = new LinkedList<>();
 		resources = new HashMap<>();
+		geneData = new HashMap<>();
 		
 		// init Resources map
 		for (String curResource : init.getResources().keySet()){
@@ -71,23 +80,39 @@ public class RunData {
 	//////// getter / setter ////////
 	/////////////////////////////////
 	
-	public LinkedList<String> getEnrichedLists() {
-		return enrichedLists;
+	// inital data
+	
+	public String getCurListName() {
+		return curListName;
+	}
+
+
+	public void setCurListName(String curListName) {
+		this.curListName = curListName;
+	}
+	
+	
+	
+	
+	// lookup data
+	
+	public LinkedList<String> getEnrichedResources() {
+		return enrichedResources;
 	}
 
 	
-	public void setEnrichedLists(LinkedList<String> enrichedLists) {
-		this.enrichedLists = enrichedLists;
+	public void setEnrichedResources(LinkedList<String> enrichedResources) {
+		this.enrichedResources = enrichedResources;
 	}
 
 	
-	public int getNumberEnrichedLists() {
+	public int getNumberEnrichedResources() {
 		return numberEnrichedLists;
 	}
 
 	
-	public void setNumberEnrichedLists(int numberEnrichedLists) {
-		this.numberEnrichedLists = numberEnrichedLists;
+	public void setNumberEnrichedResources(int numberEnrichedRsources) {
+		this.numberEnrichedLists = numberEnrichedRsources;
 	}
 	
 	
@@ -124,14 +149,6 @@ public class RunData {
 		this.resources = resources;
 	}
 
-	public double getEmpiricalPval() {
-		return empiricalPval;
-	}
-
-	public void setEmpiricalPval(double empiricalPval) {
-		this.empiricalPval = empiricalPval;
-	}
-
 	public int getLengthInput() {
 		return lengthInput;
 	}
@@ -140,6 +157,47 @@ public class RunData {
 		this.lengthInput = lengthInput;
 	}
 
+
+	public Map<String, GeneData> getGeneData() {
+		return geneData;
+	}
+
+	public void setGeneData(Map<String, GeneData> geneData) {
+		this.geneData = geneData;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	// resampling data
+
+	public Map<String, Double> getEmpiricalPval() {
+		return empiricalPval;
+	}
+
+	public void setEmpiricalPval(Map<String, Double> empiricalPval) {
+		this.empiricalPval = empiricalPval;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
 	
 	
 	

@@ -1,13 +1,11 @@
 package de.gentos.geneSet.lookup;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
-import de.gentos.geneSet.initialize.data.GeneData;
 import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.ResourceLists;
 import de.gentos.geneSet.initialize.data.RunData;
@@ -22,7 +20,6 @@ public class LookupMain {
 	private HandleFiles log;
 	private LinkedList<String> inputList;
 	private Map<String, ResourceLists> resources;
-	private Map<String, GeneData> allScores;
 	private GetGeneSetOptions options;
 	private RunData runData; 
 
@@ -113,7 +110,7 @@ public class LookupMain {
 			if (enrichmentPval <= threshold){
 				runData.getResources().get(curResourceList).setEnriched(true);
 				runData.incrementEnrichment();
-				runData.getEnrichedLists().add(curResourceList);
+				runData.getEnrichedResources().add(curResourceList);
 			}
 
 			
@@ -134,8 +131,6 @@ public class LookupMain {
 		// make log entry
 		log.writeOutFile("\n#### Calculating gene scores");
 
-		allScores = new LinkedHashMap<>();
-
 		// for each enriched list calculate the weight for each gene and save in hash
 		for (String curResourceList : resources.keySet()) {
 
@@ -145,13 +140,13 @@ public class LookupMain {
 				if (runData.getResources().get(curResourceList).isSorted()) {
 
 					List<String> resourceGeneList = new ArrayList<>(resources.get(curResourceList).getGenes().keySet());	
-					new GetScore().rankedList(resourceGeneList, allScores);
+					
+					new GetScore().rankedList(resourceGeneList, runData.getGeneData(), curResourceList);
 					
 				} else {
 					
 					List<String> resourceGeneList = new ArrayList<>(resources.get(curResourceList).getGenes().keySet());	
-					new GetScore().unranked(resourceGeneList, allScores);
-
+					new GetScore().unranked(resourceGeneList, runData.getGeneData(), curResourceList);
 				}
 			}
 		}
@@ -161,14 +156,6 @@ public class LookupMain {
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
-
-
-	public Map<String, GeneData> getAllScores() {
-		return allScores;
-	}
-
-
-
 
 
 }

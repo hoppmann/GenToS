@@ -8,8 +8,8 @@ import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.geneSet.lookup.LookupMain;
 import de.gentos.geneSet.lookup.ResamplingMain;
-import de.gentos.geneSet.lookup.WriteInfoFile;
-import de.gentos.geneSet.lookup.WriteResults;
+import de.gentos.geneSet.writeResults.WriteInfoFile;
+import de.gentos.geneSet.writeResults.WriteResults;
 import de.gentos.general.files.HandleFiles;
 
 public class GeneSetMain {
@@ -59,7 +59,9 @@ public class GeneSetMain {
 			//////// calculate enrichment in different lists  
 
 			// create object to save data generated the processing the current input
+			String curInputList = inputList.getListName();
 			RunData runData = new RunData(init, inputList.getQueryGenes().size());
+			runData.setCurListName(curInputList);
 			
 
 			// print info which input list is processed
@@ -73,16 +75,17 @@ public class GeneSetMain {
 
 			///////////////////////////
 			//////// random repeat for empirical pVal estimation
-			new ResamplingMain(options, init, inputList, lookup.getAllScores());
+			new ResamplingMain(options, init, inputList, runData);
 
 
-			System.exit(0);
 			
 			//////// write results file
-			new WriteResults(init);
+			new WriteResults(init, runData);
 			
-			//////// write info file
-			new WriteInfoFile(init);
+			
+			
+//			//////// write info file
+//			new WriteInfoFile(init, runData);
 
 
 

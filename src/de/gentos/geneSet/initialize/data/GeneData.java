@@ -1,6 +1,8 @@
 package de.gentos.geneSet.initialize.data;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class GeneData {
 	///////////////////////////
@@ -15,13 +17,11 @@ public class GeneData {
 	
 	// gene data collection during lookup
 	private double cumScore = 0;
-
-	
-	
+	private Map<String, String> enrichedResources;
 	
 	private int scoreHits = 0;
 	private double empiricalPval;
-	private int numberEnricheLists = 0;
+	private int numberEnricheResources = 0;
 	private int numberAllFoundResources = 0;
 
 
@@ -32,8 +32,9 @@ public class GeneData {
 	// general constructor
 	public GeneData(String[] splitLine) {
 
-		// init LinkedList
+		// init Lists
 		line = new LinkedList<>();
+		enrichedResources = new HashMap<>();
 		
 		// if line is header just save in line list
 		if (splitLine[0].startsWith("#")){
@@ -63,6 +64,9 @@ public class GeneData {
 	// constructor to initialize only name
 	public GeneData(String geneName) {
 		
+		// init lists
+		enrichedResources = new HashMap<>();
+		// set gene name
 		this.geneName = geneName.toUpperCase();
 	
 	}
@@ -84,15 +88,17 @@ public class GeneData {
 		scoreHits++;
 	}
 	
-	public void incrementNumberEnricheLists (){
-		numberEnricheLists++;
+	public void incrementNumberEnricheResources (){
+		numberEnricheResources++;
 	}
 	
 	public void incrementNumberAllFoundResources(){
 		numberAllFoundResources++;
 	}
 	
-	
+	public void putEnrichedList(String listName, String position) {
+		enrichedResources.put(listName, position);
+	}
 
 
 	/////////////////////////////////
@@ -151,14 +157,29 @@ public class GeneData {
 	}
 
 
-	public int getNumberEnricheLists() {
-		return numberEnricheLists;
+	public int getNumberEnricheResources() {
+		return numberEnricheResources;
 	}
 
-	public void setNumberEnricheLists(int numberEnricheLists) {
-		this.numberEnricheLists = numberEnricheLists;
+	public void setNumberEnricheResources(int numberEnricheResources) {
+		this.numberEnricheResources = numberEnricheResources;
 	}
 
+
+	public Map<String, String> getEnrichedResources() {
+		return enrichedResources;
+	}
+
+
+	public void setEnrichedResources(Map<String, String> enrichedLists) {
+		this.enrichedResources = enrichedLists;
+	}
+
+
+
+
+
+	
 
 	
 
