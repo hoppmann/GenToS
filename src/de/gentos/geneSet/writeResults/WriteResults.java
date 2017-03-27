@@ -131,7 +131,8 @@ public class WriteResults {
 			outLine.add(Double.toString(empPVal));
 
 			// get number of enriched resources
-			int numbEnrichedResources = runData.getNumberEnrichedResources();
+			int numbEnrichedResources = runData.getGeneData().get(curGene).getNumberAllFoundResources(); 
+					//runData.getNumberEnrichedResources();
 			outLine.add(Integer.toString(numbEnrichedResources));
 
 			// get total number of resources checkt for enrichment

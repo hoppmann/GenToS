@@ -57,9 +57,12 @@ public class GetScore {
 			
 			// save rank of gene in this list
 			String position = Integer.toString(rank) + "/" + Integer.toString(list.size());
-			geneData.get(gene).putEnrichedList(currentResourceList, position);;
+			geneData.get(gene).putEnrichedList(currentResourceList, position);
 			rank++;
-
+			
+			// increment that gene is listed in another resource
+			geneData.get(gene).incrementNumberAllFoundResources();
+			
 			// store weight in array
 			geneData.get(gene).sumScore(weightCurGene);
 		}
@@ -76,15 +79,15 @@ public class GetScore {
 	//////// calculate weight for unranked list
 	//// weight of gene = 1 / length of list
 
-	public void unranked(List<String> list, Map<String, GeneData> geneScores, String currentResourceList){
+	public void unranked(List<String> list, Map<String, GeneData> geneData, String currentResourceList){
 
 		int lengthList = list.size();
 		// for each gene get weight and save in hash
 		for (String gene : list) {
 
 			// check if gene key is available else initialize
-			if (! geneScores.containsKey(gene)) {
-				geneScores.put(gene, new GeneData(gene));
+			if (! geneData.containsKey(gene)) {
+				geneData.put(gene, new GeneData(gene));
 			}
 
 			// get weight of current gene 
@@ -92,10 +95,14 @@ public class GetScore {
 
 			// save rank of gene in this list
 			String position = "-/" + Integer.toString(list.size());
-			geneScores.get(gene).putEnrichedList(currentResourceList, position);;
+			geneData.get(gene).putEnrichedList(currentResourceList, position);;
 
+			// increment that gene is listed in another resource
+			geneData.get(gene).incrementNumberAllFoundResources();
+
+			
 			// store weight in array
-			geneScores.get(gene).sumScore(scoreCurGene);
+			geneData.get(gene).sumScore(scoreCurGene);
 
 		}
 	}
