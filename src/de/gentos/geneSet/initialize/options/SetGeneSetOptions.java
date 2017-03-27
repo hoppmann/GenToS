@@ -51,15 +51,13 @@ public class SetGeneSetOptions {
 		opts = LinkedListMultimap.create();
 		
 		
-		//////// Main options
+		//////// main options
 		opts.put(main, new OptionValue(options, "inputList", true, "List of genes to check for"));
 		opts.put(main, new OptionValue(options, "outDir", true, "\tName of the directory for the output"));
-		opts.put(main, new OptionValue(options, "log", true, "\tName of the logfile. (default = \"logfile.txt\")"));
 		opts.put(main, new OptionValue(options, "resourceDir", true, "Directory where the resource lists are saved. (Default: \"geneLists\")"));
 		opts.put(main, new OptionValue(options, "listOfQueries", true, "File containing path to all querylists."));
-		opts.put(main, new OptionValue(options, "help", false, "\tCalls this help."));
 		
-		//////// Resampling
+		//////// resampling
 		opts.put(resample, new OptionValue(options, "iterations", true, "Number of iterations that should be used for resampling (Default: 1000)"));
 		opts.put(resample, new OptionValue(options, "dbGene", true, "\tFile name of gene database to be used. Only needed if not internal databse desired. [tableGene option required]"));
 		opts.put(resample, new OptionValue(options, "tableGene", true, "Name of gene table in dbGene (default = genes)"));
@@ -67,9 +65,11 @@ public class SetGeneSetOptions {
 
 		//////// misc
 		opts.put(misc, new OptionValue(options, "infoFile", true, "Name of the infoFile"));
-		
+		opts.put(misc, new OptionValue(options, "help", false, "\tCalls this help."));
+		opts.put(misc, new OptionValue(options, "log", true, "\tName of the logfile. (default = \"logfile.txt\")"));
+
 		//////// lookup
-		opts.put(lookup, new OptionValue(options, "stringent", false, "Íf chosen make threshold correction by number of resource lists AND input lists."));
+		opts.put(lookup, new OptionValue(options, "stringent", false, "If chosen make threshold correction by number of resource lists AND input lists."));
 		
 		
 		
