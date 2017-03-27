@@ -32,8 +32,6 @@ public class ResourceLists {
 		sorted = false;
 		genes = new HashMap<>();
 		
-		
-		
 	}
 
 

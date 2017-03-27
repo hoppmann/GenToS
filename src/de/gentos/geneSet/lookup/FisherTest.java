@@ -66,6 +66,12 @@ public class FisherTest {
 		return Math.exp(p);
 	}
 
+	
+	
+	
+	
+	
+	
 	// calculates the one tail P-value for the Fisher Exact test
 	// @param a,b,c,d are the four cells in a 2x2 matrix
 	// @return the P-value

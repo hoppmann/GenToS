@@ -66,6 +66,11 @@ public class GetScore {
 
 	}
 
+	
+	
+	
+	
+	
 
 	//////////////////////
 	//////// calculate weight for unranked list

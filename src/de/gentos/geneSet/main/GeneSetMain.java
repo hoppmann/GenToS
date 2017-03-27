@@ -1,8 +1,11 @@
 package de.gentos.geneSet.main;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
+import de.gentos.geneSet.initialize.data.InfoData;
 import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
@@ -19,6 +22,7 @@ public class GeneSetMain {
 	GetGeneSetOptions options;
 	InitializeGeneSetMain init; 
 	InputList inputLists;
+	Map<String, InfoData> infoMap;
 
 
 
@@ -36,8 +40,8 @@ public class GeneSetMain {
 
 	public void runLists(String[] args) {
 
-
-
+		// init info map for later use to produce info file
+		infoMap = new HashMap<>();
 
 		///////////////////////////
 		//////// initialize program
@@ -70,9 +74,9 @@ public class GeneSetMain {
 			
 			
 			// for each list check enrichment with query gene list
-			LookupMain lookup = new LookupMain(init, inputList, runData);
-			
+			new LookupMain(init, inputList, runData);
 
+			
 			///////////////////////////
 			//////// random repeat for empirical pVal estimation
 			new ResamplingMain(options, init, inputList, runData);
@@ -84,13 +88,14 @@ public class GeneSetMain {
 			
 			
 			
-//			//////// write info file
-//			new WriteInfoFile(init, runData);
-
-
+			//////// collect data for info file
+			new WriteInfoFile().collectData(runData, curInputList, infoMap);
 
 		}
 
+		
+		//////// write info file
+		new WriteInfoFile().writeInfo(init, infoMap);
 
 
 		// close log file

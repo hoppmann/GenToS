@@ -59,6 +59,7 @@ public class Enrichment {
 	
 	
 	
+	
 	// calculate the enrichment p-val based on binomial distribution
 	public double getEnrichment (int hits, int totalGenes, int lengthList) {
 		
@@ -76,6 +77,7 @@ public class Enrichment {
 	}
 	
 
+	
 	
 	
 	// calculate enrichment p-val based on fisher exact test

@@ -175,6 +175,11 @@ public class ResamplingMain {
 				}
 			}
 
+			
+			
+			
+			
+			
 
 
 			// for each gene found in original list check if it was found in random sampled list
@@ -191,11 +196,6 @@ public class ResamplingMain {
 				}
 			}
 		}
-			
-			
-			
-			
-			
 			
 			
 			
@@ -236,42 +236,6 @@ public class ResamplingMain {
 			Map<String, Double> sortedGeneList = sortByValue(geneList);
 			runData.setEmpiricalPval(sortedGeneList);
 			
-			
-			
-//			//// prepare out file header
-//			// prepare summary of enriched Lists 
-//			
-//			int numberEnrichedLists = init.getDataMap().get(curInputList).getNumberEnrichedLists();
-//			LinkedList<String> enrichedLists = init.getDataMap().get(curInputList).getEnrichedLists();
-//
-//			resultOut.writeFile("# Number of enriched lists: " + numberEnrichedLists);
-//			for (String curEnrichedList : enrichedLists){
-//				Boolean isSorted = init.getResources().get(curEnrichedList).isSorted();
-//				
-//				if (isSorted) {
-//					resultOut.writeFile("# " + curEnrichedList + "\tsorted");
-//				} else {
-//					resultOut.writeFile("# " + curEnrichedList + "\tnot sorted");
-//				}
-//				
-//			
-//			}
-//			
-//			// prepare values definitions
-//			resultOut.writeFile("#gene\tp-value\tscore [-log10]");
-//
-//			// print out values
-//			for (String curGene : sortedGeneList.keySet()){
-//				double pval = originalScores.get(curGene).getEmpiricalPVal();
-//				double score = originalScores.get(curGene).getLogCumScore();
-//				
-//				resultOut.writeFile(curGene + "\t" + pval + "\t" + score);
-//				
-//			}
-//			
-//			// close result file
-//			resultOut.closeFile();
-//		}
 	}
 
 	

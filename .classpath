@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/jsc.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.8.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/ssj-2.5.jar"/>
+	<classpathentry kind="lib" path="/media/hoppmann/Data/workspace/GenToS/lib/commons-lang3-3.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

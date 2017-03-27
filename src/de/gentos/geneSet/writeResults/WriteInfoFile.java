@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
+import de.gentos.geneSet.initialize.data.InfoData;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
@@ -12,38 +13,23 @@ public class WriteInfoFile {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
-	private GetGeneSetOptions options;
-	private InitializeGeneSetMain init;
-	private RunData runData;
-//	private Map<String, RunData> data;
-	
-	
 	
 	
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
-
-	public WriteInfoFile(InitializeGeneSetMain init, RunData runData) {
-		
-		// collect variables
-		this.init = init;
-		this.options = init.getOptions();
-		this.runData = runData;
-//		this.data = init.getDataMap();
-		
-		
-		// create info file
-		writeInfo();
-	}
-	
-	
 	
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
 
-	private void writeInfo(){
+	public void writeInfo(InitializeGeneSetMain init, Map<String, InfoData> infoMap){
+		
+		// retrieve and extract needed variables
+		GetGeneSetOptions options = init.getOptions();
+		
+		
+		
 		
 		// open file for writing
 		String fileName = options.getOutDir() + File.separator + options.getInfoFile();
@@ -56,14 +42,27 @@ public class WriteInfoFile {
 			- number of enriched lists
 			- number of genes in input list
 		*/
+		// prepare header
 		infoFile.writeFile("Inputlist\tnumber of genes in list\tnumber of enriched lists");
-		for (String curInputList : data.keySet()) {
-			String numberGenes = Integer.toString(data.get(curInputList).getLengthInput());
-			String numberEnrichedLists = Integer.toString(data.get(curInputList).getNumberEnrichedResources());
-			infoFile.writeFile(curInputList + "\t" + numberGenes + "\t" + numberEnrichedLists);
+		
+		// write condense primary info 
+		
+		for (String curInputList : infoMap.keySet()){
+			
+			// retrieve variables for readability
+			int numberEnrichedResources = infoMap.get(curInputList).getNumberEnrichedResources();
+			int genesInInputList = infoMap.get(curInputList).getNumberGenesInInput();
+			
+			// prepare line
+			String line = curInputList + "\t" + genesInInputList + "\t" + numberEnrichedResources;
+			
+			// Write out in info-file
+			infoFile.writeFile(line);
+			
 		}
 		
-		// enter empty lines for better visability
+		
+		// enter empty lines for better visibility
 		infoFile.writeFile("\n");
 		
 		
@@ -80,14 +79,14 @@ public class WriteInfoFile {
 		
 		
 		// for each input list write infos in file
-		for ( String curInputList : data.keySet()){
+		for ( String curInputList : infoMap.keySet()){
 			
 			infoFile.writeFile(curInputList);
-			infoFile.writeFile("Number of genes in input list: " + data.get(curInputList).getLengthInput());;
-			infoFile.writeFile("Number of enriched lists: " + Integer.toString(data.get(curInputList).getNumberEnrichedResources()));
-			
+			infoFile.writeFile("Number of genes in input list: " + infoMap.get(curInputList).getNumberGenesInInput());;
+			infoFile.writeFile("Number of enriched lists: " + Integer.toString(infoMap.get(curInputList).getNumberEnrichedResources()));
+
 			// extract found lists
-			for (String curEnrichedList : data.get(curInputList).getEnrichedResources()) {
+			for (String curEnrichedList : infoMap.get(curInputList).getEnrichedResources()) {
 				
 				// check if enriched list is sorted
 				if (init.getResources().get(curEnrichedList).isSorted()) {
@@ -109,7 +108,24 @@ public class WriteInfoFile {
 		
 		
 	}
+
 	
+	
+	public void collectData(RunData runData, String curInputName, Map<String, InfoData> info) {
+		
+		// create new InfoData object containing  
+		InfoData infoData = new InfoData();
+		infoData.setNumberEnrichedResources(runData.getNumberEnrichedResources());
+		infoData.setNumberGenesInInput(runData.getLengthInput());
+		infoData.setEnrichedResources(runData.getEnrichedResources());
+		
+		// add infoData to info map
+		info.put(curInputName, infoData);
+		
+		
+		
+		
+	}
 	
 	
 	

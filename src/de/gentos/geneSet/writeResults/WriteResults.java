@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Lists;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
@@ -84,6 +86,7 @@ public class WriteResults {
 
 		// prepare final header line
 		String finalHeader = "gene\tpVal\t#enrichedResources\t#ofAllResources";
+		
 		// add name of enriched lists
 		for (String curEnrichedResource : runData.getEnrichedResources()) {
 			String resourceName = new File(curEnrichedResource).getName();
@@ -139,19 +142,13 @@ public class WriteResults {
 			// get positions of genes in enriched lists 
 			for (String curEnrichedResource : runData.getEnrichedResources()){
 				String position = runData.getGeneData().get(curGene).getEnrichedResources().get(curEnrichedResource);
-				outLine.add(position);
+					outLine.add(position);
 			}
 
 
-			// write out line
-			//			String finalLine = StringUtils.join(outLine, "\t");
-			String finalLine = String.join("\t", outLine);
-			resultOut.writeFile(finalLine);
-
-
-
-
-
+			// Concat elements and write out line
+			String completeLine = StringUtils.join(outLine, "\t");
+			resultOut.writeFile(completeLine);
 
 		}
 
@@ -159,13 +156,6 @@ public class WriteResults {
 		resultOut.closeFile();
 
 	}
-
-
-
-
-
-
-
 
 
 
@@ -215,28 +205,6 @@ public class WriteResults {
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
-
-
-	//	//// prepare out file header
-	//	// prepare summary of enriched Lists 
-	//	
-	//	
-	//	// prepare values definitions
-	//	resultOut.writeFile("#gene\tp-value\tscore [-log10]");
-	//
-	//	// print out values
-	//	for (String curGene : sortedGeneList.keySet()){
-	//		double pval = originalScores.get(curGene).getEmpiricalPVal();
-	//		double score = originalScores.get(curGene).getLogCumScore();
-	//		
-	//		resultOut.writeFile(curGene + "\t" + pval + "\t" + score);
-	//		
-	//	}
-	//	
-	//	// close result file
-	//	resultOut.closeFile();
-	//}
-
 
 
 }
