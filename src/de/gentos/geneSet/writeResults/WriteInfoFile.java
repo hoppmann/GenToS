@@ -1,6 +1,7 @@
 package de.gentos.geneSet.writeResults;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
@@ -8,6 +9,7 @@ import de.gentos.geneSet.initialize.data.InfoData;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
+import de.gentos.general.misc.generalMethods;
 
 public class WriteInfoFile {
 	///////////////////////////
@@ -42,12 +44,23 @@ public class WriteInfoFile {
 			- number of enriched lists
 			- number of genes in input list
 		*/
+		
+		
 		// prepare header
 		infoFile.writeFile("Inputlist\tnumber of genes in list\tnumber of enriched lists");
 		
-		// write condense primary info 
 		
-		for (String curInputList : infoMap.keySet()){
+		// sort infoMap by number of enriched resources
+		Map<String, Double> toBeSorted = new HashMap<>();
+		for ( String curInputList : infoMap.keySet()) {
+			toBeSorted.put(curInputList, (double) infoMap.get(curInputList).getNumberEnrichedResources());
+		}
+		Map<String, Double> sortedInfoMap = new generalMethods().sortMapByValue(toBeSorted, false);
+
+		
+		
+		// write condense primary info 
+		for (String curInputList : sortedInfoMap.keySet()){
 			
 			// retrieve variables for readability
 			int numberEnrichedResources = infoMap.get(curInputList).getNumberEnrichedResources();
@@ -77,10 +90,8 @@ public class WriteInfoFile {
 		 * - number of genes in input list
 		 */
 		
-		
 		// for each input list write infos in file
-		for ( String curInputList : infoMap.keySet()){
-			
+		for ( String curInputList : sortedInfoMap.keySet()){
 			infoFile.writeFile(curInputList);
 			infoFile.writeFile("Number of genes in input list: " + infoMap.get(curInputList).getNumberGenesInInput());;
 			infoFile.writeFile("Number of enriched lists: " + Integer.toString(infoMap.get(curInputList).getNumberEnrichedResources()));
@@ -93,13 +104,10 @@ public class WriteInfoFile {
 					infoFile.writeFile(curEnrichedList + "\t sorted ");	
 				} else {
 					infoFile.writeFile(curEnrichedList + "\t NOT sorted ");	
-
 				}
-				
 			}
-			
+			// add spacing for visibility
 			infoFile.writeFile("\n\n");
-			
 		}
 		
 		
@@ -126,6 +134,7 @@ public class WriteInfoFile {
 		
 		
 	}
+	
 	
 	
 	

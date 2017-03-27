@@ -1,21 +1,17 @@
 package de.gentos.geneSet.writeResults;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.collect.Lists;
-
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
+import de.gentos.general.misc.generalMethods;
 
 public class WriteResults {
 	///////////////////////////
@@ -45,6 +41,9 @@ public class WriteResults {
 	}
 
 
+	
+	
+	
 
 	/////////////////////////
 	//////// methods ////////
@@ -112,7 +111,7 @@ public class WriteResults {
 		//// get list informations
 
 		// for each gene (in sorted empirical pval list) extract the postion of the gene in each enriched List
-		Map<String, Double> sortedEmpiricalPvalList = sortByValue(runData.getEmpiricalPval());		
+		Map<String, Double> sortedEmpiricalPvalList = new generalMethods().sortMapByValue(runData.getEmpiricalPval(), true);		
 
 		for (String curGene : sortedEmpiricalPvalList.keySet()){
 
@@ -156,45 +155,6 @@ public class WriteResults {
 		resultOut.closeFile();
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-	////////////
-	//////// sort hash according to the values
-	public Map<String, Double> sortByValue(Map<String, Double> map) {
-		List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
-
-
-		// sort by values
-		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
-
-			public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
-				return (m2.getValue()).compareTo(m1.getValue());
-			}
-		});
-
-		// reverse sort order to start with smallest
-		List<Map.Entry<String, Double>> reverseList = Lists.reverse(list);
-
-		// transfer sorted list to linked hash map
-		Map<String, Double> result = new LinkedHashMap<String, Double>();
-		for (Map.Entry<String, Double> entry : reverseList) {
-			result.put(entry.getKey(), entry.getValue());
-		}
-		return result;
-	}
-
-
 
 
 
