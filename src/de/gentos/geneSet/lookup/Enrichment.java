@@ -35,7 +35,7 @@ public class Enrichment {
 	/////////////////////////
 
 	// extract the number of hits found in resource list using the query list
-	public int getHits(LinkedList<String> queryList, ResourceLists resourceList) {
+	public int getHits(LinkedList<String> inputList, ResourceLists resourceList) {
 		
 		// for each gene in query gene list check if is in resource list, if
 		int numberOfHits = 0;
@@ -44,10 +44,10 @@ public class Enrichment {
 		List<String> geneList = new ArrayList<>(resourceList.getGenes().keySet());
 
 		
-		for (String gene : queryList) {
+		for (String curGene : inputList) {
 			
 			// if gene is found in resource list increment hit count
-			if (geneList.contains(gene)) {
+			if (geneList.contains(curGene)) {
 				numberOfHits++;
 			}
 		}

@@ -20,23 +20,17 @@ public class GeneSetMain {
 	//////// variables ////////
 	///////////////////////////
 	GetGeneSetOptions options;
-	InitializeGeneSetMain init; 
+	InitializeGeneSetMain init;
 	InputList inputLists;
 	Map<String, InfoData> infoMap;
-
-
 
 	/////////////////////////////
 	//////// constructor ////////
 	/////////////////////////////
 
-
-
-
 	/////////////////////////
 	//////// methods ////////
 	/////////////////////////
-
 
 	public void runLists(String[] args) {
 
@@ -47,67 +41,65 @@ public class GeneSetMain {
 		//////// initialize program
 
 		// getting command line options
-		// prepare log file  
+		// prepare log file
 		// read in resource lists
 		// read in query gene list
 
 		init = new InitializeGeneSetMain(args);
 		options = init.getOptions();
 
-		
 		// for each query input list run program
-		for (InputList inputList : init.getInputLists()){
-
+		for (InputList curInputList : init.getInputLists()) {
 
 			///////////////////////////
-			//////// calculate enrichment in different lists  
+			//////// calculate enrichment in different lists
 
-			// create object to save data generated the processing the current input
-			String curInputList = inputList.getListName();
-			RunData runData = new RunData(init, inputList.getQueryGenes().size());
-			runData.setCurListName(curInputList);
-			
+			// create object to save data generated the processing the current
+			// input
+			String curInputListName = curInputList.getListName();
+			RunData runData = new RunData(init, curInputList.getQueryGenes().size());
+			runData.setCurListName(curInputListName);
 
 			// print info which input list is processed
 			HandleFiles log = init.getLog();
-			log.writeOutFile("\n\n################ \n######## " + new File(inputList.getListPath()).getName() );
-			
-			
-			// for each list check enrichment with query gene list
-			new LookupMain(init, inputList, runData);
+			log.writeOutFile("\n\n################ \n######## " + new File(curInputList.getListPath()).getName());
 
-			
+			// for each list check enrichment with query gene list
+			new LookupMain(init, curInputList, runData);
+
 			///////////////////////////
 			//////// random repeat for empirical pVal estimation
-			new ResamplingMain(options, init, inputList, runData);
+			/*
+			 * check if input list has any enriched resources if so do
+			 * resampling and write results this avoids unnecessary resampling
+			 * iterations and saves time results files without resampling would
+			 * be empty thus they are skipped General info still will be written
+			 * in Info file
+			 */
+			
+			
+			if (runData.getNumberEnrichedResources() > 0) {
+				// run random sampling for empirical pVal estimation
+				new ResamplingMain(options, init, curInputList, runData);
 
+				//////// write results file
+				 new WriteResults(init, runData, curInputList);
 
-			
-			//////// write results file
-			new WriteResults(init, runData);
-			
-			
-			
+			}
+
 			//////// collect data for info file
-			new WriteInfoFile().collectData(runData, curInputList, infoMap);
+			new WriteInfoFile().collectData(runData, curInputListName, infoMap, curInputList);
 
 		}
 
-		
 		//////// write info file
 		new WriteInfoFile().writeInfo(init, infoMap);
-
 
 		// close log file
 		init.getLog().writeOutFile("\n######## GenToS successuflly finished.\n");
 		init.getLog().closeFile();
 
-
 	}
-
-
-
-
 
 	/////////////////////////////////
 	//////// getter / setter ////////

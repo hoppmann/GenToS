@@ -1,6 +1,5 @@
 package de.gentos.geneSet.lookup;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
 
 import com.google.common.collect.Lists;
 
@@ -204,11 +201,6 @@ public class ResamplingMain {
 			//////// calculate resampling pval for each gene 
 			//////// sort list according to pvals and save the results in sorted list
 
-			// prepare results file
-			String resultFileName = FilenameUtils.getBaseName(inputList.getListName()) + ".csv";
-			HandleFiles resultOut = new HandleFiles();
-			resultOut.openWriter(options.getOutDir() + File.separator + resultFileName);
-			
 			///////////////
 			// for each originally found gene calculate empirical pVal
 			// init variables

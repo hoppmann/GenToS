@@ -24,10 +24,10 @@ public class RunData {
 	private int lengthInput;
 	private Map<String, GeneData> geneData; // map with key resource list and value geneData object
 
-
-
 	// resampling data
 	private Map<String, Double> empiricalPval; // Sorted Map containing gene <=> empirical pval connection
+	
+	
 	
 	/////////////////////////////
 	//////// constructor ////////
@@ -68,10 +68,6 @@ public class RunData {
 		numberEnrichedLists++;
 		
 	}
-
-
-	
-	
 	
 	
 	
@@ -166,8 +162,6 @@ public class RunData {
 		this.geneData = geneData;
 	}
 
-
-	
 	
 	
 	
@@ -182,6 +176,19 @@ public class RunData {
 	public void setEmpiricalPval(Map<String, Double> empiricalPval) {
 		this.empiricalPval = empiricalPval;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

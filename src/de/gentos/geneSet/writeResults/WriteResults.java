@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
+import de.gentos.geneSet.initialize.data.InputList;
 import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
@@ -20,6 +21,7 @@ public class WriteResults {
 	private GetGeneSetOptions options;
 	private InitializeGeneSetMain init;
 	private RunData runData;
+	private InputList curInputList;
 
 
 
@@ -28,13 +30,24 @@ public class WriteResults {
 	/////////////////////////////
 
 
-	public WriteResults(InitializeGeneSetMain init, RunData runData) {
+	public WriteResults(InitializeGeneSetMain init, RunData runData, InputList curInputList) {
 
 		// retrieve data
 		this.init = init;
 		this.options = init.getOptions();
 		this.runData = runData;
+		this.curInputList = curInputList;
+		
 
+		// create folder for result files
+		String sep = File.separator;
+		String outDir = options.getOutDir() + sep + "results";
+		new File(outDir).mkdirs();
+		
+		
+		// make log entry
+		init.getLog().writeOutFile("\n#### Writing result file!");
+		
 		// write result
 		write();
 
@@ -53,11 +66,11 @@ public class WriteResults {
 
 	private void write() {
 
+		
 		// prepare out file name
-		String outDir = options.getOutDir();
 		String sep = File.separator;
+		String outDir = options.getOutDir() + sep + "results";
 		String outFileName = outDir + sep + runData.getCurListName();
-		System.out.println(outFileName);
 
 
 		// out file for writing 
@@ -68,23 +81,29 @@ public class WriteResults {
 		///////////////////////
 		//////// prepare header
 		int numberEnrichedLists = runData.getNumberEnrichedResources();
-		LinkedList<String> enrichedLists = runData.getEnrichedResources();
+		LinkedList<String> enrichedResources = runData.getEnrichedResources();
 
 
 		//// write out number of enriched lists, name of enriched list and if sorted or not
 		resultOut.writeFile("# Number of enriched lists: " + numberEnrichedLists);
-		for (String curEnrichedList : enrichedLists){
-			Boolean isSorted = init.getResources().get(curEnrichedList).isSorted();
+		for (String curEnrichedResource : enrichedResources){
 
+			// get length of current resource
+			int lengthResource = init.getResources().get(curEnrichedResource).getGenes().size();
+			
+			// get info if resource is sorted
+			Boolean isSorted = init.getResources().get(curEnrichedResource).isSorted();
+			
 			if (isSorted) {
-				resultOut.writeFile("# " + curEnrichedList + "\tsorted");
+				resultOut.writeFile("# " + curEnrichedResource + "\tsorted\t " + lengthResource + " genes");
 			} else {
-				resultOut.writeFile("# " + curEnrichedList + "\tnot sorted");
+				resultOut.writeFile("# " + curEnrichedResource + "\tnot sorted\t " + lengthResource + " genes");
 			}
 		}
 
+		
 		// prepare final header line
-		String finalHeader = "gene\tpVal\t#enrichedResources\t#ofAllResources";
+		String finalHeader = "gene\tinInput\tpVal\t#enrichedResources\t#ofAllResources";
 		
 		// add name of enriched lists
 		for (String curEnrichedResource : runData.getEnrichedResources()) {
@@ -112,7 +131,7 @@ public class WriteResults {
 
 		// for each gene (in sorted empirical pval list) extract the postion of the gene in each enriched List
 		Map<String, Double> sortedEmpiricalPvalList = new generalMethods().sortMapByValue(runData.getEmpiricalPval(), true);		
-
+		
 		for (String curGene : sortedEmpiricalPvalList.keySet()){
 
 
@@ -125,6 +144,43 @@ public class WriteResults {
 			// add gene name to line 
 			outLine.add(curGene);
 
+			
+			// check if gene was in original input list if so flag it in results file
+			if (curInputList.getQueryGenes().contains(curGene)) {
+				outLine.add("X");
+			} else {
+				outLine.add("");
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			// list of values needed for output (besides curgene)
 			// get empirical pValue
 			double empPVal = sortedEmpiricalPvalList.get(curGene);
