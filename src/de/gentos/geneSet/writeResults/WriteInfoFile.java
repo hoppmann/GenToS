@@ -47,7 +47,7 @@ public class WriteInfoFile {
 		
 		
 		// prepare header
-		infoFile.writeFile("Inputlist\tnumber of genes in list\tnumber of enriched lists");
+		infoFile.writeFile("Inputlist\tgenes in input list\tenriched resources");
 		
 		
 		// sort infoMap by number of enriched resources
@@ -94,7 +94,7 @@ public class WriteInfoFile {
 		for ( String curInputList : sortedInfoMap.keySet()){
 			infoFile.writeFile(curInputList);
 			infoFile.writeFile("Number of genes in input list: " + infoMap.get(curInputList).getNumberGenesInInput());;
-			infoFile.writeFile("Number of enriched lists: " + Integer.toString(infoMap.get(curInputList).getNumberEnrichedResources()));
+			infoFile.writeFile("Number of enriched resource lists: " + Integer.toString(infoMap.get(curInputList).getNumberEnrichedResources()));
 
 			// extract found lists
 			for (String curEnrichedList : infoMap.get(curInputList).getEnrichedResources()) {
