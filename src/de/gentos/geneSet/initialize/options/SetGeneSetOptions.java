@@ -62,7 +62,8 @@ public class SetGeneSetOptions {
 		opts.put(resample, new OptionValue(options, "dbGene", true, "\tFile name of gene database to be used. Only needed if not internal databse desired. [tableGene option required]"));
 		opts.put(resample, new OptionValue(options, "tableGene", true, "Name of gene table in dbGene (default = genes)"));
 		opts.put(resample, new OptionValue(options, "seed", true, "\tSet seed for random generator."));
-
+		opts.put(resample, new OptionValue(options, "minEnriched", true, "Minimum number of enriched resources to run resampling. (default = 1)"));
+		
 		//////// misc
 		opts.put(misc, new OptionValue(options, "infoFile", true, "Name of the infoFile"));
 		opts.put(misc, new OptionValue(options, "help", false, "\tCalls this help."));

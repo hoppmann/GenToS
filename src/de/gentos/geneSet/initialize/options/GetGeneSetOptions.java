@@ -41,6 +41,7 @@ public class GetGeneSetOptions {
 	private String dbGeneName;
 	private String dbGeneTable;
 	private long seed = -1;
+	private int minEnrichement = 1;
 	
 	// misc
 	private String infoFile  = "INFO.txt";
@@ -195,8 +196,10 @@ public class GetGeneSetOptions {
 		}
 
 
-		
-		
+		// get min number of enrichemnt
+		if (cmd.hasOption("minEnriched")){
+			minEnrichement = Integer.valueOf(cmd.getOptionValue("minEnriched"));
+		}
 		
 		
 		
@@ -312,6 +315,10 @@ public class GetGeneSetOptions {
 
 	public boolean isStringent() {
 		return stringent;
+	}
+
+	public int getMinEnrichement() {
+		return minEnrichement;
 	}
 
 

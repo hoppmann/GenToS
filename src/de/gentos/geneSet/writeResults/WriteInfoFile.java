@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.gentos.geneSet.initialize.InitializeGeneSetMain;
 import de.gentos.geneSet.initialize.data.InfoData;
 import de.gentos.geneSet.initialize.data.InputList;
@@ -45,14 +47,17 @@ public class WriteInfoFile {
 
 
 		/* create short summary in the top containing 
+		 *  - minEnriched  option value
 			- resource list
 			- number of enriched lists
 			- number of genes in input list
 		 */
 
+		// give out what was min enrichment
+		infoFile.writeFile("Enriched resources needed to run resampling: " + init.getOptions().getMinEnrichement());
 
 		// prepare header
-		infoFile.writeFile("Inputlist\tgenes in input list\tinformative genes\tenriched resources");
+		infoFile.writeFile("\nInputlist\tgenes in input list\tinformative genes\tenriched resources");
 
 
 		// sort infoMap by number of enriched resources
@@ -121,11 +126,12 @@ public class WriteInfoFile {
 
 
 			// add info about gene of input list found in final list
-			String informativeGenes = String.join(" ", infoMap.get(curInputList).getEnrichedGenes());
+			String informativeGenes = StringUtils.join(infoMap.get(curInputList).getEnrichedGenes(), ", ");
 			int numberInforamtiveGenes = infoMap.get(curInputList).getEnrichedGenes().size();
-			String nonInformativeGenes = String.join(" ", infoMap.get(curInputList).getNonEnrichedGenes());
+			String nonInformativeGenes = StringUtils.join(infoMap.get(curInputList).getNonEnrichedGenes(), ", ")	;
 			int  numberNonInforativeGenes = infoMap.get(curInputList).getNonEnrichedGenes().size();
 
+			
 			if (informativeGenes.length() > 0){
 				infoFile.writeFile("\nInformative input genes (found in enriched resource list): " + numberInforamtiveGenes);
 				infoFile.writeFile(informativeGenes);
@@ -149,7 +155,7 @@ public class WriteInfoFile {
 
 
 
-	public void collectData(RunData runData, String curInputName, Map<String, InfoData> info, InputList curInputList) {
+	public void collectData(RunData runData, String curInputName, Map<String, InfoData> info, InputList curInputList, InitializeGeneSetMain init) {
 
 		// create new InfoData object containing  
 		InfoData infoData = new InfoData();
@@ -162,7 +168,7 @@ public class WriteInfoFile {
 
 
 		// get genes from input which are present in any enriches list and which are not
-		if (runData.getEnrichedResources().size() > 0) {
+		if (runData.getEnrichedResources().size() >= init.getOptions().getMinEnrichement()) {
 			for (String curGene : curInputList.getQueryGenes()) {
 				if (runData.getEmpiricalPval().keySet().contains(curGene)){
 					infoData.addEnrichedGene(curGene, true);

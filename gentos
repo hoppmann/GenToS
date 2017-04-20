@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 #look for current path of program, even if symlinked
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; 

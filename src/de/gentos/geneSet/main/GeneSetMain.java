@@ -78,7 +78,8 @@ public class GeneSetMain {
 			 */
 			
 			
-			if (runData.getNumberEnrichedResources() > 0) {
+			
+			if (runData.getNumberEnrichedResources() >= options.getMinEnrichement()) {
 				// run random sampling for empirical pVal estimation
 				new ResamplingMain(options, init, curInputList, runData);
 
@@ -88,7 +89,7 @@ public class GeneSetMain {
 			}
 
 			//////// collect data for info file
-			new WriteInfoFile().collectData(runData, curInputListName, infoMap, curInputList);
+			new WriteInfoFile().collectData(runData, curInputListName, infoMap, curInputList, init);
 
 		}
 
