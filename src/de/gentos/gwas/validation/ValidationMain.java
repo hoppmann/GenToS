@@ -188,7 +188,7 @@ public class ValidationMain {
 				seed = init.getGwasOptions().getSeed();
 			}
 			// draw lists
-			random.drawInMap(lengthCurrenList, numberOfIterations, origList, allLists, seed, init.getReadGenes());
+			random.drawInMap(lengthCurrenList, numberOfIterations, origList, allLists, seed, init.getReadGenes(), true);
 			
 		
 		}

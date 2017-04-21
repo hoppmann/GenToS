@@ -46,8 +46,9 @@ public class WriteResults {
 		
 		
 		// make log entry
-		init.getLog().writeOutFile("\n#### Writing result file!");
-		
+		if (options.getThreads() == 1 || options.isVerbose()){
+			init.getLog().writeOutFile("\n#### Writing result file!");
+		}
 		// write result
 		write();
 

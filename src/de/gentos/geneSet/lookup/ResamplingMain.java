@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.google.common.collect.Lists;
 
@@ -31,8 +33,8 @@ public class ResamplingMain {
 	private ArrayList<LinkedList<String>> allRandomLists;
 	private Map<String, ResourceLists> resources;
 	private Map<String, GeneData> originalScores;
-	private double threshold = 0.05;
 	private RunData runData;
+	private double threshold = 0.05;
 
 
 
@@ -43,7 +45,7 @@ public class ResamplingMain {
 	public ResamplingMain(GetGeneSetOptions options, InitializeGeneSetMain init, 
 			InputList inputList, RunData runData) {
 
-		
+
 		// gather and retriev variables
 		this.options = options;
 		this.init = init;
@@ -52,9 +54,11 @@ public class ResamplingMain {
 		this.resources = init.getResources();
 		this.originalScores = runData.getGeneData();
 		this.runData = runData;
-		
+
 		// make log entry
-		log.writeOutFile("\n######## Resampling with random gene lists. ########");
+		if (options.getThreads() == 1 || options.isVerbose()){
+			log.writeOutFile("\n######## Resampling with random gene lists. ########");
+		}
 
 		// draw random genes
 		drawRandomGenes();
@@ -62,7 +66,7 @@ public class ResamplingMain {
 		// rerun enrichment and weighting with random list and store each time that original weight is reached
 		rerunEnrichment();
 
-		
+
 	}
 
 
@@ -78,8 +82,9 @@ public class ResamplingMain {
 	public void drawRandomGenes() {
 
 		// make log entry
-		log.writeOutFile("Drawing random genes");
-
+		if (options.getThreads() == 1 || options.isVerbose()){
+			log.writeOutFile("Drawing random genes");
+		}
 		// init and gather variables
 		allRandomLists = new ArrayList<>();
 		int length = inputList.getQueryGenes().size();
@@ -90,8 +95,11 @@ public class ResamplingMain {
 
 		// draw random set of genes
 		// create map to be able to reuse GenToS GWAS random draw
-		new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes);
-		
+		if (options.getThreads() == 1 || options.isVerbose()){
+			new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes, true);
+		} else {
+			new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes, false );
+		}
 	}
 
 
@@ -100,9 +108,10 @@ public class ResamplingMain {
 	public void rerunEnrichment() {
 
 		// make log entry
-		log.writeOutFile("Iterating lookup step");
-		
-		
+		if (options.getThreads() == 1 || options.isVerbose()){
+			log.writeOutFile("Iterating lookup step");
+		}
+
 		// init and gather variables
 		Enrichment enrichment = new Enrichment(log);
 		int totalGenes = init.getGeneDbGenes().getAllGeneNames().size();
@@ -110,7 +119,7 @@ public class ResamplingMain {
 		// define threshold as bonferroni correction for each list
 		int numberResources = resources.keySet().size();
 		int numberQueries = init.getInputLists().size();
-		
+
 		// if set stringent make bonferroni for resources AND queries, else resources only
 		if (options.isStringent()){
 			threshold = (double) 0.05 / ( numberResources * numberQueries );
@@ -119,153 +128,106 @@ public class ResamplingMain {
 
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		// for each original list rerun lookup for each randomly drawn list
-		// check for enrichment of random list in resource lists
-		// calculate weight of all genes on that list and save the number of times that 
-		// the random weight is greater or equal the original weight
+
+
+
+
+
+
+
+		/* for each original list rerun lookup for each randomly drawn list
+		 * check for enrichment of random list in resource lists
+		 * calculate weight of all genes on that list and save the number of times that 
+		 * the random weight is greater or equal the original weight
+		 */
+
+
+		// define maximum number of threads to be used
+		ExecutorService executor = Executors.newFixedThreadPool(options.getCpuPerThread());
+
+		// for each random drawn gene list start one process
 		for (LinkedList<String> curRandQuery : allRandomLists){
 
-
-			// init variable to gather weights over all lists
-			Map<String, GeneData> allRandScores = new LinkedHashMap<>();
-
-
-			// for each resource list get enrichment p-val
-			for ( String curResource : resources.keySet()){
-
-
-				// extract the number of query genes found in resource list
-				int hits = enrichment.getHits(curRandQuery, resources.get(curResource));
-
-				// extract the length of the query gene list 
-				int lengthList = curRandQuery.size();
-
-				// get enrichment Pval for current list
-				double enrichmentPval = enrichment.getEnrichment(hits, totalGenes, lengthList);
-
-
-				// check if list has enrichment pVal < threshold
-				// if it is enriched calculate weight
-				if (enrichmentPval <= threshold){
-
-					// check if list is sorted or unsorted
-					if (resources.get(curResource).isSorted()){
-
-						// calculate weights for current resource list in sorted case
-						List<String> resourceGeneList = new ArrayList<>(resources.get(curResource).getGenes().keySet());	
-						new GetScore().rankedList(resourceGeneList, allRandScores, curResource);
-
-					} else if (!resources.get(curResource).isSorted()) {
-
-						// calculate weights for current resource list in unsorted case
-						List<String> resourceGeneList = new ArrayList<>(resources.get(curResource).getGenes().keySet());	
-						new GetScore().unranked(resourceGeneList, allRandScores, curResource);
-
-					}
-				}
-			}
-
+			Runnable task = new ResamplingIteration(curRandQuery, resources, enrichment, totalGenes, originalScores, threshold);
+			executor.execute(task);
 			
-			
-			
-			
-			
-
-
-			// for each gene found in original list check if it was found in random sampled list
-			// if so check if the weight is greater or equal. Then save to calculate pVal  
-
-			for (String curGene : originalScores.keySet()){
-				if (allRandScores.containsKey(curGene)) {
-
-					if (allRandScores.get(curGene).getCumScore() >= originalScores.get(curGene).getCumScore()) {
-
-						// save number of hits in object from original list
-						originalScores.get(curGene).incrementScoreHits();
-					}
-				}
-			}
 		}
-			
-			
-			
-			
-			/////////////////////////////////////////////////////////////////////////
-			//////// calculate resampling pval for each gene 
-			//////// sort list according to pvals and save the results in sorted list
 
-			///////////////
-			// for each originally found gene calculate empirical pVal
+		// wait for all jobs to finish
+		executor.shutdown();
+		while (! executor.isTerminated()){
+		}
+
+
+		/////////////////////////////////////////////////////////////////////////
+		//////// calculate resampling pval for each gene 
+		//////// sort list according to pvals and save the results in sorted list
+
+		///////////////
+		// for each originally found gene calculate empirical pVal
+		// init variables
+		Map<String, Double> geneList = new LinkedHashMap<>();
+		for (String curGene : originalScores.keySet()) {
+
 			// init variables
-			Map<String, Double> geneList = new LinkedHashMap<>();
-			for (String curGene : originalScores.keySet()) {
+			double pval = 0;
 
-				// init variables
-				double pval = 0;
-				
-				// check if gene was found by any random draw then calculate pval else define pval as 0 
-				if (originalScores.get(curGene).getScoreHits() > 0){
-					int numhits = originalScores.get(curGene).getScoreHits();
-					int numiter = options.getIteration();
-					
-					// calculate p-value
-					pval = (double) numhits / numiter;
-				}
-				
-				// store pval and create hash to get sorted
-				originalScores.get(curGene).setEmpiricalPVal(pval);
-				geneList.put(curGene, pval);
+			// check if gene was found by any random draw then calculate pval else define pval as 0 
+			if (originalScores.get(curGene).getScoreHits() > 0){
+				int numhits = originalScores.get(curGene).getScoreHits();
+				int numiter = options.getIteration();
+
+				// calculate p-value
+				pval = (double) numhits / numiter;
 			}
-			
-			// Sort genes according to their pval and save for later use
-			Map<String, Double> sortedGeneList = sortByValue(geneList);
-			runData.setEmpiricalPval(sortedGeneList);
-			
+
+			// store pval and create hash to get sorted
+			originalScores.get(curGene).setEmpiricalPVal(pval);
+			geneList.put(curGene, pval);
+		}
+
+		// Sort genes according to their pval and save for later use
+		Map<String, Double> sortedGeneList = sortByValue(geneList);
+		runData.setEmpiricalPval(sortedGeneList);
+
 	}
 
-	
-	
-		////////////////////
-		//////// sort hash according to the values
-		public Map<String, Double> sortByValue(Map<String, Double> map) {
-	        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
-	
-	        
-	        // sort by values
-	        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
 
-	        	public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
-	        		return (m2.getValue()).compareTo(m1.getValue());
-	        	}
-	        });
 
-	        // reverse sort order to start with smallest
-	        List<Map.Entry<String, Double>> reverseList = Lists.reverse(list);
-	        
-	        // transfer sorted list to linked hash map
-	        Map<String, Double> result = new LinkedHashMap<String, Double>();
-	        for (Map.Entry<String, Double> entry : reverseList) {
-	            result.put(entry.getKey(), entry.getValue());
-	        }
-	        return result;
-	    }
+	////////////////////
+	//////// sort hash according to the values
+	public Map<String, Double> sortByValue(Map<String, Double> map) {
+		List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
 
-	
-	
+
+		// sort by values
+		Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+
+			public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
+				return (m2.getValue()).compareTo(m1.getValue());
+			}
+		});
+
+		// reverse sort order to start with smallest
+		List<Map.Entry<String, Double>> reverseList = Lists.reverse(list);
+
+		// transfer sorted list to linked hash map
+		Map<String, Double> result = new LinkedHashMap<String, Double>();
+		for (Map.Entry<String, Double> entry : reverseList) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
+
+
+
 
 
 	/////////////////////////////////
 	//////// getter / setter ////////
 	/////////////////////////////////
-		
-		
-		
+
+
+
 
 }

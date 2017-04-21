@@ -32,7 +32,6 @@ public class GetGeneSetOptions {
 
 	private String query;
 	private String outDir = "out";
-	private String log = "logfile.txt";
 	private String listDir = "geneLists";
 	private String listOfQueries;
 
@@ -45,6 +44,10 @@ public class GetGeneSetOptions {
 	
 	// misc
 	private String infoFile  = "INFO.txt";
+	private int threads = 1;
+	private int cpuPerThread = 1;
+	private String log = "logfile.txt";
+	private boolean verbose = false;
 	
 	// lookup
 	private boolean stringent = false;
@@ -148,11 +151,6 @@ public class GetGeneSetOptions {
 			outDir = cmd.getOptionValue("outDir");
 		}
 		
-		// get name of logfile
-		if (cmd.hasOption("log")) {
-			log = cmd.getOptionValue("log");
-		}
-
 		// get directory of resource gene lists
 		if (cmd.hasOption("resourceDir")) {
 			listDir = cmd.getOptionValue("resourceDir");
@@ -209,10 +207,28 @@ public class GetGeneSetOptions {
 		if (cmd.hasOption("infoFile")){
 			infoFile = cmd.getOptionValue("infoFile");
 		}
+		
+		// get max number of threads
+		if (cmd.hasOption(("threads"))) {
+			threads = Integer.valueOf(cmd.getOptionValue("threads"));
+		}
 
+		// get  number of cpu per thread
+		if (cmd.hasOption("cpuPerThread")) {
+			cpuPerThread = Integer.valueOf(cmd.getOptionValue("cpuPerThread"));
+		}
+		
+		// get name of logfile
+		if (cmd.hasOption("log")) {
+			log = cmd.getOptionValue("log");
+		}
 
+		// check if verbose
+		if (cmd.hasOption("verbose")){
+			verbose = true;
+		}
 
-
+		
 
 		///////////
 		//// lookup
@@ -319,6 +335,18 @@ public class GetGeneSetOptions {
 
 	public int getMinEnrichement() {
 		return minEnrichement;
+	}
+
+	public int getThreads() {
+		return threads;
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public int getCpuPerThread() {
+		return cpuPerThread;
 	}
 
 

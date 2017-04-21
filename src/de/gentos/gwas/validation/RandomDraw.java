@@ -42,11 +42,12 @@ public class RandomDraw {
 
 
 	// draw random list of genes
-	public void drawInMap(int length, int iterations, String listName, Multimap<String, LinkedList<String>> allLists, long seed, ReadInGeneDB genes) {
+	public void drawInMap(int length, int iterations, String listName, Multimap<String, LinkedList<String>> allLists, long seed, ReadInGeneDB genes, Boolean printLog) {
 
 		// make log entry
-		log.writeOutFile("Drawing random lists of genes for " + listName);
-
+		if (printLog) {
+			log.writeOutFile("Drawing random lists of genes for " + listName);
+		}
 
 		// init random class
 		//if seed option is chosen use value as seed
@@ -86,11 +87,12 @@ public class RandomDraw {
 	
 	
 	// draw random list of genes and save in single LinkedList
-	public void drawInList(int length, int iterations, String listName, ArrayList<LinkedList<String>> allLists, long seed, ReadInGeneDB genes) {
+	public void drawInList(int length, int iterations, String listName, ArrayList<LinkedList<String>> allLists, long seed, ReadInGeneDB genes, Boolean printLog) {
 
 		// make log entry
-		log.writeOutFile("Drawing random lists of genes for " + listName);
-
+		if (printLog){
+			log.writeOutFile("Drawing random lists of genes for " + listName);
+		}
 
 		// init random class
 		//if seed option is chosen use value as seed

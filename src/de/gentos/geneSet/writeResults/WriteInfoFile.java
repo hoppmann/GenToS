@@ -109,6 +109,7 @@ public class WriteInfoFile {
 
 		// for each input list write infos in file
 		for ( String curInputList : sortedInfoMap.keySet()){
+			
 			infoFile.writeFile(curInputList);
 			infoFile.writeFile("Number of genes in input list: " + infoMap.get(curInputList).getNumberGenesInInput());;
 			infoFile.writeFile("Number of enriched resource lists: " + Integer.toString(infoMap.get(curInputList).getNumberEnrichedResources()));
@@ -163,8 +164,7 @@ public class WriteInfoFile {
 		infoData.setNumberGenesInInput(runData.getLengthInput());
 		infoData.setEnrichedResources(runData.getEnrichedResources());
 
-		// add infoData to info map
-		info.put(curInputName, infoData);
+		
 
 
 		// get genes from input which are present in any enriches list and which are not
@@ -177,6 +177,10 @@ public class WriteInfoFile {
 				}
 			}
 		}
+		
+		// add infoData to info map
+		info.put(curInputName, infoData);
+		
 	}
 
 
