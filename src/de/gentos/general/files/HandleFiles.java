@@ -51,6 +51,8 @@ public class HandleFiles {
 		String warningline = "## WARNING: " + line;
 		System.out.println(warningline);
 		writer.write(warningline);
+		writer.write(System.lineSeparator());
+
 		
 	}
 

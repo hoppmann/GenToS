@@ -46,7 +46,7 @@ public class ResamplingMain {
 			InputList inputList, RunData runData) {
 
 
-		// gather and retriev variables
+		// gather and retrieve variables
 		this.options = options;
 		this.init = init;
 		this.log = init.getLog();
