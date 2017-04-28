@@ -1,5 +1,7 @@
 package de.gentos.geneSet.initialize.options;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -178,7 +180,7 @@ public class GetGeneSetOptions {
 		if (cmd.hasOption("dbGene")){
 			dbGeneName = cmd.getOptionValue("dbGene");
 		} else {
-			dbGeneName = progPath + config.getDbGene();
+			dbGeneName = new File(progPath).getParent() + File.separator + config.getDbGene();
 		}
 
 		// get table of gene database

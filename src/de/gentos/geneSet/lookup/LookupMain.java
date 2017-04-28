@@ -33,6 +33,8 @@ public class LookupMain {
 
 	public LookupMain(InitializeGeneSetMain init, InputList inputList, RunData runData) {
 
+		
+		
 		// retrieve variables
 		this.init = init;
 		log = init.getLog();
@@ -90,7 +92,6 @@ public class LookupMain {
 			threshold = (double) 0.05 / ( numberResources );
 
 		}
-
 
 		// for each resource list get enrichment p-val
 		for (String curResourceList: resources.keySet()){

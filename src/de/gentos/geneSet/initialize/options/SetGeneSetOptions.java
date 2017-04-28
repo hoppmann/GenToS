@@ -69,7 +69,7 @@ public class SetGeneSetOptions {
 		opts.put(misc, new OptionValue(options, "help", false, "\tCalls this help."));
 		opts.put(misc, new OptionValue(options, "log", true, "\tName of the logfile. (default = \"logfile.txt\")"));
 		opts.put(misc, new OptionValue(options, "threads", true, "The number of threads (input lists) that should be handled in parallel. NOTE: total number of CPU usage = threads * cpuPerThread"));
-		opts.put(misc, new OptionValue(options, "cpuPerThread", true, "Set how many CPUs should be available per data thread (inputlist). NOTE: total number of CPU usage = threads * cpuPerThread"));
+		opts.put(misc, new OptionValue(options, "cpuPerThread", true, "(Prefered option over \"threads\") Set how many CPUs should be available per data thread (inputlist). NOTE: total number of CPU usage = threads * cpuPerThread"));
 		opts.put(misc, new OptionValue(options, "verbose", false, "Add extra output for debugging"));
 		
 		//////// lookup

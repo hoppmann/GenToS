@@ -1,7 +1,6 @@
 package de.gentos.geneSet.initialize.data;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class ResourceLists {
@@ -11,7 +10,6 @@ public class ResourceLists {
 
 	//////// data produced in init step
 	private boolean sorted;
-	private LinkedList<GeneData> header;
 	private Map<String, String[]> genes; // line coresponing 
 	
 	
@@ -28,7 +26,6 @@ public class ResourceLists {
 	public ResourceLists() {
 		
 		// initialize lists
-		header = new LinkedList<>();
 		sorted = false;
 		genes = new HashMap<>();
 		
@@ -45,13 +42,6 @@ public class ResourceLists {
 	//////// methods ////////
 	/////////////////////////
 
-	// add line to header information
-	public void addHeader(String[] splitLine) {
-		
-		header.add(new GeneData(splitLine));
-	}
-
-	
 	// add genes to map
 	public void addGene(String gene, String[] geneInfo ){
 		genes.put(gene, geneInfo);
@@ -73,13 +63,6 @@ public class ResourceLists {
 		this.sorted = sorted;
 	}
 
-	public LinkedList<GeneData> getHeader() {
-		return header;
-	}
-
-	public void setHeader(LinkedList<GeneData> header) {
-		this.header = header;
-	}
 	
 	public Map<String, String[]> getGenes() {
 		return genes;

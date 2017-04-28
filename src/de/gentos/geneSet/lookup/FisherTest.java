@@ -66,12 +66,12 @@ public class FisherTest {
 		return Math.exp(p);
 	}
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	// calculates the one tail P-value for the Fisher Exact test
 	// @param a,b,c,d are the four cells in a 2x2 matrix
 	// @return the P-value
@@ -87,26 +87,35 @@ public class FisherTest {
 			System.exit(1);
 		}
 
-		
-		// calculate cumulative pVal
-		cumPVal += getP(a11, b21, c12, d22);
+		/*
+		 *  check if enrichment or depleation needs less calculations
+		 * take the one with fewer steps (speed issue)
+		 */
 
+		// check if enrichment is faster
 		if((a11*d22)>=(b21*c12)) {
+			cumPVal += getP(a11, b21, c12, d22);
+
+			// get minimum
+			// min = If()?then:else;
 			min=(c12<b21)?c12:b21;
 			for(i=0; i<min; i++) {
 				cumPVal+=getP(++a11, --b21, --c12, ++d22);
 			}
-		}
-		
-		if((a11*d22)<(b21*c12)) {
+
+			// else calculate depleation with inverse P
+		} else {
 			min=(a11<d22)?a11:d22;
 			for(i=0; i<min; i++) {
 				cumPVal+=getP(--a11, ++b21, ++c12, --d22);
 			}
+
+			// inverse p-val
+			cumPVal = 1 - cumPVal;
 		}
 
 		// return pvalue
-				return cumPVal;
+		return cumPVal;
 	}
 
 

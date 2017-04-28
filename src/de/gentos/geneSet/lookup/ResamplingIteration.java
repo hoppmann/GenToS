@@ -98,7 +98,6 @@ public class ResamplingIteration implements Runnable{
 				}
 			}
 		}
-		
 	}
 	
 	

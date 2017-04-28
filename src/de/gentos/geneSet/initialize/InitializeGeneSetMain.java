@@ -198,9 +198,6 @@ public class InitializeGeneSetMain {
 				// extract header and check if file is sorted or not.
 				if (splitLine[0].startsWith("#")){
 
-					// save header lines
-					curListIn.addHeader(splitLine);
-
 					// check if list is sorted if so store it
 					if (splitLine[0].toUpperCase().startsWith("#SORTED")){
 						curListIn.setSorted(true);
@@ -210,6 +207,7 @@ public class InitializeGeneSetMain {
 
 					// if not header section any more save as gene element
 					// check if there is an entry for the gene name
+					// gene column is empty if so skip
 					if (!splitLine[0].isEmpty()){
 						String curGene = splitLine[0];
 						int lengthNewArray = splitLine.length -1;

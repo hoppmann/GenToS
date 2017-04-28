@@ -22,7 +22,7 @@ import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.validation.RandomDraw;
 
-public class ResamplingMain {
+public  class ResamplingMain {
 	///////////////////////////
 	//////// variables ////////
 	///////////////////////////
@@ -218,8 +218,6 @@ public class ResamplingMain {
 		}
 		return result;
 	}
-
-
 
 
 

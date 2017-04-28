@@ -95,6 +95,7 @@ public class Enrichment {
 		int notInputNotResource = totalGenes - lengthResource - inputNotResource;
 
 		
+		
 		// calculate fisher one-sided fisher test
 		FisherTest fisher = new FisherTest(totalGenes, log);
 
@@ -104,6 +105,7 @@ public class Enrichment {
 			notInputResources	NotInputNotResource		=>	b21		d22
 		
 		*/
+		
 		
 		pVal = fisher.getCumulativevP(inputResource, notInputResource, inputNotResource, notInputNotResource);
 		

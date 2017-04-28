@@ -48,6 +48,9 @@ public class GeneSetMain extends Thread{
 		options = init.getOptions();
 
 		
+		
+		
+		//////// make multi threading per input list
 		// set maximum number of threads to be executed
 		ExecutorService executor = Executors.newFixedThreadPool(options.getThreads());
 		

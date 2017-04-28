@@ -69,6 +69,7 @@ public class ReadInGeneDB {
 		this.tableGene = options.getDbGeneTable();
 		this.dbGene = options.getDbGeneName();
 
+		
 		// make log entry
 		log.writeOutFile("Reading in genes from DB " + dbGene + " table " + tableGene + ".");
 	
