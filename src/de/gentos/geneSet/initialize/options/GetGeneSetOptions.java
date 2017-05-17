@@ -43,6 +43,8 @@ public class GetGeneSetOptions {
 	private String dbGeneTable;
 	private long seed = -1;
 	private int minEnrichement = 1;
+	private double alpha = 0.05;
+	private String threshMethod = "FDR";
 	
 	// misc
 	private String infoFile  = "INFO.txt";
@@ -202,6 +204,31 @@ public class GetGeneSetOptions {
 		}
 		
 		
+		// get value for alpha 
+		if (cmd.hasOption("alpha")) {
+			alpha = Double.valueOf(cmd.getOptionValue("alpha"));
+		}
+		
+		// get value for the final thresh type
+		if (cmd.hasOption("threshMethod")){
+			threshMethod = cmd.getOptionValue("threshMethod");
+			
+			if (! threshMethod.matches("FDR") & ! threshMethod.matches("bonferroni")) {
+				
+				System.out.println("ERROR: Possible values for threshMethods are \"FDR\" or \"bonferroni\".");
+				System.exit(1);
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		////////////
@@ -349,6 +376,14 @@ public class GetGeneSetOptions {
 
 	public int getCpuPerThread() {
 		return cpuPerThread;
+	}
+
+	public double getAlpha() {
+		return alpha;
+	}
+
+	public String getThreshMethod() {
+		return threshMethod;
 	}
 
 

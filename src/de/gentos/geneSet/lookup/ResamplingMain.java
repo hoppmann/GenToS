@@ -1,6 +1,7 @@
 package de.gentos.geneSet.lookup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ import de.gentos.geneSet.initialize.data.RunData;
 import de.gentos.geneSet.initialize.options.GetGeneSetOptions;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
+import de.gentos.general.misc.generalMethods;
 import de.gentos.gwas.validation.RandomDraw;
 
 public  class ResamplingMain {
@@ -66,6 +68,9 @@ public  class ResamplingMain {
 		// rerun enrichment and weighting with random list and store each time that original weight is reached
 		rerunEnrichment();
 
+		
+		// calculate the threshold to be used for final output list
+		finalThresh();
 
 	}
 
@@ -75,6 +80,37 @@ public  class ResamplingMain {
 	//////// methods ////////
 	/////////////////////////
 
+
+	////////////////////////////
+	//////// get final threshold
+	
+	private void finalThresh(){
+		
+		
+		Map<String, Double> sortedEmpiricalPvalList = new generalMethods().sortMapByValue(runData.getEmpiricalPval(), true);		
+		List<Double> allPval = new ArrayList<>();
+		allPval = Arrays.asList(sortedEmpiricalPvalList.values().toArray(new Double[0]));
+		
+		
+		Threshold threshold = new Threshold(init);
+		
+		if (options.getThreshMethod().matches("FDR")){
+			runData.setFinalThresh(threshold.benjaminiHochberg(allPval));
+
+		} else if (options.getThreshMethod().matches("bonferroni")){
+			runData.setFinalThresh(threshold.bonferroni(allPval));
+
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	//////////////////////
 	//// draw random genes
@@ -103,6 +139,10 @@ public  class ResamplingMain {
 	}
 
 
+	
+	
+	
+	
 	/////////////////////////
 	//////// rerun enrichment
 	public void rerunEnrichment() {
@@ -193,6 +233,13 @@ public  class ResamplingMain {
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
 
 	////////////////////
 	//////// sort hash according to the values

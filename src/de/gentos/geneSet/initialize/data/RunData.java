@@ -26,7 +26,7 @@ public class RunData {
 
 	// resampling data
 	private Map<String, Double> empiricalPval; // Sorted Map containing gene <=> empirical pval connection
-	
+	private double finalThresh;
 	
 	
 	/////////////////////////////
@@ -177,7 +177,15 @@ public class RunData {
 		this.empiricalPval = empiricalPval;
 	}
 
+	public double getFinalThresh() {
+		return finalThresh;
+	}
 
+	public void setFinalThresh(double finalThresh) {
+		this.finalThresh = finalThresh;
+	}
+
+	
 
 
 

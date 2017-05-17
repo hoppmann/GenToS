@@ -63,14 +63,17 @@ public class SetGeneSetOptions {
 		opts.put(resample, new OptionValue(options, "tableGene", true, "Name of gene table in dbGene (default = genes)"));
 		opts.put(resample, new OptionValue(options, "seed", true, "\tSet seed for random generator."));
 		opts.put(resample, new OptionValue(options, "minEnriched", true, "Minimum number of enriched resources to run resampling. (default = 1)"));
+		opts.put(resample, new OptionValue(options, "alpha", true, "\tSets the alfa that should be used to calculate threshold for final list. (default = 0.05"));
+		opts.put(resample, new OptionValue(options, "threshMethod", true, "Sets the method for the threshold calculation of the threshold for the final list. Possible choices [FDR/bonferroni]. (default = FDR)"));
+		
 		
 		//////// misc
 		opts.put(misc, new OptionValue(options, "infoFile", true, "Name of the infoFile"));
 		opts.put(misc, new OptionValue(options, "help", false, "\tCalls this help."));
 		opts.put(misc, new OptionValue(options, "log", true, "\tName of the logfile. (default = \"logfile.txt\")"));
-		opts.put(misc, new OptionValue(options, "threads", true, "The number of threads (input lists) that should be handled in parallel. NOTE: total number of CPU usage = threads * cpuPerThread"));
+		opts.put(misc, new OptionValue(options, "threads", true, "\tThe number of threads (input lists) that should be handled in parallel. NOTE: total number of CPU usage = threads * cpuPerThread"));
 		opts.put(misc, new OptionValue(options, "cpuPerThread", true, "(Prefered option over \"threads\") Set how many CPUs should be available per data thread (inputlist). NOTE: total number of CPU usage = threads * cpuPerThread"));
-		opts.put(misc, new OptionValue(options, "verbose", false, "Add extra output for debugging"));
+		opts.put(misc, new OptionValue(options, "verbose", false, "\tAdd extra output for debugging"));
 		
 		//////// lookup
 		opts.put(lookup, new OptionValue(options, "stringent", false, "If chosen make threshold correction by number of resource lists AND input lists."));
