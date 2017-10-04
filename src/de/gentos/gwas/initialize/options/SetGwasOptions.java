@@ -50,7 +50,9 @@ public class SetGwasOptions {
 		opts.put(mandatory, new OptionValue(options, "specFile", true, "File containing database specifications (tab delimited) (see also option 'getSpec'"));
 		opts.put(mandatory, new OptionValue(options, "dbSNP", true, "\tName of database containing GWAS summary statistics. See specifications"));
 		opts.put(mandatory, new OptionValue(options, "tableSNP", true, "Name of table containing GWAS summary statistics"));
-
+		opts.put(mandatory, new OptionValue(options, "bedFile", false, "\tIf chosen, gene lists are chosen as BED files. (See specs for more details)\n"));
+		// 
+		
 		// other run specific
 		opts.put(run, new OptionValue(options, "flanking", true, "Length of region flanking (upstream AND downstream) gene of interest which should also be analyzed (default 10000) (integers only)"));
 		opts.put(run, new OptionValue(options, "upstream", true, "Length of region upstream of gene that should also be analyzed (overwrites the option flanking)"));
@@ -86,7 +88,7 @@ public class SetGwasOptions {
 		opts.put(validation, new OptionValue(options, "enrichment", false, "Choose this option if the enrichment should be validated"));
 		opts.put(validation, new OptionValue(options, "randomRepeat", false, "Graphical validation of findings by an iteration of drawing random genes for each list of equal number of original list, then running the program on drawn genes (slowest method)"));
 		opts.put(validation, new OptionValue(options, "iterations", true, "Number of times randomRepeat shuld be repeated (default 2000)"));
-		opts.put(validation,  new OptionValue(options, "binomial", false, "Graphical validation of findings by estimating the enrichment using binomial distribution (default)"));
+		opts.put(validation,  new OptionValue(options, "binomial", false, "Graphical validation of findings by estimating the enrichment using binomial distribution (default) (not supported for bed files)"));
 		opts.put(validation, new OptionValue(options, "seed", true, "\tSet seed for random generator."));
 		opts.put(validation, new OptionValue(options, "getProbHit", false, "If chosen gives out the theoretical probability of observing a gene as being significant used to calculate binomial distribution"));
 		

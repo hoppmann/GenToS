@@ -2,13 +2,12 @@ package de.gentos.gwas.threshold;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
-import de.gentos.gwas.initialize.data.GeneListInfo;
+import de.gentos.gwas.initialize.data.GeneInfo;
 import de.gentos.gwas.initialize.data.SnpLine;
 
 public class FalseDiscoveryRate  {
@@ -33,7 +32,7 @@ public class FalseDiscoveryRate  {
 	/////////////
 	//////// methods
 	
-	public void runFDR(Map<String, GeneListInfo> currentQueryGenes, LinkedList<String> currentList, ReadInGwasData gwasData) {
+	public void runFDR(Map<String, GeneInfo> currentQueryGenes, ReadInGwasData gwasData) {
 
 		// init varialbes
 		ArrayList<Double> allPval = new ArrayList<>();
@@ -43,8 +42,8 @@ public class FalseDiscoveryRate  {
 		// then for each gwas entry extract pval add to array allPval
 		for (String gene : currentQueryGenes.keySet()){
 
-			if (!(gwasData.getGeneSNP().get(gene) == null)){
-				List<SnpLine> snpLines = gwasData.getGeneSNP().get(gene);
+			if (!(gwasData.getGwasSnps().get(gene) == null)){
+				List<SnpLine> snpLines = gwasData.getGwasSnps().get(gene);
 
 				for (SnpLine snp : snpLines) {
 					allPval.add(snp.getpValue());

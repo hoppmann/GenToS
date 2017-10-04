@@ -9,7 +9,8 @@ import org.apache.commons.io.FilenameUtils;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.InitializeGwasMain;
-import de.gentos.gwas.initialize.data.GeneListInfo;
+import de.gentos.gwas.initialize.data.GeneInfo;
+import de.gentos.gwas.initialize.data.GeneInfo.ROI;
 import de.gentos.gwas.initialize.data.SnpLine;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
 
@@ -18,50 +19,58 @@ public class WriteResult {
 	//////////////////////
 	//////// set variables
 
-	Map<String, GeneListInfo> geneQueryList;
+	Map<String, GeneInfo> geneQueryList;
 	HandleFiles result;
 	GetGwasOptions options;
 	HandleFiles csv;
 	InitializeGwasMain init;
 	CommandLine cmd;
-	String currentListName;
+	String currentQueryGeneListName;
 	ReadInGeneDB readGenes;
 
 
-	////////////////////
-	//////// Constructor
+	/////////////////////////////
+	//////// Constructor ////////
+	/////////////////////////////
+	
 
-	public WriteResult(Map<String, GeneListInfo> geneQueryList, String tableName, String pathSNP, 
-			HandleFiles result, GetGwasOptions options, String csvDir, InitializeGwasMain init, String currentListName) {
+	public WriteResult(Map<String, GeneInfo> geneQueryList, String tableName, String pathSNP, 
+			HandleFiles result, GetGwasOptions options, String csvDir, InitializeGwasMain init, 
+			String currentQueryGeneListName) {
 
 		this.geneQueryList = geneQueryList;
 		this.result = result;
 		this.init = init;
 		options = init.getGwasOptions();
 		cmd = options.getCmd();
-		this.currentListName = currentListName;
+		this.currentQueryGeneListName = currentQueryGeneListName;
 		this.readGenes = init.getReadGenes();
 
 		// create Strings for file names
 		String dbName = FilenameUtils.getBaseName(pathSNP);
-		String filePath = csvDir + System.getProperty("file.separator") + dbName + "_"+ tableName + "_"  + currentListName + ".csv"; 
+		String filePath = csvDir + System.getProperty("file.separator") + dbName + "_"+ tableName + "_"  + currentQueryGeneListName + ".csv"; 
 
 		// open csv file
 		csv = new HandleFiles();
 		csv.openWriter(filePath);
-
+		
 	}
 
 
 
 
-	////////////////
-	//////// methods
+	/////////////////////////
+	//////// methods ////////
+	/////////////////////////
+	
 
 	public void write() {
 
+		/////////////////////
+		//////// prepare header
+		
 		// write header for result file DBname and tableName
-		String outLine = "######## " + currentListName + " ########";
+		String outLine = "######## " + currentQueryGeneListName + " ########";
 		String outLine2 = null;
 		for (int i = 0; i < outLine.length(); i++){
 			if (outLine2 == null) {
@@ -72,8 +81,12 @@ public class WriteResult {
 		}
 		result.writeFile(outLine2 + System.lineSeparator() + outLine + System.lineSeparator() + outLine2 + System.lineSeparator());
 
-
-		// retrieve plenty thresh info for later use in result file
+		
+		
+		///////////////////
+		//////// prepare result file
+		
+		//////// retrieve plenty thresh info for later use in result file
 		Double plentyThresh = null;
 		if (!cmd.hasOption("FDR")) {
 			if (!cmd.hasOption("plenty")) {
@@ -88,45 +101,53 @@ public class WriteResult {
 		
 		
 		// for each gene write results in resultFile
-		for (String gene : geneQueryList.keySet()) {
+		for (String curGene : geneQueryList.keySet()) {
 
-			// write in result file gene header and some info
-			result.writeFile("######## " + gene + " ########");
+			// write in result file gene name as header and some info
 
-			// chr, start and ending
-			result.writeFile( "Chromosome: " +  readGenes.getGeneInfo().get(gene).getChr());
-			result.writeFile("Gene start: " + readGenes.getGeneInfo().get(gene).getStart());
-			result.writeFile("Gene end: " + readGenes.getGeneInfo().get(gene).getStop());
+			/* 
+			 * check if lookup is gene based or different ROIs, not gene clustered,
+			 * prepare header information accordingly
+			 * 
+			 */
+
+			// if no gene name given mak header chr start-stop 
+			if (! geneQueryList.get(curGene).isHasGeneName()) {
+
+				// retrieve chr, start and stop from ROI
+				String chr = "chr" + geneQueryList.get(curGene).getRois().getFirst().getChr();
+				Integer start = geneQueryList.get(curGene).getRois().getFirst().getStart();
+				Integer stop = geneQueryList.get(curGene).getRois().getFirst().getStop();
+				result.writeFile("######## " + chr + " " + start + "-" + stop + " ########");
 
 
-
-
-			// if bonferoni option chosen
-			// write out number of independent SNPs (depending if lenient option chosen or not with additional info)
-			if (init.getGwasOptions().getMethod().equals("bonferoni")) {
-
-				int indep = geneQueryList.get(gene).getIndepSNPs(); 
-				int lenient = geneQueryList.get(gene).getGwasSNPs(); 
-
-				if (cmd.hasOption("lenient")) {
-					if (indep < lenient) {
-						result.writeFile("Independent SNPs: " + indep + " (" +lenient + " SNPs in GWAS file)");
-					} else {
-						result.writeFile("SNPs in GWAS file: " + lenient + " (" + indep + " independent SNPs in 1kgp file.)");
-					}
-				} else {
-
-					result.writeFile("Independet SNPs: " + indep );
-
+				// if gene name is given make header gene name
+			} else {
+				result.writeFile("######## " + curGene + " ########");
+				// store chr, start and ending for each roi
+				result.writeFile("chr\tstart-stop");
+				for (ROI curRoi : geneQueryList.get(curGene).getRois()) {
+					String line = curRoi.getChr() + "\t" + curRoi.getStart() + "-" + curRoi.getStop();
+					result.writeFile(line);
 				}
 			}
 
+			
+			
+			
+			
+			// if bonferroni option was chosen
+			// write out the number of independent SNPs (depending if lenient option chosen or not with additional info)
+			if (init.getGwasOptions().getMethod().equals("bonferroni")) {
+				int indepSnps =  geneQueryList.get(curGene).getIndepSNPs(); 
+				result.writeFile("Independet SNPs: " + indepSnps );
+			}
 
 
 
 			// write threshold information in result file
 			// write out threshold
-			Double thresh = geneQueryList.get(gene).getThreshold(); 
+			Double thresh = geneQueryList.get(curGene).getThreshold(); 
 			result.writeFile("Threshold: " + String.format("%6.2e", thresh));
 			if (!cmd.hasOption("FDR") && !cmd.hasOption("fixThresh")) {
 
@@ -136,32 +157,31 @@ public class WriteResult {
 					result.writeFile("Threshold with plenty option: " + String.format("%6.2e", plentyThresh));
 				} 
 			}
+			
 
-
-
-
-
-
-
-
+			
+			
+			
+			
+			
 			// check if there are results for gene. If so write in result AND csv
 			// else write to result file low SNP and info only
 			// if no information available at all make statement
-			if (geneQueryList.get(gene).isHasHit()) {
+			if (geneQueryList.get(curGene).isHasHit()) {
 
 				// write gene name as header in file
-				csv.writeFile("######## " + gene + " ########");
+				csv.writeFile("######## " + curGene + " ########");
 
 				// write header information in csv
 				String lineOut = createLine(init.getGwasData().getHeader());
+				
 				// write prepared string to output file
 				csv.writeFile(lineOut);
 				result.writeFile(lineOut);
 
 
-
 				// for each SNP write information in csv
-				for (SnpLine snp : geneQueryList.get(gene).getSnpHits()) {
+				for (SnpLine snp : geneQueryList.get(curGene).getSnpHits()) {
 
 
 					// form string for out file
@@ -173,6 +193,7 @@ public class WriteResult {
 
 				}
 
+				
 				// add emtpy line 
 				csv.writeFile("");
 				result.writeFile("");
@@ -180,18 +201,18 @@ public class WriteResult {
 			} else {
 
 				// check if no information at all
-				if ((geneQueryList.get(gene).getLowPvalSNP() != null)) {
+				if ((geneQueryList.get(curGene).getLowPvalSNP() != null)) {
 
 					// if no hit for gene save lowest pval in region
-					String rsID = geneQueryList.get(gene).getLowPvalSNP().getRsid(); 
-					Double pval = geneQueryList.get(gene).getLowPvalSNP().getpValue(); 
+					String rsID = geneQueryList.get(curGene).getLowPvalSNP().getRsid(); 
+					Double pval = geneQueryList.get(curGene).getLowPvalSNP().getpValue(); 
 					result.writeFile(rsID + " has lowest pval in region with " + String.format("%6.2e", pval));
 					result.writeFile("");
 
 
 				}  else {
 
-					result.writeFile("No SNPs in the region of " + gene);
+					result.writeFile("No SNPs in the region of " + curGene);
 					result.writeFile("");
 				}
 			}
@@ -222,7 +243,7 @@ public class WriteResult {
 	}
 
 
-	private int sumUp(Map<String, GeneListInfo> queryGenes) {
+	private int sumUp(Map<String, GeneInfo> queryGenes) {
 
 		// init integer for sum
 		int totalGenes = 0;

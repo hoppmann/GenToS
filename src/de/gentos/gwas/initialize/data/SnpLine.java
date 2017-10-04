@@ -16,12 +16,12 @@ public class SnpLine {
 	/////////////////
 	//////// constructor
 	
-	public SnpLine(String rsid, Integer currentChr, Integer position, Double pValue, List<String> fc) {
+	public SnpLine(String rsid, Integer currentChr, Integer position, Double pValue, List<String> remainingColumns) {
 		this.rsid = rsid;
 		this.chr = currentChr;
 		this.position = position;
 		this.pValue = pValue;
-		this.furtherColumns = fc;
+		this.furtherColumns = remainingColumns;
 	}
 	
 	

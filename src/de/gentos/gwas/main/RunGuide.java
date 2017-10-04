@@ -20,47 +20,76 @@ public class RunGuide {
 	//////// Methods
 
 	public InitializeGwasMain initializeGwasMain(String[] args){
-		// initialize system
-		//		-> read in options and check them
-		//		-> read in config file
-		//		-> check databases for correctness
+		
+		/* 
+		 * 	initialize system
+		 *	-> read in options and check them
+		 *	-> read in config file
+		 *	-> check databases for correctness
+		 *	-> reading in the data
+		 *		- GWAS
+		 *		- independent SNPs
+		 *		- gene positions
+		 *		- gene lists
+		 */
+
+		
 		InitializeGwasMain init = new InitializeGwasMain(args);
 		return init;
 	}
 
 
-	public void extractSNPs(InitializeGwasMain init) {
-		// extract independent snps and calculate threshold
-		//		-> extract gene position
-		//		-> extract number of independent SNPs
-		//		-> calculate threshold 
-		//			-> bonferoni (lenient, plenty)
-		//			-> FDR
-		//		-> extract SNPs according threshold
-		//		-> extract low pval SNPs
-		//		-> write results in file
+	
+	
+	
+	public void extractSNPs(InitializeGwasMain init, Integer curGwasDb) {
+	
+		/* 
+		 * read in current GWAS database 
+		 * 
+		 * extract SNPs and calculate threshold
+		 *	-> extract gene position if not given via bed file
+		 *	-> extract number of independent SNPs
+		 *	-> calculate threshold 
+		 *		-> bonferroni (lenient, plenty)
+		 *		-> FDR
+		 *	-> extract SNPs according threshold
+		 *	-> extract low pval SNPs
+		 *	-> write results in file
+		*/
+		extract = new ExtractSNPMain(init, curGwasDb);
 
-		extract = new ExtractSNPMain(init);
-
+		
 	}
+	
+	
+	
 
 
-	public void validate(InitializeGwasMain init) {
+	public void validate(InitializeGwasMain init, Integer curGwasDb) {
 
-		// validate findings of lists by
-		//		-> iteration randomly drawn genes then running the program
-		//		-> simulating random draw via binomial distribution
-
+		/*
+		 * 
+		 * validate results 
+		 * 	(random draw)
+		 *		-> iterate entire program
+		 *		-> random draw on calculated threshold
+		 *		-> distribution based validation?
+		 *	binomial
+		 *		-> calculate binomial output for random draws
+		 *		-> plot histogram
+		 */
 
 		if (init.getGwasOptions().getCmd().hasOption("enrichment")) {
+			
 			if (init.getGwasOptions().isRandomRepeats()){
 				
-				ValidationMain validation = new ValidationMain(init);
+				ValidationMain validation = new ValidationMain(init, curGwasDb);
 				validation.randomDraw(extract);
 				
 			} else if (init.getGwasOptions().isBinomial()) {
 				
-				ValidationMain validation = new ValidationMain(init);
+				ValidationMain validation = new ValidationMain(init, curGwasDb);
 				validation.binomial(extract);
 				
 			}

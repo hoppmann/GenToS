@@ -44,12 +44,28 @@ public class PrintSpecifications {
 	"\trsid\tvarchar\tnot null\n" +
 	"\tpos\tint\tnot null\n";
 	
-	
+	String bedFile = "######## BED file ########\n\n" +
+	"The bed file is a tab seperated file containing ROIs and has a specific order as shown below. "
+	+ "It has to consist of at least 3 columns (chr, star, stop) and can have an additional gene name column. "
+	+ "If a gene name column is present, the given ROIs are clustered according to the corresponding gene names. Else each ROI is treated seperately. "
+	+ "In the file it can be mixed, if column 4 exists or not."
+	+ "\n\n#header informations (will be skipped if starting with \"#\")"
+	+ "\n#additional columns will be ignored if present"
+	+ "\n#the chr column can be written as \"chr1\", \"CHR1\" or \"1\""
+	+ "\n#chr	start	stop	geneName"
+	+ "\n\ne.g."
+	+ "\n#chr	start		stop		geneName"
+	+ "\n14	92432335	92432455	TRIP11"
+	+ "\nchr14	92432535	92432712	TRIP11"
+	+ "\nCHR14	92432835	92432994";
+			
+			
 	
 	
 	System.out.println("\n\n" + dataBase);
 	System.out.println("\n\n" + specFile);
 	System.out.println("\n\n" + indepDB);
+	System.out.println("\n\n" + bedFile);
 	System.out.println("\n\n");
 	System.exit(0);
 	

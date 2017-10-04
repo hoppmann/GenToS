@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.gentos.gwas.initialize.data.DbSnpInfo;
+import de.gentos.gwas.initialize.data.GwasDbInfo;
 
 public class ExtracSpecFile {
 
@@ -15,7 +15,7 @@ public class ExtracSpecFile {
 	String specFile;
 	String dbGene;
 	String tableGene;
-	Map<Integer, DbSnpInfo> dbSNP = new HashMap<>();
+	Map<Integer, GwasDbInfo> dbSNP = new HashMap<>();
 
 	/////////////////
 	///// Constructor
@@ -61,7 +61,7 @@ public class ExtracSpecFile {
 						String dbPath = lineSplit[0];
 						String tableName = lineSplit[1];
 
-						DbSnpInfo dbInfo = new DbSnpInfo(dbPath, tableName);
+						GwasDbInfo dbInfo = new GwasDbInfo(dbPath, tableName);
 						dbSNP.put(counter, dbInfo);
 						counter++;
 					}
@@ -88,7 +88,7 @@ public class ExtracSpecFile {
 		return tableGene;
 	}
 
-	public Map<Integer, DbSnpInfo> getDbSNP() {
+	public Map<Integer, GwasDbInfo> getDbSNP() {
 
 		return dbSNP;
 	}

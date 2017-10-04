@@ -14,11 +14,12 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.gentos.general.files.HandleFiles;
-import de.gentos.gwas.getSNPs.ExtractData;
+import de.gentos.gwas.getSNPs.ExtractDataMethods;
 import de.gentos.gwas.getSNPs.ExtractSNPMain;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
-import de.gentos.gwas.initialize.data.GeneListInfo;
+import de.gentos.gwas.initialize.data.GeneInfo;
+import de.gentos.gwas.initialize.data.GwasDbInfo;
 import de.gentos.gwas.threshold.CreateThresh;
 
 public class ValidationMain {
@@ -30,17 +31,17 @@ public class ValidationMain {
 	private InitializeGwasMain init;
 	private HandleFiles log;
 	private int numberOfIterations;
-
-
+	private GwasDbInfo curGWASdbInfo;
 
 
 
 	///////////////
 	//////// constructor
-	public ValidationMain(InitializeGwasMain init) {
+	public ValidationMain(InitializeGwasMain init, Integer curGWASdbKey) {
 		this.init = init;
 		this.log = init.getLog();
 		this.numberOfIterations = init.getGwasOptions().getNumberOfIterations();
+		this.curGWASdbInfo = init.getOptions().getGwasDbs().get(curGWASdbKey);
 	}
 
 
@@ -72,89 +73,84 @@ public class ValidationMain {
 		mkDir(tmpDir);
 		mkDir(validationDir);
 
-
+		
+		
 		/////////////////////
-		//// for each database table and each list calculate binomial distribution  
-		for (int currentGwasFile : init.getDbSNPInfo().keySet()){
+		//// for current GWAS database and each gene query list calculate binomial distribution  
 
-			// get gwas data to pass on
-			ReadInGwasData gwasData = init.getDbSNPInfo().get(currentGwasFile).getGwasData();
+		// get read in GWAS data to to be processed
+		ReadInGwasData gwasData = init.getGwasData();
 
-			// instanciate binomial class for getting informations
-			Binomial binom = new Binomial(init, gwasData);
-
-
-			// user information about progress
-			log.writeOutFile("######## Running on " + init.getDbSNPInfo().get(currentGwasFile).getDbName() +"\t" + init.getDbSNPInfo().get(currentGwasFile).getTableName());
-
-			// run over each gene query list
-			for (String origList : init.getGwasOptions().getGeneLists().keySet()){
-
-				///////////////
-				//////// estimate probability of hit
-
-				//////// gather informations needed
-				// get threshold
-				Double thresh = init.getDbSNPInfo().get(currentGwasFile).getListThresh().get(origList);
-
-				// estimate probability
-				double probHit = binom.estimateProb(thresh);
+		// instanciate binomial class for getting informations
+		Binomial binom = new Binomial(init, gwasData);
 
 
+		// user information about progress
+		String gwasDbName = curGWASdbInfo.getDbName();
+		String gwasTableName = curGWASdbInfo.getTableName();
+		log.writeOutFile("######## Running on " + gwasDbName + "\t" + gwasTableName);
 
-				///////////////////
-				//////// get length of gene list
-				int lengthInputList = init.getGwasOptions().getGeneLists().get(origList).size();
+		
 
-				///////////////		
-				//////// get number of iterations
-				int numberIterations = init.getGwasOptions().getNumberOfIterations();
+		
+		// iterate over each gene query list
+		for (String origList : init.getGeneLists().keySet()){
 
+			
+			///////////////
+			//////// estimate probability of hit
 
+			//////// gather informations needed
+			// get threshold
+			Double thresh = curGWASdbInfo.getListThresh().get(origList);
 
-				//////////////
-				//////// perform random draw of binomial distributed variables
-				// Instantiate random generator
-				List<Integer> histogram = binom.simulate(lengthInputList, probHit, numberIterations);
-
-
-
-
-				///////////////
-				//// prepare plotting
-
-				// get hits from lookup
-				int actualFindings = init.getDbSNPInfo().get(currentGwasFile).getHitsPerList().get(origList);  
-
-				//prepare outName of graphs Validation graphs
-				String databaseName = init.getDbSNPInfo().get(currentGwasFile).getDbName();
-				String tableName = init.getDbSNPInfo().get(currentGwasFile).getTableName();
-				String outName = databaseName + "-" + tableName + "-" + origList;
-				double pVal = binom.cummulativeBinom(probHit, lengthInputList, actualFindings);
-
-				String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
-				PlotHistogram plotter = new PlotHistogram(init);
-				plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
-
-				// print out probHit on screen and in file
-				if (init.getGwasOptions().isGetProp()){
-					System.out.println("p(Hit) " + databaseName + " " + tableName + " " + origList + " = " + String.format("%6.2e", probHit));
-					log.writeFile("p(Hit) " + databaseName + " " + tableName + " " + origList + " =  " + String.format("%6.2e", probHit));
-				}
+			// estimate probability
+			
+			double probHit = binom.estimateProb(thresh);
+			
+			
+			///////////////////
+			//////// get length of query gene list
+			int lengthInputList = init.getGeneLists().get(origList).size();
 
 
+			//////////////
+			//////// perform random draw of binomial distributed variables
+			// Instantiate random generator
+			List<Integer> histogram = binom.simulate(lengthInputList, probHit, numberOfIterations);
+
+			
+			
+			///////////////
+			//// prepare plotting
+
+			// get hits from lookup
+			int actualFindings = curGWASdbInfo.getHitsPerList().get(origList);  
+
+			//prepare outName of graphs Validation graphs
+			String outName = gwasDbName + "-" + gwasTableName + "-" + origList;
+			double pVal = binom.cummulativeBinom(probHit, lengthInputList, actualFindings);
+
+			String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
+			PlotHistogram plotter = new PlotHistogram(init);
+			plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
+
+			// print out probHit on screen and in file
+			if (init.getGwasOptions().isGetProp()){
+				System.out.println("p(Hit) " + gwasDbName + " " + gwasTableName + " " + origList + " = " + String.format("%6.2e", probHit));
+				log.writeFile("p(Hit) " + gwasDbName + " " + gwasTableName + " " + origList + " =  " + String.format("%6.2e", probHit));
 			}
-		}
 
+			
+			
+		}
+		
+		
 		// delete temp dir if not specified to keep
 		if (!init.getGwasOptions().getCmd().hasOption("keepTmp")){
 			rmDir(tmpDir);
 		}
 	}
-
-
-
-
 
 
 
@@ -176,10 +172,10 @@ public class ValidationMain {
 		/////////////////
 		//// for each list draw random list of length list
 
-		for (String origList : init.getGwasOptions().getGeneLists().keySet()){
+		for (String origList : init.getGeneLists().keySet()){
 
 			// get length of list 
-			int lengthCurrenList = init.getGwasOptions().getGeneLists().get(origList).size(); 
+			int lengthCurrenList = init.getGeneLists().get(origList).size(); 
 
 			//// Create random lists
 			// check if seed is given, else set to -1
@@ -193,114 +189,113 @@ public class ValidationMain {
 		
 		}
 
-
-		// create temporary folder and folder for graphs
+		
+		//// create temporary folder and folder for graphs
 		String tmpDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "tmp";
 		String validationDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "graphs";
 		mkDir(tmpDir);
 		mkDir(validationDir);
 
-
-
-
 		/////////////////////
-		//// for each database table run program on random lists  
-		for (int currentGwasFile : init.getDbSNPInfo().keySet()){
+		//// for current GWAS database and each gene query list run program on random lists  
+		
+		// user information about progress
+		
+		String gwasDbName = curGWASdbInfo.getDbName();
+		String gwasDbTableName = curGWASdbInfo.getTableName();
+		log.writeOutFile("######## Running on " + gwasDbName +"\t" + gwasDbTableName);
 
-			// usr information about progress
-			log.writeOutFile("######## Running on " + init.getDbSNPInfo().get(currentGwasFile).getDbName() +"\t" + init.getDbSNPInfo().get(currentGwasFile).getTableName());
+		// get gwas data to pass on
+		ReadInGwasData gwasData = init.getGwasData();
 
-			// get gwas data to pass on
-			ReadInGwasData gwasData = init.getDbSNPInfo().get(currentGwasFile).getGwasData();
-
-			// init extraction class
-			ExtractData extract = new ExtractData(init);
-			extract.setVerbose(false);
-
-
-			//// Instanciate Binom for pVal calculation
-			Binomial binom = new Binomial(init, gwasData);
+		// init extraction class
+		ExtractDataMethods extract = new ExtractDataMethods(init);
+		extract.setVerbose(false);
 
 
-
-			// for each original list iterate over each randomly generated list
-			// get independent SNPs, get threshold and extract snps to get number of hist in list
-			for (String origList : allLists.keySet()){
+		//// Instantiate Binom for pVal calculation
+		Binomial binom = new Binomial(init, gwasData);
 
 
-				// init variable for validation results
-				LinkedList<Integer> histogram = new LinkedList<>();
-				double thresh = 0;
-
-				// counter to give user information about progress
-				int counter = 1;
-				System.out.println("\nRunning on " + origList);
-				for (LinkedList<String> currentRandomList : allLists.get(origList)){
-
-					// inform user about progression
-					System.out.println("Iteration list " + counter + "/" + numberOfIterations);
-					counter++;
-
-					// run validation on each randomly drawn list 
-					// set variable 
-					Map<String, GeneListInfo> genesWithThresh = new HashMap<>();
-
-					// get threshold for each gene
-					CreateThresh createThresh = new CreateThresh(init, gwasData);
-					createThresh.choose(extract, currentRandomList, genesWithThresh);
-
-					thresh = createThresh.getThresh();
-
-					// extract snps with pval lower then threshold
-					// create result hash containing extracted pvals
-					extract.extractSNPs(gwasData, genesWithThresh);
-
-					// save number of hits for later plotting
-					int count = 0;
-					for (String gene : genesWithThresh.keySet()){
-						if (genesWithThresh.get(gene).isHasHit()){
-							count++;
-						}
-					}	
-
-					// add to list each run the number of hits detected. Collecting for producing histogram. 
-					histogram.add(count);
-				}
+		// for each original list iterate over each randomly generated list
+		// get independent SNPs, get threshold and extract snps to get number of hist in list
+		for (String origList : allLists.keySet()){
 
 
-				///////////////
-				//////// get information to calculate pVal based on binom dist
+			// init variable for validation results
+			LinkedList<Integer> histogram = new LinkedList<>();
+			double thresh = 0;
 
-				// get threshold
-				thresh = init.getDbSNPInfo().get(currentGwasFile).getListThresh().get(origList);
+			// counter to give user information about progress
+			int counter = 1;
+			System.out.println("\nRunning on " + origList);
+			for (LinkedList<String> currentRandomList : allLists.get(origList)){
 
-				// estimate probability
-				double probHit = binom.estimateProb(thresh);
+				// inform user about progression
+				System.out.println("Iteration list " + counter + "/" + numberOfIterations);
+				counter++;
 
-				//////// get length of gene list
-				int lengthList = init.getGwasOptions().getGeneLists().get(origList).size();
+				// run validation on each randomly drawn list 
+				// set variable 
+				Map<String, GeneInfo> genesWithThresh = new HashMap<>();
 
+				// get threshold for each gene
+				CreateThresh createThresh = new CreateThresh(init, gwasData);
+				createThresh.choose(extract, genesWithThresh);
 
-				///////////////
-				//// prepare plotting
+				
+				thresh = createThresh.getThresh();
 
-				// get hits from lookup
-				int actualFindings = init.getDbSNPInfo().get(currentGwasFile).getHitsPerList().get(origList);  
+				// extract snps with pval lower then threshold
+				// create result hash containing extracted pvals
+				extract.extractSNPs(gwasData, genesWithThresh);
 
+				// save number of hits for later plotting
+				int count = 0;
+				for (String gene : genesWithThresh.keySet()){
+					if (genesWithThresh.get(gene).isHasHit()){
+						count++;
+					}
+				}	
 
-				//prepare outName of graphs Validation graphs
-				String databaseName = init.getDbSNPInfo().get(currentGwasFile).getDbName();
-				String tableName = init.getDbSNPInfo().get(currentGwasFile).getTableName();
-				String outName = databaseName + "-" + tableName + "-" + origList;
-				double pVal = binom.cummulativeBinom(probHit, lengthList, actualFindings);
-				String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
-
-				PlotHistogram plotter = new PlotHistogram(init);
-				plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
-
-
+				// add to list each run the number of hits detected. Collecting for producing histogram. 
+				histogram.add(count);
 			}
+
+		
+			//////////
+			//////// get information to calculate pVal based on binom dist
+
+			// get threshold
+			thresh = curGWASdbInfo.getListThresh().get(origList);
+
+			// estimate probability
+			double probHit = binom.estimateProb(thresh);
+
+			//////// get length of gene list
+			int lengthList = init.getGeneLists().get(origList).size();
+
+
+			///////////////
+			//// prepare plotting
+
+			// get hits from lookup
+			int actualFindings = curGWASdbInfo.getHitsPerList().get(origList);  
+
+
+			//prepare outName of graphs Validation graphs
+			String databaseName = curGWASdbInfo.getDbName();
+			String tableName = curGWASdbInfo.getTableName();
+			String outName = databaseName + "-" + tableName + "-" + origList;
+			double pVal = binom.cummulativeBinom(probHit, lengthList, actualFindings);
+			String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
+
+			PlotHistogram plotter = new PlotHistogram(init);
+			plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
+
+
 		}
+
 
 		// delete temp dir if not specified to keep
 		if (!init.getGwasOptions().getCmd().hasOption("keepTmp")){
@@ -308,7 +303,176 @@ public class ValidationMain {
 		}
 	}
 
-	// create dir
+
+
+		
+
+
+	
+	
+	
+	
+
+	//////// Estimate enrichment by drawing random lists and iterate over program.
+//	// (2)
+//	public void randomDraw(ExtractSNPMain extractMain) {
+//
+//
+//		// make log entry that randomDraw validation started
+//		log.writeOutFile("######## Starting validation with randomRepeats. ########\n");
+//
+//		// create multimap with lists of random genes
+//		Multimap<String, LinkedList<String>> allLists = LinkedListMultimap.create();
+//
+//		// instanciate RandomDraw
+//		RandomDraw random = new RandomDraw(log);
+//
+//
+//		/////////////////
+//		//// for each list draw random list of length list
+//
+//		for (String origList : init.getGwasOptions().getGeneLists().keySet()){
+//
+//			// get length of list 
+//			int lengthCurrenList = init.getGwasOptions().getGeneLists().get(origList).size(); 
+//
+//			//// Create random lists
+//			// check if seed is given, else set to -1
+//			long seed = -1;
+//			if (init.getGwasOptions().getCmd().hasOption("seed")){
+//				seed = init.getGwasOptions().getSeed();
+//			}
+//			// draw lists
+//			random.drawInMap(lengthCurrenList, numberOfIterations, origList, allLists, seed, init.getReadGenes(), true);
+//			
+//		
+//		}
+//
+//
+//		// create temporary folder and folder for graphs
+//		String tmpDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "tmp";
+//		String validationDir = init.getGwasOptions().getDir()+ System.getProperty("file.separator") + "graphs";
+//		mkDir(tmpDir);
+//		mkDir(validationDir);
+//
+//
+//
+//
+//		/////////////////////
+//		//// for each database table run program on random lists  
+//		for (int currentGwasFile : init.getDbSNPInfo().keySet()){
+//
+//			// usr information about progress
+//			log.writeOutFile("######## Running on " + init.getDbSNPInfo().get(currentGwasFile).getDbName() +"\t" + init.getDbSNPInfo().get(currentGwasFile).getTableName());
+//
+//			// get gwas data to pass on
+//			ReadInGwasData gwasData = init.getDbSNPInfo().get(currentGwasFile).getGwasData();
+//
+//			// init extraction class
+//			ExtractDataMethods extract = new ExtractDataMethods(init);
+//			extract.setVerbose(false);
+//
+//
+//			//// Instanciate Binom for pVal calculation
+//			Binomial binom = new Binomial(init, gwasData);
+//
+//
+//
+//			// for each original list iterate over each randomly generated list
+//			// get independent SNPs, get threshold and extract snps to get number of hist in list
+//			for (String origList : allLists.keySet()){
+//
+//
+//				// init variable for validation results
+//				LinkedList<Integer> histogram = new LinkedList<>();
+//				double thresh = 0;
+//
+//				// counter to give user information about progress
+//				int counter = 1;
+//				System.out.println("\nRunning on " + origList);
+//				for (LinkedList<String> currentRandomList : allLists.get(origList)){
+//
+//					// inform user about progression
+//					System.out.println("Iteration list " + counter + "/" + numberOfIterations);
+//					counter++;
+//
+//					// run validation on each randomly drawn list 
+//					// set variable 
+//					Map<String, GeneListInfo> genesWithThresh = new HashMap<>();
+//
+//					// get threshold for each gene
+//					CreateThresh createThresh = new CreateThresh(init, gwasData);
+//					createThresh.choose(extract, currentRandomList, genesWithThresh);
+//
+//					thresh = createThresh.getThresh();
+//
+//					// extract snps with pval lower then threshold
+//					// create result hash containing extracted pvals
+//					extract.extractSNPs(gwasData, genesWithThresh);
+//
+//					// save number of hits for later plotting
+//					int count = 0;
+//					for (String gene : genesWithThresh.keySet()){
+//						if (genesWithThresh.get(gene).isHasHit()){
+//							count++;
+//						}
+//					}	
+//
+//					// add to list each run the number of hits detected. Collecting for producing histogram. 
+//					histogram.add(count);
+//				}
+//
+//
+//				///////////////
+//				//////// get information to calculate pVal based on binom dist
+//
+//				// get threshold
+//				thresh = init.getDbSNPInfo().get(currentGwasFile).getListThresh().get(origList);
+//
+//				// estimate probability
+//				double probHit = binom.estimateProb(thresh);
+//
+//				//////// get length of gene list
+//				int lengthList = init.getGwasOptions().getGeneLists().get(origList).size();
+//
+//
+//				///////////////
+//				//// prepare plotting
+//
+//				// get hits from lookup
+//				int actualFindings = init.getDbSNPInfo().get(currentGwasFile).getHitsPerList().get(origList);  
+//
+//
+//				//prepare outName of graphs Validation graphs
+//				String databaseName = init.getDbSNPInfo().get(currentGwasFile).getDbName();
+//				String tableName = init.getDbSNPInfo().get(currentGwasFile).getTableName();
+//				String outName = databaseName + "-" + tableName + "-" + origList;
+//				double pVal = binom.cummulativeBinom(probHit, lengthList, actualFindings);
+//				String legend = "pVal = " + String.format(Locale.US, "%.2e", pVal);
+//
+//				PlotHistogram plotter = new PlotHistogram(init);
+//				plotter.plotHist(histogram, actualFindings, tmpDir, outName, validationDir, legend, thresh);
+//
+//
+//			}
+//		}
+//
+//		// delete temp dir if not specified to keep
+//		if (!init.getGwasOptions().getCmd().hasOption("keepTmp")){
+//			rmDir(tmpDir);
+//		}
+//	}
+//
+	
+	
+	
+	
+	
+	
+	
+	
+	////////////////
+	//////// create dir
 	private void mkDir(String dir) {
 
 		try {
@@ -321,8 +485,8 @@ public class ValidationMain {
 
 	}
 
-
-	// remove dir 
+	////////////////
+	//////// remove dir 
 	private void rmDir (String dir){
 		try {
 			FileUtils.forceDelete(new File(dir));

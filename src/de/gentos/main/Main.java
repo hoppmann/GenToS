@@ -24,7 +24,7 @@ public class Main {
 		// check if GenToS GWAS is chosen, then start
 		if (args.length == 0){
 			System.out.println("Missing analysis type: \nChoosable types are \"GWAS\" and \"GeneSet\"");
-		} else if (args[0].equals("gwas")) {
+		} else if (args[0].equals("GWAS")) {
 		
 			GwasMain gwas = new GwasMain();
 			gwas.runGentos(args);

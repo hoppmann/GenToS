@@ -26,14 +26,15 @@ public class InitDatabase {
 	// other
 	HandleFiles log;
 	String dbPath;
+	boolean verbose;
 
 	////////////////////
 	//////// Constructor
 
-	public InitDatabase(String dbPath, HandleFiles log) {
+	public InitDatabase(String dbPath, HandleFiles log, boolean verbose) {
 		this.dbPath = dbPath;
 		this.log = log;
-
+		this.verbose = verbose;
 		
 		//try to connect to database if database exists else abort
 		File file = new File(dbPath);
@@ -45,7 +46,10 @@ public class InitDatabase {
 				log.writeOutFile("Failed to connect to database " + dbPath);
 				System.exit(1);
 			}
-			log.writeOutFile("Connection to database " + dbPath + " successful.");
+			
+			if (verbose) {
+				log.writeOutFile("Connection to database " + dbPath + " successful.");
+			}
 		} else {
 			log.writeError("Database " + dbPath + " not found.");
 			System.exit(1);
@@ -88,7 +92,9 @@ public class InitDatabase {
 
 			// check if table exists else Error and quit
 			if (table.next()){
-				log.writeOutFile("Table " + tableName + " exists");
+				if ( verbose ) {
+					log.writeOutFile("Table " + tableName + " exists");
+				}
 			} else {
 				// error message and exit
 				log.writeError("Table "+ tableName + " not found in Database " + dbPath + "!");
@@ -117,8 +123,10 @@ public class InitDatabase {
 				}
 			}
 			
-			log.writeOutFile("All columns found!");
-
+			if (verbose) {
+				log.writeOutFile("All columns found!");
+			}
+			
 		} catch (Exception e) {
 
 			// write failure if something happened getting meta data
@@ -134,4 +142,24 @@ public class InitDatabase {
 			System.out.println("WARNING: Couldn't close database!"); 
 		}
 	}
+
+
+
+	
+	
+	
+	
+	
+	///////////////////////////////
+	//////// Getter Setter ////////
+	///////////////////////////////
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+	
+	
+	
+	
+	
+	
 }

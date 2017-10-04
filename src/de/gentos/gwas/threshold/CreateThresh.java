@@ -1,17 +1,15 @@
 package de.gentos.gwas.threshold;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
-import de.gentos.gwas.getSNPs.ExtractData;
+import de.gentos.gwas.getSNPs.ExtractDataMethods;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.GeneInfo;
-import de.gentos.gwas.initialize.data.GeneListInfo;
 
 public class CreateThresh {
 
@@ -23,7 +21,7 @@ public class CreateThresh {
 	Double thresh;
 	String plenty;
 	ReadInGwasData gwasData;
-	ReadInGeneDB readGenes;
+	ReadInGeneDB geneDB;
 	GeneInfo geneInfo;
 
 
@@ -37,7 +35,7 @@ public class CreateThresh {
 		this.log = init.getLog();
 		this.cmd = init.getGwasOptions().getCmd();
 		this.gwasData = gwasData;
-		this.readGenes = init.getReadGenes();
+		this.geneDB = init.getReadGenes();
 	}
 
 
@@ -70,28 +68,21 @@ public class CreateThresh {
 
 
 
-	public void choose(ExtractData extract, LinkedList<String> queryGenes, Map<String, GeneListInfo> queryGenesChecked) {
+	public void choose(ExtractDataMethods extract, Map<String, GeneInfo> curQueryList) {
 
 		////////////
-		//////// bonferoni
+		//////// bonferroni
 		if (init.getGwasOptions().getMethod().equals("bonferroni")) {
 
 
-			// for each Gene get number of independent SNPs
-			log.writeOutFile("For each gene extract independent SNPs.");
-			try {
-				extract.extractIndep(queryGenesChecked, queryGenes);
-			} catch (Exception e) {
-				log.writeError("An error occured while getting gene informations from the indep database.");
-				System.exit(1);
+			// remember method used to calculate threshold
+			for (String curGene : curQueryList.keySet()) {
+				
+				//TODO check naming 
+				curQueryList.get(curGene).setMethod("Bonferoni");
 			}
 
-			// set remember method used to calculate threshold
-			for (String gene : queryGenesChecked.keySet()) {
-				queryGenesChecked.get(gene).setMethod("Bonferoni");
-			}
-
-			// instanciate bonferoni correction
+			// Instantiate bonferroni correction
 			Bonferroni bonfe = new Bonferroni(init, gwasData);
 
 			////// run without further option
@@ -99,20 +90,19 @@ public class CreateThresh {
 
 
 				// run bonferoni with not special correction
-				bonfe.correctOnly(queryGenesChecked);
+				bonfe.correctOnly(curQueryList);
 
 				////// run plenty only
 			} else if (cmd.hasOption("plenty")) {
 
 				// run bonferoni with plenty option
-				bonfe.plentyOnly(queryGenesChecked);
+				bonfe.plentyOnly(curQueryList);
 			}
 
 			// get threshold
 			thresh = bonfe.getThresh();
+			
 		}
-
-
 
 
 
@@ -120,52 +110,28 @@ public class CreateThresh {
 		//////// FDR correction
 		//////// by Benjamini-Hochberg
 		if (init.getGwasOptions().getMethod().equals("FDR")) {
-			// for each gene in query list check if gene is supported if so save in corrected hash
-
-			for (String currentGene : queryGenes){
-				extract.checkGene(currentGene, queryGenesChecked);
-			}
 
 			// calculate FDR
 			FalseDiscoveryRate FDR = new FalseDiscoveryRate(init);
-			FDR.runFDR(queryGenesChecked, queryGenes, gwasData);
+			FDR.runFDR(curQueryList, gwasData);
 
 			thresh = FDR.getThreshold(); 
-
+			
 		}
-
-
-
-
+			
+			
 		////////////
 		/////// Fix Thresh
 		if (init.getGwasOptions().getMethod().equals("fixThresh")) {
 
-			// for each gene in query list check if gene is supported if so save in corrected hash
-			for (String currentGene : queryGenes){
-				extract.checkGene(currentGene, queryGenesChecked);
-			}
 			// use fix thresh
 			// add threshold to each gene in hash
 			thresh = init.getGwasOptions().getFixThresh();
-			for (String gene : queryGenesChecked.keySet()) {
-				queryGenesChecked.get(gene).setThreshold(thresh);
-				queryGenesChecked.get(gene).setMethod("fixThresh");
+			for (String gene : curQueryList.keySet()) {
+				curQueryList.get(gene).setThreshold(thresh);
+				curQueryList.get(gene).setMethod("fixThresh");
 			}
-
 		}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -201,40 +167,6 @@ public class CreateThresh {
 		//			System.exit(3234);
 		//			
 		//		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

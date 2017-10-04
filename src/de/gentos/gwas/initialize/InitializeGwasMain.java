@@ -3,15 +3,24 @@ package de.gentos.gwas.initialize;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.io.FilenameUtils;
 
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
-import de.gentos.gwas.initialize.data.DbSnpInfo;
+import de.gentos.gwas.initialize.data.GeneInfo;
+import de.gentos.gwas.initialize.data.GwasDbInfo;
 import de.gentos.gwas.initialize.options.GetGwasOptions;
 
-// This class initializes all primary steps, like opening a file for log; reading in the options; checking the config file ...
+/* 
+ * This class initializes all primary steps, like opening a file for logging;
+ * reading in the options;
+ * checking the config file
+ * checking and reading in databases
+ * */
 
 public class InitializeGwasMain {
 
@@ -22,7 +31,7 @@ public class InitializeGwasMain {
 	HandleFiles log;
 	ReadInGwasData gwasData;
 	ReadInGeneDB readGenes;
-	Map<Integer, DbSnpInfo> dbSNPInfo;
+	Map<String, Map<String, GeneInfo>> geneLists = new HashMap<>();
 
 
 	// //////////////////////////////////////////////
@@ -36,24 +45,27 @@ public class InitializeGwasMain {
 		// get options
 		InitOptions(args);
 
-		
+
 		// open output directory
-		
 		new File(options.getDir()).mkdir();
 
 		// open log file
 		initLog();
 
-		// write commandline options to log file
+		// write command line options to log file
 		log.writeOutFile("########Starting initializing ########\n");
 		log.writeFile("Options chosen:\n" + Arrays.toString(args) + "\n");
 
+		
 		// check databases for correctness
 		checkDatabases();
+		
+		// read in data from databases
+		readGeneDatabase();
 
-
-		// read in data
-		readData();
+		// read in gene lists
+		readGeneLists();
+		
 		
 		// write to log file init done
 		log.writeOutFile("Finished initialization\n");
@@ -99,7 +111,7 @@ public class InitializeGwasMain {
 
 
 
-	// init commandline options and write them to logfile and check basic options for correctness
+	// init command line options and write them to log file and check basic options for correctness
 
 	private void InitOptions(String[] args) {
 		options = new GetGwasOptions(args, config);
@@ -111,7 +123,7 @@ public class InitializeGwasMain {
 
 
 
-
+	//////////////////////
 	//// check databases for correctness
 
 	private void checkDatabases() {
@@ -124,26 +136,57 @@ public class InitializeGwasMain {
 		String dbGenePath = options.getDbGene();
 		String dbGeneTable = options.getTableGene();
 		String[] columnNamesGenes = {"gene", "chr", "start", "stop"};
-		InitDatabase dbGene = new InitDatabase(dbGenePath, log);
+		InitDatabase dbGene = new InitDatabase(dbGenePath, log, true);
 		dbGene.checkDatabases(dbGeneTable, columnNamesGenes);
 
-		// dbSNP
+		// SNP db
 		// iterate over all given databases and tables
-		Map<Integer, DbSnpInfo> dbSNPInfo = options.getDbSNP();
+		Map<Integer, GwasDbInfo> allGwasDbs = options.getGwasDbs();
 
+		for (Integer currentDbKey : allGwasDbs.keySet()) {
 
-
-		for (Integer currentDbKey : dbSNPInfo.keySet()) {
-
-			// get dbSNP and tableSNP values from current db to check
-			String dbPath = dbSNPInfo.get(currentDbKey).getDbPath();
-			String tableName = dbSNPInfo.get(currentDbKey).getTableName();
+			// get dbSNP and tableSNP values from current DB to check
+			String dbPath = allGwasDbs.get(currentDbKey).getDbPath();
+			String tableName = allGwasDbs.get(currentDbKey).getTableName();
 			String[] columnNamesSNPs = {options.getColrsID(), options.getColChr(), options.getColPos(), options.getColPval()};
 
 			// check current db
-			InitDatabase dbSNP = new InitDatabase(dbPath, log);
+			InitDatabase dbSNP = new InitDatabase(dbPath, log, true);
 			dbSNP.checkDatabases(tableName, columnNamesSNPs);
 		}
+		
+		
+		// independent SNPs
+		String dbIndepPath = options.getIndepDB();
+		String[] columnNamesIndep = {"rsid", "pos"};
+		for ( int chr = 1; chr <= 22; chr++) {
+			InitDatabase dbIndep = new InitDatabase(dbIndepPath, log, false);
+			dbIndep.checkDatabases("chr"+chr, columnNamesIndep);
+		}
+		
+		// make log entry, that indep DB is ok
+		log.writeOutFile("Reference DB successfully checked.");
+		
+	}
+
+
+
+
+
+
+	/////////////////
+	//// read in genes from gene db and GWAS data from GWAS db's and save it in hash
+	private void readGeneDatabase() {
+
+
+		////////////////
+		//////// gene db
+		// read in gene database for later extraction of gene positions
+		// in case of bed-files the gene database is not needed
+		if (! options.isBedFile()) {
+			readGenes = new ReadInGeneDB(this);
+		}
+
 	}
 
 	
@@ -152,32 +195,165 @@ public class InitializeGwasMain {
 	
 	
 	
-	// read in gene data from gene db and gwas data from gwas db's and save it in hash
-	private void readData() {
-		// get gene info
-		readGenes = new ReadInGeneDB(this);
+	///////////////////
+	//////// read in GWAS database
+
+	public void readGwasDbStandard(int curGwasDb) {
 
 
+			// for each GWAS file and GWAS table read in data from database
+			GwasDbInfo gwasDbInfo = options.getGwasDbs().get(curGwasDb);
 
-		// dbSNP
-		// iterate over all given databases and tables
-		dbSNPInfo = options.getDbSNP();
+			String gwasDbPath = gwasDbInfo.getDbPath();
+			String tableGwasDb = gwasDbInfo.getTableName();
 
-		
-		// instantiate new data object
-		
-		for (Integer currentDbKey : dbSNPInfo.keySet()) {
-
-			// for each gwas file and gwas table read in data from database
-			String dbSnpPath = dbSNPInfo.get(currentDbKey).getDbPath();
-			String tableSnpName = dbSNPInfo.get(currentDbKey).getTableName();
 			
-			// read in gwas data from db and save object to corresponding hash entry
+			// read in GWAS data from DB and save object to corresponding hash entry
 			gwasData = new ReadInGwasData(this);
-			gwasData.readGWASFile(dbSnpPath, tableSnpName, readGenes);
-			
-			dbSNPInfo.get(currentDbKey).setGwasData(gwasData);
-			
+			gwasData.readGWASFileStandard(gwasDbPath, tableGwasDb, readGenes);
+	}
+
+	
+	
+	
+	
+	
+	
+	/////////////////////////
+	//////// read in GWAS database with bed-file option
+	 public void readGwasDbBed(int curGwasDb, String curGeneList) {
+		
+		 // for each GWAS file and GWAS table read in data from database
+
+		 GwasDbInfo gwasDbInfo = options.getGwasDbs().get(curGwasDb);
+		 String gwasDbPath = gwasDbInfo.getDbPath();
+		 String tableGwasDb = gwasDbInfo.getTableName();
+
+		 // read in GWAS data from DB and save object to corresponding hash entry
+		 gwasData = new ReadInGwasData(this);
+		 gwasData.readGwasFileBed(gwasDbPath, tableGwasDb, curGeneList);
+	 }
+	
+	
+	 
+	 
+	 
+	 
+	 
+	//////////////////////////////////////
+	//////// read in GenList and check if pure list or if bed file
+
+	private void readGeneLists() {
+
+		//////// read in gene lists, single genes or bed files
+		// if a single gene is chosen add this gene 
+		if (options.getCmd().hasOption("gene")) {
+
+			// retrieve gene name from command line input
+			String geneName = options.getSingleGene();
+
+			// prepare map with gene as key
+			Map<String, GeneInfo> curGene = new HashMap<>();
+			curGene.put(geneName,new GeneInfo());
+
+			geneLists.put("singleGene", curGene);
+
+		}
+
+
+		// if a list or a list collection is chosen read in the genes and save in hash 
+		// key = listName; value = Map of gene infos
+		if (options.getCmd().hasOption("list") || options.getCmd().hasOption("listCollection")) {
+
+			// check for bed file option; if so load bed file not plain list
+			if (options.isBedFile()) {
+
+				// prepare integer to be used as key for 
+				int keyInt = 0; 
+				
+				for (String listPath : options.getListOfQueries()) {
+
+					// prepare hash for current List
+					Map<String, GeneInfo> curInpuList = new HashMap<>();
+
+					// check if file exists
+					new HandleFiles().exist(listPath);
+
+					// read in file line wise
+					for (String line : new HandleFiles().openFile(listPath, true)) {
+
+						// create counter to get uniq key for each 
+						
+						String[] splitLine = line.split("\t");
+
+						/* 
+						 * extract information about current ROI
+						 * 		chromosome and remove all besides the chr number
+						 * 		start and stop
+						 *  	save in GeneInfo object
+						 *  gene names have to be treated sepreately in case no name given
+						 */
+						Integer chr = Integer.parseInt(splitLine[0].replaceAll("[^\\d]", ""));
+						Integer start = Integer.parseInt(splitLine[1]);
+						Integer stop = Integer.parseInt(splitLine[2]);
+
+						/* 
+						 * add current ROI consisting of chr/start/stop to hash
+						 * if gene is given in bed file use gene name as key, else use keyInteger as arbitrary key
+						 * as key use incrementing integer and not geneName, due to flexibility reasons 
+						 * 
+						 */
+						
+						// check if gene names are given in 4th column
+						if (splitLine.length > 3) {
+							String geneName = splitLine[3].replaceAll("\\s", "");
+							// handle case if gene names are given. 
+							if (curInpuList.containsKey(geneName)) {
+								curInpuList.get(geneName).addRoi(chr, start, stop);
+							} else {
+								curInpuList.put(geneName, new GeneInfo());
+								curInpuList.get(geneName).addRoi(chr, start, stop);
+							}
+						} else {
+							
+							// handle case of non gene names given
+							String key  = Integer.toString(keyInt);
+							
+							curInpuList.put(key, new GeneInfo());
+							curInpuList.get(key).addRoi(chr, start, stop);
+							curInpuList.get(key).setHasGeneName(false);
+							
+							// increment key for next ROI
+							keyInt++;
+						}
+					}
+					
+					// save current List in Hash of list collection
+					String listName = FilenameUtils.getBaseName(listPath);
+					geneLists.put(listName, curInpuList);
+
+					
+					
+				}
+
+				// load plain list of genes
+			} else {
+				for (String listPath: options.getListOfQueries()) {
+					// get key = name of current list
+					String key = FilenameUtils.getBaseName(listPath);
+
+					// for each entry in this list save to the gene list map and save
+					Map<String, GeneInfo> curInputList = new HashMap<>();
+					for (String curGene : new HandleFiles().openFile(listPath, true)) {
+						curInputList.put(curGene.replaceAll("\\s", ""), new GeneInfo());
+					}
+
+					// save gene query list in geneList hash containing all lists
+					geneLists.put(key, curInputList);
+
+				}
+
+			}
 		}
 	}
 
@@ -185,10 +361,6 @@ public class InitializeGwasMain {
 	// ////////////////////////
 	// ////// Getter and Setter
 
-	
-	public Map<Integer, DbSnpInfo> getDbSNPInfo() {
-		return dbSNPInfo;
-	}
 
 	public ReadInGwasData getGwasData() {
 		return gwasData;
@@ -197,6 +369,7 @@ public class InitializeGwasMain {
 	public ReadInGeneDB getReadGenes() {
 		return readGenes;
 	}
+	
 
 	public GetGwasOptions getGwasOptions() {
 		return options;
@@ -209,6 +382,20 @@ public class InitializeGwasMain {
 	public HandleFiles getLog() {
 		return log;
 	}
+
+	public GetGwasOptions getOptions() {
+		return options;
+	}
+
+	public Map<String, Map<String, GeneInfo>> getGeneLists() {
+		return geneLists;
+	}
+
+
+
+
+
+
 
 
 }

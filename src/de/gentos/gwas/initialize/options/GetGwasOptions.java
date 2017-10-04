@@ -10,12 +10,11 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.io.FilenameUtils;
 
 import de.gentos.general.files.ConfigFile;
 import de.gentos.general.files.HandleFiles;
 import de.gentos.gwas.initialize.ExtracSpecFile;
-import de.gentos.gwas.initialize.data.DbSnpInfo;
+import de.gentos.gwas.initialize.data.GwasDbInfo;
 
 public class GetGwasOptions {
 
@@ -28,12 +27,14 @@ public class GetGwasOptions {
 
 	// define variables to be set by options
 	//mandatory
-	Map<String, LinkedList<String>> geneLists = new HashMap<>();
-	private LinkedList<String> list = new LinkedList<>();
+	private LinkedList<String> listOfQueries = new LinkedList<>();
+	private String singleGene;
+	
 	private String spec;
 	private String dbGene;
 	private String tableGene;
-	private Map<Integer, DbSnpInfo> dbSNP;
+	private Map<Integer, GwasDbInfo> gwasDbs;
+	private boolean bedFile = false;
 
 	// other run specific
 	private int[] flank = new int[2];
@@ -153,8 +154,19 @@ public class GetGwasOptions {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		/////////////
-		//// genral settings
+		//// general settings
 		
 		//define name of log file
 		log = cmd.getOptionValue("log");
@@ -178,53 +190,104 @@ public class GetGwasOptions {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		////////////////
 		//////// mandatory options
 
+		// check if bed file option is chosen
+		if (cmd.hasOption("bedFile")){
+			bedFile = true;
+		}
 
-		// check for singularity of options gene name or gene list
-		// check if option chosen if so increment check variable
+		
+		
+		
+		
+		// check for singularity of options gene name, gene list and  listCollection
+		// check if option chosen, if so increment check variable and test if more then one is chosen
+		
 		int check = 0;
+		
 		if (cmd.hasOption("gene")) {
 			// save single gene if gene is chosen
-			LinkedList<String> genes = new LinkedList<>();
-			genes.add(cmd.getOptionValue("gene"));
-			geneLists.put("singleGene", genes);
+			singleGene = cmd.getOptionValue("gene");
+			
 			check++;
+			
+			// check if bedFile option if chosen since if so make statement that not combinable
+			if (cmd.hasOption("bedFile")) {
+				System.out.println("\n#### WARNING: Option \"gene\" and \"bedFile\" are not combineable. Option \"bedFile\" will be ignored.\n");
+			}
 		}
+		
+		
+		
+		//// get list of genes
 		if (cmd.hasOption("list")) {
-			// check if list exsist then extract genes
-			list.add(cmd.getOptionValue("list"));
+			listOfQueries.add(cmd.getOptionValue("list"));
 			check++;
 		}
+		
 		if (cmd.hasOption("listCollection")) {
 			// check if list Collection exist then extract lists
-			new HandleFiles().exist(cmd.getOptionValue("listCollection"));
-			list.addAll(new HandleFiles().openFile(cmd.getOptionValue("listCollection"), true));
+			String listCollection =cmd.getOptionValue("listCollection");
+			new HandleFiles().exist(listCollection);
+			listOfQueries.addAll(new HandleFiles().openFile(listCollection, true));
 			check++;
 		}
 
+		
+		
+		
 		// if more than one option chosen abort and pass out error message
 		if (check > 1){
-			System.out.println("ERROR:\nOptions \"gene\", \"list\" and \"listCollecion\" not combinable.");
+			System.out.println("ERROR:\nOptions \"gene\", \"list\" and \"listCollecion\" are not combinable.");
 			System.exit(1);
 		} else if (check < 1) {
 			System.out.println("ERROR:\nEither option \"gene\", \"list\" or \"listCollection\" mandatory!");
 			System.exit(1);
 
 			// if list or list collection option chosen read in genes for each list
-		} else if (!list.isEmpty()) {
-			for (String file : list){
-				new HandleFiles().exist(file);
-				String key = FilenameUtils.getBaseName(file);
-				geneLists.put(key, new HandleFiles().openFile(file, true));
-			}
+		} else if (!listOfQueries.isEmpty()) {
+			for (String file : listOfQueries){
 
+				// check if file exists
+				new HandleFiles().exist(file);
+			}
 		}
 
-
-
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -244,7 +307,7 @@ public class GetGwasOptions {
 				ExtracSpecFile specFile = new ExtracSpecFile(spec);
 				dbGene = specFile.getDbGene();
 				tableGene = specFile.getTableGene();
-				dbSNP = specFile.getDbSNP();
+				gwasDbs = specFile.getDbSNP();
 
 			}
 
@@ -257,11 +320,11 @@ public class GetGwasOptions {
 			tableGene = cmd.getOptionValue("tableGene");
 
 			// get single dbSNP and single tableSNP
-			dbSNP =  new HashMap<>();
+			gwasDbs =  new HashMap<>();
 			String dbPath = cmd.getOptionValue("dbSNP");
 			String tableName = cmd.getOptionValue("tableSNP");
-			DbSnpInfo dbInfo = new DbSnpInfo(dbPath, tableName);
-			dbSNP.put(0, dbInfo);
+			GwasDbInfo dbInfo = new GwasDbInfo(dbPath, tableName);
+			gwasDbs.put(0, dbInfo);
 		}
 
 
@@ -280,9 +343,26 @@ public class GetGwasOptions {
 		}
 
 
-
-
-
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		/////////////
 		/////// other run specific
@@ -336,6 +416,16 @@ public class GetGwasOptions {
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		////////////////
 		//////// threshold options
@@ -357,25 +447,31 @@ public class GetGwasOptions {
 
 		// check for singularity of chosen thresh calculation
 		check = 0;
+		
+		// check if fix thresh is chosen
 		if (cmd.hasOption("fixThresh")) {
 			method = "fixThresh";
-			// check if also lenient or plentygenes is chosen if so make warning
-			if (cmd.hasOption("lenient") || cmd.hasOption("plenty")){
-				System.out.println("#ERROR: fixThresh is not combinable with \"plenty\" or \"lenient\"");
+			// check if also plenty genes is chosen if so make warning
+			if (cmd.hasOption("plenty")){
+				System.out.println("#ERROR: fixThresh is not combinable with \"plenty\"");
 				System.exit(1);
 			}
 
 			check++;
 		}
+		
+		// check if bonferroni is chosen and according sub mode
 		if (cmd.hasOption("bonferroni") || cmd.hasOption("plenty")) {
 			method = "bonferroni";
 			check++;
 		}
+		
+		// check if FDR is wrongly combined
 		if (cmd.hasOption("FDR")) {
 			method = "FDR";
-			// check if also lenient or plentygenes is chosen if so make warning
-			if (cmd.hasOption("lenient")){
-				System.out.println("#ERROR: FDR is not combinable with \"plenty\" or \"lenient\"");
+			// check if also plenty genes is chosen if so make warning
+			if (cmd.hasOption("plenty")){
+				System.out.println("#ERROR: FDR is not combinable with \"plenty\"");
 				System.exit(1);
 			}
 			check++;
@@ -398,7 +494,7 @@ public class GetGwasOptions {
 			method = "bonferroni";
 		}
 
-		// check that alpha is double and set defult if needed
+		// check that alpha is double and set default if needed
 		if (cmd.hasOption("alpha")) {
 			try {
 				alpha = Double.valueOf(cmd.getOptionValue("alpha"));
@@ -408,6 +504,16 @@ public class GetGwasOptions {
 			}
 		} 
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -432,7 +538,7 @@ public class GetGwasOptions {
 			popDir = progPath + config.getIndepDir();
 		}
 
-		// combine to indepDB and check for existance
+		// combine to indepDB and check for existence
 		indepDB = popDir + "/" + pop + ".db";
 
 		if (! new File(indepDB).isFile()) {
@@ -441,6 +547,15 @@ public class GetGwasOptions {
 		}
 
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -471,7 +586,7 @@ public class GetGwasOptions {
 		}		
 		
 		
-		// check if no validation method chosen take random reapeats
+		// check if no validation method chosen, then take random repeats
 		if (cmd.hasOption("enrichment")) {
 			if (!cmd.hasOption("randomRepeat") && !cmd.hasOption("binomial")) {
 				binomial = true;
@@ -485,17 +600,38 @@ public class GetGwasOptions {
 			}
 		}
 		
-		// check for seed option and save as long
 		
+		// check if binomial and BED-file option is chosen, if so abort with ERROR
+		if (this.isBedFile() && this.isBinomial()) {
+			System.out.println("## ERROR: Binomial validation is not supported for BED files.");
+			System.exit(1);
+		}
+
+		
+		
+		
+		// check for seed option and save as long
 		if (cmd.hasOption("seed")) {
 			seed = Long.valueOf(cmd.getOptionValue("seed"));
 		}
+
+		
 		
 		// get prob Hit
 		if (cmd.hasOption("getProbHit")) {
 			getProp = true;
 			
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -573,57 +709,46 @@ public class GetGwasOptions {
 
 	}
 
+	
 
-
-
-
-
-
+	
+	
+	
+	
 	//////////////////////////////////////
 	//////// getters for option parameters
 
-	public boolean isRandomRepeats() {
-		return randomRepeats;
+	
+	
+	public ConfigFile getConfig() {
+		return config;
 	}
 
-	public boolean isBinomial() {
-		return binomial;
+	public CommandLine getCmd() {
+		return cmd;
 	}
 
-	public String getMethod() {
-		return method;
+	public String[] getArgs() {
+		return args;
 	}
 
-	public String getLog() {
-		return log;
+	public SetGwasOptions getSetGwasOptions() {
+		return setGwasOptions;
 	}
 
-	public String getDir() {
-		return dir;
+	public LinkedList<String> getListOfQueries() {
+		return listOfQueries;
+	}
+
+	public String getSingleGene() {
+		return singleGene;
 	}
 
 	public String getSpec() {
 		return spec;
 	}
 
-	public ConfigFile getConfig() {
-		return config;
-	}
-
-	public LinkedList<String> getList() {
-		return list;
-	}
-
-	public double getAlpha() {
-		return alpha;
-	}
-
-	public Map<String, LinkedList<String>> getGeneLists() {
-		return geneLists;
-	}
-
 	public String getDbGene() {
-
 		return dbGene;
 	}
 
@@ -631,16 +756,40 @@ public class GetGwasOptions {
 		return tableGene;
 	}
 
-	public Map<Integer, DbSnpInfo> getDbSNP() {
-		return dbSNP;
+	public Map<Integer, GwasDbInfo> getGwasDbs() {
+		return gwasDbs;
 	}
 
-	public String[] getArgs() {
-		return args;
+	public boolean isBedFile() {
+		return bedFile;
 	}
 
-	public SetGwasOptions getSetOptions() {
-		return setGwasOptions;
+	public int[] getFlank() {
+		return flank;
+	}
+
+	public String getPop() {
+		return pop;
+	}
+
+	public String getPopDir() {
+		return popDir;
+	}
+
+	public String getIndepDB() {
+		return indepDB;
+	}
+
+	public double getAlpha() {
+		return alpha;
+	}
+
+	public Double getFixThresh() {
+		return fixThresh;
+	}
+
+	public String getMethod() {
+		return method;
 	}
 
 	public String getColrsID() {
@@ -663,36 +812,32 @@ public class GetGwasOptions {
 		return numberOfIterations;
 	}
 
-	public int[] getFlank() {
-		return flank;
+	public boolean isRandomRepeats() {
+		return randomRepeats;
 	}
 
-	public String getPop() {
-		return pop;
+	public boolean isBinomial() {
+		return binomial;
 	}
 
-	public String getPopDir() {
-		return popDir;
+	public long getSeed() {
+		return seed;
 	}
 
-	public String getIndepDB() {
-		return indepDB;
+	public boolean isGetProp() {
+		return getProp;
 	}
 
-	public CommandLine getCmd() {
-		return cmd;
+	public String getLog() {
+		return log;
 	}
 
-	public Double getFixThresh() {
-		return fixThresh;
+	public String getDir() {
+		return dir;
 	}
 
 	public String getCsvDir() {
 		return csvDir;
-	}
-
-	public String getProgPath() {
-		return progPath;
 	}
 
 	public String getGraphSuffix() {
@@ -707,15 +852,9 @@ public class GetGwasOptions {
 		return graphTitel;
 	}
 
-	public long getSeed() {
-		return seed;
+	public String getProgPath() {
+		return progPath;
 	}
-
-	public boolean isGetProp() {
-		return getProp;
-	}
-
-
 
 
 }

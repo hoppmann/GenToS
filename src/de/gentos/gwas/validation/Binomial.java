@@ -9,7 +9,7 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import de.gentos.general.files.ReadInGeneDB;
-import de.gentos.gwas.getSNPs.ExtractData;
+import de.gentos.gwas.getSNPs.ExtractDataMethods;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
 import de.gentos.gwas.initialize.data.SnpLine;
@@ -51,10 +51,11 @@ public class Binomial {
 	public double estimateProb(double thresh) {
 
 		// for each gene extract lowest Pval 
-		List<Double> lowesPvalPerGene = new ExtractData(init).extractLowestPvalPerGene(gwasData);
+		List<Double> lowesPvalPerGene = new ExtractDataMethods(init).extractLowestPvalPerGene(gwasData);
 
+		
 		// get total number of genes in gwas
-		int totalNumberOfGenesInGwas = gwasData.getGeneSNP().keySet().size();
+		int totalNumberOfGenesInGwas = gwasData.getGwasSnps().keySet().size();
 
 		// extract number of genes with pval < thresh
 		Collections.sort(lowesPvalPerGene);
@@ -62,6 +63,7 @@ public class Binomial {
 		while ((possibleHitGenes < totalNumberOfGenesInGwas ) && (lowesPvalPerGene.get(possibleHitGenes) <= thresh)) {
 			possibleHitGenes++;
 		}
+
 
 		
 		// probability of hit is equal to possibleHitGenes / totalNumberGenesInGwas 
@@ -173,10 +175,10 @@ public class Binomial {
 		// for each gene; for each SNP save if pval < smallestPval
 		for (String gene : init.getReadGenes().getAllGeneNames()) {
 			// for each SNP: if pval < threshold save data to hash
-			if (!(gwasData.getGeneSNP().get(gene) == null)) {
+			if (!(gwasData.getGwasSnps().get(gene) == null)) {
 
 
-				for (SnpLine currentSNP : gwasData.getGeneSNP().get(gene)) {
+				for (SnpLine currentSNP : gwasData.getGwasSnps().get(gene)) {
 					Double pval = currentSNP.getpValue();
 
 					// if pval smaller thresh mark as hit go to next gene
@@ -205,10 +207,10 @@ public class Binomial {
 		for (String gene : queryGenes){
 
 			// for each SNP: if pval < threshold save data to hash
-			if (!(gwasData.getGeneSNP().get(gene) == null)) {
+			if (!(gwasData.getGwasSnps().get(gene) == null)) {
 
 
-				for (SnpLine currentSNP : gwasData.getGeneSNP().get(gene)) {
+				for (SnpLine currentSNP : gwasData.getGwasSnps().get(gene)) {
 					Double pval = currentSNP.getpValue();
 
 					// if pval smaller thresh mark as hit go to next gene

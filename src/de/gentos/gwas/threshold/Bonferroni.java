@@ -8,7 +8,7 @@ import de.gentos.general.files.HandleFiles;
 import de.gentos.general.files.ReadInGeneDB;
 import de.gentos.gwas.initialize.InitializeGwasMain;
 import de.gentos.gwas.initialize.ReadInGwasData;
-import de.gentos.gwas.initialize.data.GeneListInfo;
+import de.gentos.gwas.initialize.data.GeneInfo;
 
 public class Bonferroni  {
 
@@ -51,8 +51,7 @@ public class Bonferroni  {
 
 	//////// run without further options
 
-	public void correctOnly (Map<String, GeneListInfo> genes ){
-
+	public void correctOnly (Map<String, GeneInfo> genes ){
 		
 		// set lenient to -9
 		for (String gene : genes.keySet()) {
@@ -60,7 +59,7 @@ public class Bonferroni  {
 
 			// get number of independent SNPs to correct for
 			int indep = genes.get(gene).getIndepSNPs(); 
-			
+
 			// to avoid infinity, if denominator = 0 set to 1
 			if (indep == 0) {
 				indep = 1;
@@ -77,7 +76,7 @@ public class Bonferroni  {
 
 
 	//////// run on plenty and lenient mode
-	public void plentyLenient ( Map<String, GeneListInfo> genes) {
+	public void plentyLenient ( Map<String, GeneInfo> genes) {
 
 		// extract number of SNPs in gwas file
 		lenient(genes);
@@ -108,7 +107,7 @@ public class Bonferroni  {
 
 
 	//////// run on plenty mode only
-	public void plentyOnly (Map<String, GeneListInfo> genes) {
+	public void plentyOnly (Map<String, GeneInfo> genes) {
 
 		// set lenient to -9
 		for (String gene : genes.keySet()) {
@@ -140,7 +139,7 @@ public class Bonferroni  {
 
 
 	//////// run on lenient mode only
-	public void lenientOnly ( Map<String, GeneListInfo> genes) {
+	public void lenientOnly ( Map<String, GeneInfo> genes) {
 
 		// extract number of SNPs in gwas file
 		lenient(genes);
@@ -176,15 +175,15 @@ public class Bonferroni  {
 	////////////
 	//////// lenient option
 
-	public void lenient(Map<String, GeneListInfo> genes) {
+	public void lenient(Map<String, GeneInfo> genes) {
 
 
 		// for each gene extract number of snps in gwas file and add to genes hash
 		for (String gene : genes.keySet()) {
 			int gwasSNPs = 0;
 			// check if there are entries for gwas snps else set 0
-			if (!(gwasData.getGeneSNP().get(gene) == null)) {
-				gwasSNPs = gwasData.getGeneSNP().get(gene).size();
+			if (!(gwasData.getGwasSnps().get(gene) == null)) {
+				gwasSNPs = gwasData.getGwasSnps().get(gene).size();
 				}
 			genes.get(gene).setGwasSNPs(gwasSNPs);
 		}
@@ -193,7 +192,7 @@ public class Bonferroni  {
 
 	//////////////
 	//////// extract total number of SNPs to correct for
-	public int plenty(Map<String, GeneListInfo> genes) {
+	public int plenty(Map<String, GeneInfo> genes) {
 
 		// get number of independent SNPs (sum up all SNPs)
 		int totalNumberSNPs = 0;
@@ -203,7 +202,7 @@ public class Bonferroni  {
 			// extract int values of gwas and kgp indep
 			Integer indep = genes.get(gene).getIndepSNPs();
 			Integer gwas = genes.get(gene).getGwasSNPs();
-			
+
 			// check if lenient column has -9 (no lenient option)
 			if (gwas == -9 || gwas > indep ) {
 				totalNumberSNPs += indep;

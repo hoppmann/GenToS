@@ -26,7 +26,7 @@ public class ReadInGeneDB {
 	private HandleFiles log;
 	private String tableGene;
 	private String dbGene;
-	private Map<String, GeneInfo> geneInfo = new HashMap<>();
+	private Map<String, GeneInfo> geneListMap = new HashMap<>();
 	private Map<String, String> nonGoodGenes = new HashMap<>(); 
 	private Multimap<Integer, String> chrGene = LinkedListMultimap.create();
 	private ArrayList<String> allGeneNames = new ArrayList<>();
@@ -119,11 +119,11 @@ public class ReadInGeneDB {
 				// check to exclude all gonomsomes and save others
 				if (Arrays.asList(correctChr).contains(chr)){
 
-					// save data to geneList opject
-					GeneInfo genes = new GeneInfo(Integer.valueOf(chr), start, stop);
+					// save data to geneList object
+					GeneInfo geneInfo = new GeneInfo(Integer.valueOf(chr), start, stop);
 
 					// save geneList object to hash with key gene
-					geneInfo.put(gene, genes);
+					geneListMap.put(gene, geneInfo);
 
 					// add genes to hash with chr as key
 					chrGene.put(chr, gene);
@@ -158,8 +158,8 @@ public class ReadInGeneDB {
 		return allGeneNames;
 	}
 
-	public Map<String, GeneInfo> getGeneInfo() {
-		return geneInfo;
+	public Map<String, GeneInfo> getGeneListMap() {
+		return geneListMap;
 	}
 
 	public Multimap<Integer, String> getChrGene() {

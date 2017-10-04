@@ -319,8 +319,8 @@ public class InitializeGeneSetMain {
 		String geneDB = getOptions().getDbGeneName();
 		String geneTable = getOptions().getDbGeneTable();
 		
-		// connect to databse
-		InitDatabase db = new InitDatabase(geneDB, log);
+		// connect to database
+		InitDatabase db = new InitDatabase(geneDB, log, true);
 		
 		// check that needed table and column exists
 		db.checkDatabases(geneTable, columnNamesGenes);
