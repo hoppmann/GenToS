@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
+import de.gentos.gwas.initialize.data.GeneInfo;
 
 public class HandleFiles {
 
@@ -135,6 +139,83 @@ public class HandleFiles {
 	}
 
 
+	
+	
+	
+	
+	
+	//////// read BED file
+	public Map<String, GeneInfo> readBed(String bedPath) {
+		
+		// open file
+		LinkedList<String> lines = this.openFile(bedPath, true);
+		
+		// prepare map for storing data and counter as key
+		int keyCounter = 0;
+		Map<String, GeneInfo> bedRois = new HashMap<>();
+		
+		
+		// read in file line wise
+		for (String curLine : lines) {
+
+			// create counter to get uniq key for each 
+			
+			String[] splitLine = curLine.split("\t");
+
+			/* 
+			 * extract information about current ROI
+			 * 		chromosome and remove all besides the chr number
+			 * 		start and stop
+			 *  	save in GeneInfo object
+			 *  gene names have to be treated separately in case no name given
+			 */
+			
+			Integer chr = Integer.parseInt(splitLine[0].replaceAll("[^\\d]", ""));
+			Integer start = Integer.parseInt(splitLine[1]);
+			Integer stop = Integer.parseInt(splitLine[2]);
+
+			/* 
+			 * add current ROI consisting of chr/start/stop to hash
+			 * if gene is given in bed file use gene name as key, else use keyInteger as arbitrary key
+			 * as key use incrementing integer and not geneName, due to flexibility reasons 
+			 * 
+			 */
+			
+			// check if 4th column exists > expecting to be the gene name column
+			if (splitLine.length > 3) {
+				// get gene name
+				String geneName = splitLine[3].replaceAll("\\s", "");
+				// handle case if gene names are given. 
+				if (bedRois.containsKey(geneName)) {
+					bedRois.get(geneName).addRoi(chr, start, stop);
+				} else {
+					bedRois.put(geneName, new GeneInfo());
+					bedRois.get(geneName).addRoi(chr, start, stop);
+				}
+
+			
+			} else {
+				
+				// handle case of non gene names given
+				String key  = Integer.toString(keyCounter);
+				
+				bedRois.put(key, new GeneInfo());
+				bedRois.get(key).addRoi(chr, start, stop);
+				bedRois.get(key).setHasGeneName(false);
+				
+				// increment key for next ROI
+				keyCounter++;
+			}
+		}
+		
+		// return read in bed file
+		return bedRois;
+
+		
+	}
+	
+	
+	
 	
 	
 	public void createDirectory(String path, HandleFiles log) {

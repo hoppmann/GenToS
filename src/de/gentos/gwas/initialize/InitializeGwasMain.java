@@ -220,7 +220,10 @@ public class InitializeGwasMain {
 	
 	
 	/////////////////////////
-	//////// read in GWAS database with bed-file option
+	/* 
+	 * read in GWAS database with bed-file option
+	 * in this mode the keys will be integers instead of gene names
+	*/
 	 public void readGwasDbBed(int curGwasDb, String curGeneList) {
 		
 		 // for each GWAS file and GWAS table read in data from database
@@ -268,65 +271,16 @@ public class InitializeGwasMain {
 			// check for bed file option; if so load bed file not plain list
 			if (options.isBedFile()) {
 
-				// prepare integer to be used as key for 
-				int keyInt = 0; 
-				
 				for (String listPath : options.getListOfQueries()) {
 
 					// prepare hash for current List
 					Map<String, GeneInfo> curInpuList = new HashMap<>();
 
-					// check if file exists
+					// check if file exists and read in
 					new HandleFiles().exist(listPath);
 
-					// read in file line wise
-					for (String line : new HandleFiles().openFile(listPath, true)) {
-
-						// create counter to get uniq key for each 
-						
-						String[] splitLine = line.split("\t");
-
-						/* 
-						 * extract information about current ROI
-						 * 		chromosome and remove all besides the chr number
-						 * 		start and stop
-						 *  	save in GeneInfo object
-						 *  gene names have to be treated sepreately in case no name given
-						 */
-						Integer chr = Integer.parseInt(splitLine[0].replaceAll("[^\\d]", ""));
-						Integer start = Integer.parseInt(splitLine[1]);
-						Integer stop = Integer.parseInt(splitLine[2]);
-
-						/* 
-						 * add current ROI consisting of chr/start/stop to hash
-						 * if gene is given in bed file use gene name as key, else use keyInteger as arbitrary key
-						 * as key use incrementing integer and not geneName, due to flexibility reasons 
-						 * 
-						 */
-						
-						// check if gene names are given in 4th column
-						if (splitLine.length > 3) {
-							String geneName = splitLine[3].replaceAll("\\s", "");
-							// handle case if gene names are given. 
-							if (curInpuList.containsKey(geneName)) {
-								curInpuList.get(geneName).addRoi(chr, start, stop);
-							} else {
-								curInpuList.put(geneName, new GeneInfo());
-								curInpuList.get(geneName).addRoi(chr, start, stop);
-							}
-						} else {
-							
-							// handle case of non gene names given
-							String key  = Integer.toString(keyInt);
-							
-							curInpuList.put(key, new GeneInfo());
-							curInpuList.get(key).addRoi(chr, start, stop);
-							curInpuList.get(key).setHasGeneName(false);
-							
-							// increment key for next ROI
-							keyInt++;
-						}
-					}
+					curInpuList = new HandleFiles().readBed(listPath);
+	
 					
 					// save current List in Hash of list collection
 					String listName = FilenameUtils.getBaseName(listPath);

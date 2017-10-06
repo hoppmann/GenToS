@@ -74,20 +74,18 @@ public class CreateThresh {
 		//////// bonferroni
 		if (init.getGwasOptions().getMethod().equals("bonferroni")) {
 
-
 			// remember method used to calculate threshold
 			for (String curGene : curQueryList.keySet()) {
 				
 				//TODO check naming 
 				curQueryList.get(curGene).setMethod("Bonferoni");
+				
 			}
-
 			// Instantiate bonferroni correction
 			Bonferroni bonfe = new Bonferroni(init, gwasData);
 
 			////// run without further option
 			if (!cmd.hasOption("plenty")) {
-
 
 				// run bonferoni with not special correction
 				bonfe.correctOnly(curQueryList);
@@ -104,6 +102,8 @@ public class CreateThresh {
 			
 		}
 
+		
+		
 
 
 		////////////
@@ -120,6 +120,10 @@ public class CreateThresh {
 		}
 			
 			
+		
+		
+		
+		
 		////////////
 		/////// Fix Thresh
 		if (init.getGwasOptions().getMethod().equals("fixThresh")) {

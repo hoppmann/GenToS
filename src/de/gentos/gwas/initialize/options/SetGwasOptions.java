@@ -91,6 +91,9 @@ public class SetGwasOptions {
 		opts.put(validation,  new OptionValue(options, "binomial", false, "Graphical validation of findings by estimating the enrichment using binomial distribution (default) (not supported for bed files)"));
 		opts.put(validation, new OptionValue(options, "seed", true, "\tSet seed for random generator."));
 		opts.put(validation, new OptionValue(options, "getProbHit", false, "If chosen gives out the theoretical probability of observing a gene as being significant used to calculate binomial distribution"));
+		opts.put(validation, new OptionValue(options, "reference", true, "A bed file that should be used as reference for drawing random sets of ROIs."));
+		opts.put(validation, new OptionValue(options, "randList", true, "A list of files to be used for validation, instead of random drawing validation lists."));
+		
 		
 		// stuff
 		opts.put(other, new OptionValue(options, "getSpec", false, "\tIf chosen prints out the specifications for the databases"));

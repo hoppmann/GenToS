@@ -59,6 +59,8 @@ public class GetGwasOptions {
 	private boolean binomial = false;
 	private long seed;
 	private boolean getProp = false;
+	private String referenceFile;
+	private String randListFile;
 	
 	// general settings
 	private String log;
@@ -625,6 +627,21 @@ public class GetGwasOptions {
 		
 		
 		
+		// get reference file
+		if (cmd.hasOption("reference")) {
+			referenceFile = cmd.getOptionValue("reference");
+			new HandleFiles().exist(referenceFile);
+		}
+
+		
+		// get randList
+		if (cmd.hasOption("randList")) {
+			randListFile = cmd.getOptionValue("randList");
+			new HandleFiles().exist(randListFile);
+		}
+		
+		
+		
 		
 		
 		
@@ -855,6 +872,20 @@ public class GetGwasOptions {
 	public String getProgPath() {
 		return progPath;
 	}
+
+	public String getReference() {
+		return referenceFile;
+	}
+
+	public String getReferenceFile() {
+		return referenceFile;
+	}
+
+	public String getRandListFile() {
+		return randListFile;
+	}
+	
+	
 
 
 }

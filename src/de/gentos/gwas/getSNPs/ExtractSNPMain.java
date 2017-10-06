@@ -128,9 +128,6 @@ public class ExtractSNPMain {
 			
 			
 			
-			
-			
-			
 			///////////////////
 			//////// get the ROIs for each gene
 			
@@ -182,7 +179,8 @@ public class ExtractSNPMain {
 			// make log entry
 			log.writeOutFile("Getting independent SNPs");
 			extract.extractIndep(queryGenesChecked);
-			
+			log.writeOutFile("Independent SNPs extracted from " + options.getIndepDB() +".");
+
 			
 			
 			

@@ -9,29 +9,29 @@ options = commandArgs(trailingOnly = TRUE)
 
 # accept commandline options
 pathToFile = options[1]
-measuredHits = as.numeric(options[2])
-outName = options[3]
-titelName = options[4]
-legend = options[5]
-suffix = options[6]
-scaling = as.numeric(options [7])
+outName = options[2]
+titelName = options[3]
+legend = options[4]
+suffix = options[5]
+scaling = as.numeric(options [6])
+measuredHits = as.numeric(options[7])
 
 
-
-# # option to test settings
-# pathToFile = "out/tmp/GEFOS-LSBMD_hg19-gene"
+# # # option to test settings
+# pathToFile = "out/tmp/GEFOS-LSBMD_hg19-trip1"
 # measuredHits = 5
 # outName = paste("out/test")
 # titelName = "titel of graph"
-# legend = (measuredHits - mean(data)) / sd(data)
+# # legend = (measuredHits - mean(data)) / sd(data)
+# legend = "NA"
 # suffix = "png"
 # scaling = 1.3
+# isBed = TRUE
 
 
 #open file containing input values
-data = read.table(pathToFile)
+data = read.table(pathToFile,stringsAsFactors = FALSE)
 data = data[,1]
-
 # calculate axis length
 yAxisMax = max(table(data))
 xAxisMax = round(max(max(data), measuredHits) * 1.2 )
@@ -54,7 +54,7 @@ if ( suffix == "png" ){
 	
 } else {
 	print (paste("Filename ", outName))
-	print ("HALLO")
+  print("HALLO")
 	
 }
 
@@ -71,15 +71,16 @@ hist(data,
 		 cex.axis = scaling
 )
 
+# if (!isBed){
 
-# draw line for extracted amound of loci and lable with number of found loci
-abline(v = measuredHits, col = "black", lwd = 5)
-# print (measuredHits)
-# print (yAxisMax)
-# print (scaling)
-text((measuredHits * 1.05 ), (yAxisMax * (3/4)), paste(measuredHits, " loci found"), srt=90, cex = scaling)
-
-
+  # draw line for extracted amound of loci and lable with number of found loci
+  abline(v = measuredHits, col = "black", lwd = 5)
+  # print (measuredHits)
+  # print (yAxisMax)
+  # print (scaling)
+  text((measuredHits * 1.05 ), (yAxisMax * (3/4)), paste(measuredHits, " loci found"), srt=90, cex = scaling)
+  
+# }
 
 # write zScore in Plot
 if (!is.na(legend)){

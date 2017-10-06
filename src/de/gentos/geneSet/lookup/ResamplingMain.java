@@ -132,9 +132,9 @@ public  class ResamplingMain {
 		// draw random set of genes
 		// create map to be able to reuse GenToS GWAS random draw
 		if (options.getThreads() == 1 || options.isVerbose()){
-			new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes, true);
+			new RandomDraw(log).drawSingleList(length, iterations, curListName, allRandomLists, seed, genes, true);
 		} else {
-			new RandomDraw(log).drawInList(length, iterations, curListName, allRandomLists, seed, genes, false );
+			new RandomDraw(log).drawSingleList(length, iterations, curListName, allRandomLists, seed, genes, false );
 		}
 	}
 

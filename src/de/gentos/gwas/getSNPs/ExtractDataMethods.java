@@ -156,9 +156,6 @@ public class ExtractDataMethods {
 
 	public void extractIndep(Map<String, GeneInfo> geneList) {
 
-		// make log entry
-		log.writeOutFile("For each gene extract independent SNPs.");
-
 		// connect to indepDB
 		String indepDBPath = options.getIndepDB();
 		Database dbIndep = new Database(indepDBPath, log);
@@ -192,8 +189,6 @@ public class ExtractDataMethods {
 				}
 			}
 		}
-
-		log.writeOutFile("Independent SNPs extracted from " + indepDBPath +".");
 	}
 
 
@@ -213,6 +208,7 @@ public class ExtractDataMethods {
 	public void calculateThresh (ExtractDataMethods extract, ReadInGwasData gwasData, Map<String, GeneInfo> queryGenesChecked, int currentDbSnp, String curentListName){
 
 		// create thresh according to method chosen
+		
 		CreateThresh correction = new CreateThresh(init, gwasData);
 		correction.choose(extract, queryGenesChecked);
 		
@@ -300,32 +296,33 @@ public class ExtractDataMethods {
 	
 	
 	///////////////////
-	//// get lowes p-val within a gene
-	public List<Double> extractLowestPvalPerGene(ReadInGwasData gwasData) {
+	//// get lowest p-value within a gene
+	public List<Double> extractLowestPvalPerGene(ReadInGwasData gwasDataReference) {
 
-		
 		
 		// set variables
 		List<Double> lowestPvalPerGene = new LinkedList<>();
 		List<Double> allPval;
 
 		// for each Human gene if gene is present in gwas
-		// extract lowes pval from gwas file and save to list
+		// extract lowest pval from gwas file and save to list
 
-		
+
 		for (String gene : init.getReadGenes().getAllGeneNames()){
 
 			// reset list of collection of all pval in gene
 			allPval = new ArrayList<>();
 			
 			// check that gene is in gwas file (key is available)
-			if(gwasData.getGwasSnps().containsKey(gene)){
-				List<SnpLine> snps = gwasData.getGwasSnps().get(gene);
+			if(gwasDataReference.getGwasSnps().containsKey(gene)){
+				List<SnpLine> snps = gwasDataReference.getGwasSnps().get(gene);
 				for (SnpLine snp : snps){
 					allPval.add(snp.getpValue());
 				}
 			}
 			
+			
+
 			// sort list of pval and save smallest is List
 			Collections.sort(allPval);
 			if (!allPval.isEmpty()){

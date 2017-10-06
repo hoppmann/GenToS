@@ -36,10 +36,10 @@ public class Binomial {
 	//////// Constructor
 
 
-	public Binomial(InitializeGwasMain init, ReadInGwasData gwasData) {
+	public Binomial(InitializeGwasMain init, ReadInGwasData gwasDataReference) {
 		this.init = init;
 		this.readGenes = init.getReadGenes();
-		this.gwasData = gwasData;
+		this.gwasData = gwasDataReference;
 	}
 
 	
@@ -50,6 +50,8 @@ public class Binomial {
 	/////// estimate the probability of getting a hit by chance
 	public double estimateProb(double thresh) {
 
+		
+		
 		// for each gene extract lowest Pval 
 		List<Double> lowesPvalPerGene = new ExtractDataMethods(init).extractLowestPvalPerGene(gwasData);
 

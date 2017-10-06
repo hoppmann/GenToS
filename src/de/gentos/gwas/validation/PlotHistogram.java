@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,15 +103,15 @@ public class PlotHistogram {
 		command.add(rStarter);
 		command.add(rScript);
 		command.add(tempFileName);
-		command.add(measuredHits);
 		command.add(nameOfGraph);
 		command.add(title);
 		command.add(legend);
 		command.add(suffix);
 		command.add(scaling);
+		command.add(measuredHits);
 
 		
-		//start plink process
+		//instanciate process builder
 		ProcessBuilder builder = new ProcessBuilder(command);
 		
 		try {
